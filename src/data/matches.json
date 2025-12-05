@@ -1,0 +1,650 @@
+[
+    {
+        "id": 1,
+        "group": "A",
+        "team1": "MEX",
+        "team2": "RSA",
+        "cityId": "mexico_city",
+        "datetime": "2026-06-11T12:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 2,
+        "group": "A",
+        "team1": "TBD_A3",
+        "team2": "TBD_A4",
+        "cityId": "guadalajara",
+        "datetime": "2026-06-11T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 3,
+        "group": "A",
+        "team1": "MEX",
+        "team2": "TBD_A3",
+        "cityId": "monterrey",
+        "datetime": "2026-06-15T15:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 4,
+        "group": "A",
+        "team1": "RSA",
+        "team2": "TBD_A4",
+        "cityId": "mexico_city",
+        "datetime": "2026-06-15T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 5,
+        "group": "A",
+        "team1": "MEX",
+        "team2": "TBD_A4",
+        "cityId": "mexico_city",
+        "datetime": "2026-06-19T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 6,
+        "group": "A",
+        "team1": "RSA",
+        "team2": "TBD_A3",
+        "cityId": "guadalajara",
+        "datetime": "2026-06-19T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 7,
+        "group": "B",
+        "team1": "POR",
+        "team2": "TBD_B2",
+        "cityId": "los_angeles",
+        "datetime": "2026-06-12T14:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 8,
+        "group": "B",
+        "team1": "TBD_B3",
+        "team2": "TBD_B4",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-12T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 9,
+        "group": "B",
+        "team1": "POR",
+        "team2": "TBD_B3",
+        "cityId": "seattle",
+        "datetime": "2026-06-16T14:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 10,
+        "group": "B",
+        "team1": "TBD_B2",
+        "team2": "TBD_B4",
+        "cityId": "los_angeles",
+        "datetime": "2026-06-16T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 11,
+        "group": "B",
+        "team1": "POR",
+        "team2": "TBD_B4",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-20T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 12,
+        "group": "B",
+        "team1": "TBD_B2",
+        "team2": "TBD_B3",
+        "cityId": "seattle",
+        "datetime": "2026-06-20T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 13,
+        "group": "C",
+        "team1": "FRA",
+        "team2": "TBD_C2",
+        "cityId": "miami",
+        "datetime": "2026-06-12T13:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 14,
+        "group": "C",
+        "team1": "TBD_C3",
+        "team2": "TBD_C4",
+        "cityId": "atlanta",
+        "datetime": "2026-06-12T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 15,
+        "group": "C",
+        "team1": "FRA",
+        "team2": "TBD_C3",
+        "cityId": "atlanta",
+        "datetime": "2026-06-16T16:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 16,
+        "group": "C",
+        "team1": "TBD_C2",
+        "team2": "TBD_C4",
+        "cityId": "miami",
+        "datetime": "2026-06-16T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 17,
+        "group": "C",
+        "team1": "FRA",
+        "team2": "TBD_C4",
+        "cityId": "miami",
+        "datetime": "2026-06-20T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 18,
+        "group": "C",
+        "team1": "TBD_C2",
+        "team2": "TBD_C3",
+        "cityId": "atlanta",
+        "datetime": "2026-06-20T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 19,
+        "group": "D",
+        "team1": "ARG",
+        "team2": "TBD_D2",
+        "cityId": "new_york",
+        "datetime": "2026-06-13T13:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 20,
+        "group": "D",
+        "team1": "TBD_D3",
+        "team2": "TBD_D4",
+        "cityId": "philadelphia",
+        "datetime": "2026-06-13T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 21,
+        "group": "D",
+        "team1": "ARG",
+        "team2": "TBD_D3",
+        "cityId": "boston",
+        "datetime": "2026-06-17T16:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 22,
+        "group": "D",
+        "team1": "TBD_D2",
+        "team2": "TBD_D4",
+        "cityId": "new_york",
+        "datetime": "2026-06-17T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 23,
+        "group": "D",
+        "team1": "ARG",
+        "team2": "TBD_D4",
+        "cityId": "philadelphia",
+        "datetime": "2026-06-21T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 24,
+        "group": "D",
+        "team1": "TBD_D2",
+        "team2": "TBD_D3",
+        "cityId": "boston",
+        "datetime": "2026-06-21T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 25,
+        "group": "E",
+        "team1": "NED",
+        "team2": "TBD_E2",
+        "cityId": "dallas",
+        "datetime": "2026-06-13T12:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 26,
+        "group": "E",
+        "team1": "TBD_E3",
+        "team2": "TBD_E4",
+        "cityId": "houston",
+        "datetime": "2026-06-13T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 27,
+        "group": "E",
+        "team1": "NED",
+        "team2": "TBD_E3",
+        "cityId": "houston",
+        "datetime": "2026-06-17T15:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 28,
+        "group": "E",
+        "team1": "TBD_E2",
+        "team2": "TBD_E4",
+        "cityId": "dallas",
+        "datetime": "2026-06-17T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 29,
+        "group": "E",
+        "team1": "NED",
+        "team2": "TBD_E4",
+        "cityId": "kansas_city",
+        "datetime": "2026-06-21T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 30,
+        "group": "E",
+        "team1": "TBD_E2",
+        "team2": "TBD_E3",
+        "cityId": "dallas",
+        "datetime": "2026-06-21T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 31,
+        "group": "F",
+        "team1": "BRA",
+        "team2": "TBD_F2",
+        "cityId": "los_angeles",
+        "datetime": "2026-06-14T14:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 32,
+        "group": "F",
+        "team1": "TBD_F3",
+        "team2": "TBD_F4",
+        "cityId": "seattle",
+        "datetime": "2026-06-14T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 33,
+        "group": "F",
+        "team1": "BRA",
+        "team2": "TBD_F3",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-18T14:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 34,
+        "group": "F",
+        "team1": "TBD_F2",
+        "team2": "TBD_F4",
+        "cityId": "los_angeles",
+        "datetime": "2026-06-18T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 35,
+        "group": "F",
+        "team1": "BRA",
+        "team2": "TBD_F4",
+        "cityId": "seattle",
+        "datetime": "2026-06-22T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 36,
+        "group": "F",
+        "team1": "TBD_F2",
+        "team2": "TBD_F3",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-22T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 37,
+        "group": "G",
+        "team1": "ENG",
+        "team2": "TBD_G2",
+        "cityId": "atlanta",
+        "datetime": "2026-06-14T13:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 38,
+        "group": "G",
+        "team1": "TBD_G3",
+        "team2": "TBD_G4",
+        "cityId": "miami",
+        "datetime": "2026-06-14T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 39,
+        "group": "G",
+        "team1": "ENG",
+        "team2": "TBD_G3",
+        "cityId": "miami",
+        "datetime": "2026-06-18T16:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 40,
+        "group": "G",
+        "team1": "TBD_G2",
+        "team2": "TBD_G4",
+        "cityId": "atlanta",
+        "datetime": "2026-06-18T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 41,
+        "group": "G",
+        "team1": "ENG",
+        "team2": "TBD_G4",
+        "cityId": "philadelphia",
+        "datetime": "2026-06-22T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 42,
+        "group": "G",
+        "team1": "TBD_G2",
+        "team2": "TBD_G3",
+        "cityId": "miami",
+        "datetime": "2026-06-22T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 43,
+        "group": "H",
+        "team1": "ESP",
+        "team2": "TBD_H2",
+        "cityId": "new_york",
+        "datetime": "2026-06-15T13:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 44,
+        "group": "H",
+        "team1": "TBD_H3",
+        "team2": "TBD_H4",
+        "cityId": "boston",
+        "datetime": "2026-06-15T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 45,
+        "group": "H",
+        "team1": "ESP",
+        "team2": "TBD_H3",
+        "cityId": "philadelphia",
+        "datetime": "2026-06-19T16:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 46,
+        "group": "H",
+        "team1": "TBD_H2",
+        "team2": "TBD_H4",
+        "cityId": "new_york",
+        "datetime": "2026-06-19T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 47,
+        "group": "H",
+        "team1": "ESP",
+        "team2": "TBD_H4",
+        "cityId": "boston",
+        "datetime": "2026-06-23T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 48,
+        "group": "H",
+        "team1": "TBD_H2",
+        "team2": "TBD_H3",
+        "cityId": "new_york",
+        "datetime": "2026-06-23T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 49,
+        "group": "I",
+        "team1": "GER",
+        "team2": "TBD_I2",
+        "cityId": "dallas",
+        "datetime": "2026-06-15T12:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 50,
+        "group": "I",
+        "team1": "TBD_I3",
+        "team2": "TBD_I4",
+        "cityId": "kansas_city",
+        "datetime": "2026-06-15T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 51,
+        "group": "I",
+        "team1": "GER",
+        "team2": "TBD_I3",
+        "cityId": "kansas_city",
+        "datetime": "2026-06-19T15:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 52,
+        "group": "I",
+        "team1": "TBD_I2",
+        "team2": "TBD_I4",
+        "cityId": "dallas",
+        "datetime": "2026-06-19T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 53,
+        "group": "I",
+        "team1": "GER",
+        "team2": "TBD_I4",
+        "cityId": "houston",
+        "datetime": "2026-06-23T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 54,
+        "group": "I",
+        "team1": "TBD_I2",
+        "team2": "TBD_I3",
+        "cityId": "kansas_city",
+        "datetime": "2026-06-23T18:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 55,
+        "group": "J",
+        "team1": "JPN",
+        "team2": "TBD_J2",
+        "cityId": "vancouver",
+        "datetime": "2026-06-16T14:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 56,
+        "group": "J",
+        "team1": "TBD_J3",
+        "team2": "TBD_J4",
+        "cityId": "seattle",
+        "datetime": "2026-06-16T20:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 57,
+        "group": "J",
+        "team1": "JPN",
+        "team2": "TBD_J3",
+        "cityId": "seattle",
+        "datetime": "2026-06-20T14:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 58,
+        "group": "J",
+        "team1": "TBD_J2",
+        "team2": "TBD_J4",
+        "cityId": "vancouver",
+        "datetime": "2026-06-20T20:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 59,
+        "group": "J",
+        "team1": "JPN",
+        "team2": "TBD_J4",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-24T20:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 60,
+        "group": "J",
+        "team1": "TBD_J2",
+        "team2": "TBD_J3",
+        "cityId": "seattle",
+        "datetime": "2026-06-24T20:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 61,
+        "group": "K",
+        "team1": "USA",
+        "team2": "TBD_K2",
+        "cityId": "los_angeles",
+        "datetime": "2026-06-12T20:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 62,
+        "group": "K",
+        "team1": "TBD_K3",
+        "team2": "TBD_K4",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-13T14:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 63,
+        "group": "K",
+        "team1": "USA",
+        "team2": "TBD_K3",
+        "cityId": "new_york",
+        "datetime": "2026-06-17T13:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 64,
+        "group": "K",
+        "team1": "TBD_K2",
+        "team2": "TBD_K4",
+        "cityId": "los_angeles",
+        "datetime": "2026-06-17T20:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 65,
+        "group": "K",
+        "team1": "USA",
+        "team2": "TBD_K4",
+        "cityId": "kansas_city",
+        "datetime": "2026-06-21T12:00:00-05:00",
+        "stage": "group"
+    },
+    {
+        "id": 66,
+        "group": "K",
+        "team1": "TBD_K2",
+        "team2": "TBD_K3",
+        "cityId": "new_york",
+        "datetime": "2026-06-21T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 67,
+        "group": "L",
+        "team1": "CAN",
+        "team2": "TBD_L2",
+        "cityId": "toronto",
+        "datetime": "2026-06-14T16:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 68,
+        "group": "L",
+        "team1": "TBD_L3",
+        "team2": "TBD_L4",
+        "cityId": "vancouver",
+        "datetime": "2026-06-14T20:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 69,
+        "group": "L",
+        "team1": "CAN",
+        "team2": "TBD_L3",
+        "cityId": "vancouver",
+        "datetime": "2026-06-18T17:00:00-07:00",
+        "stage": "group"
+    },
+    {
+        "id": 70,
+        "group": "L",
+        "team1": "TBD_L2",
+        "team2": "TBD_L4",
+        "cityId": "toronto",
+        "datetime": "2026-06-18T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 71,
+        "group": "L",
+        "team1": "CAN",
+        "team2": "TBD_L4",
+        "cityId": "toronto",
+        "datetime": "2026-06-22T16:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 72,
+        "group": "L",
+        "team1": "TBD_L2",
+        "team2": "TBD_L3",
+        "cityId": "vancouver",
+        "datetime": "2026-06-22T20:00:00-07:00",
+        "stage": "group"
+    }
+]
