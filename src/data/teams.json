@@ -12,160 +12,160 @@
         "flag": "🇿🇦"
     },
     {
-        "code": "TBD_A3",
-        "name": "TBD (Playoff A)",
+        "code": "KOR",
+        "name": "South Korea",
+        "group": "A",
+        "flag": "🇰🇷"
+    },
+    {
+        "code": "PO_D",
+        "name": "UEFA Playoff D Winner",
         "group": "A",
         "flag": "🏳️"
     },
     {
-        "code": "TBD_A4",
-        "name": "TBD (Playoff A)",
-        "group": "A",
-        "flag": "🏳️"
-    },
-    {
-        "code": "POR",
-        "name": "Portugal",
+        "code": "CAN",
+        "name": "Canada",
         "group": "B",
-        "flag": "🇵🇹"
+        "flag": "🇨🇦"
     },
     {
-        "code": "TBD_B2",
-        "name": "TBD",
+        "code": "PO_A",
+        "name": "UEFA Playoff A Winner",
         "group": "B",
         "flag": "🏳️"
     },
     {
-        "code": "TBD_B3",
-        "name": "TBD",
+        "code": "QAT",
+        "name": "Qatar",
         "group": "B",
-        "flag": "🏳️"
+        "flag": "🇶🇦"
     },
     {
-        "code": "TBD_B4",
-        "name": "TBD",
+        "code": "SUI",
+        "name": "Switzerland",
         "group": "B",
-        "flag": "🏳️"
-    },
-    {
-        "code": "FRA",
-        "name": "France",
-        "group": "C",
-        "flag": "🇫🇷"
-    },
-    {
-        "code": "TBD_C2",
-        "name": "TBD",
-        "group": "C",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_C3",
-        "name": "TBD",
-        "group": "C",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_C4",
-        "name": "TBD",
-        "group": "C",
-        "flag": "🏳️"
-    },
-    {
-        "code": "ARG",
-        "name": "Argentina",
-        "group": "D",
-        "flag": "🇦🇷"
-    },
-    {
-        "code": "TBD_D2",
-        "name": "TBD",
-        "group": "D",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_D3",
-        "name": "TBD",
-        "group": "D",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_D4",
-        "name": "TBD",
-        "group": "D",
-        "flag": "🏳️"
-    },
-    {
-        "code": "NED",
-        "name": "Netherlands",
-        "group": "E",
-        "flag": "🇳🇱"
-    },
-    {
-        "code": "TBD_E2",
-        "name": "TBD",
-        "group": "E",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_E3",
-        "name": "TBD",
-        "group": "E",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_E4",
-        "name": "TBD",
-        "group": "E",
-        "flag": "🏳️"
+        "flag": "🇨🇭"
     },
     {
         "code": "BRA",
         "name": "Brazil",
-        "group": "F",
+        "group": "C",
         "flag": "🇧🇷"
     },
     {
-        "code": "TBD_F2",
-        "name": "TBD",
+        "code": "MAR",
+        "name": "Morocco",
+        "group": "C",
+        "flag": "🇲🇦"
+    },
+    {
+        "code": "SCO",
+        "name": "Scotland",
+        "group": "C",
+        "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
+    },
+    {
+        "code": "HAI",
+        "name": "Haiti",
+        "group": "C",
+        "flag": "🇭🇹"
+    },
+    {
+        "code": "USA",
+        "name": "United States",
+        "group": "D",
+        "flag": "🇺🇸"
+    },
+    {
+        "code": "PAR",
+        "name": "Paraguay",
+        "group": "D",
+        "flag": "🇵🇾"
+    },
+    {
+        "code": "AUS",
+        "name": "Australia",
+        "group": "D",
+        "flag": "🇦🇺"
+    },
+    {
+        "code": "PO_C",
+        "name": "UEFA Playoff C Winner",
+        "group": "D",
+        "flag": "🏳️"
+    },
+    {
+        "code": "GER",
+        "name": "Germany",
+        "group": "E",
+        "flag": "🇩🇪"
+    },
+    {
+        "code": "ECU",
+        "name": "Ecuador",
+        "group": "E",
+        "flag": "🇪🇨"
+    },
+    {
+        "code": "CIV",
+        "name": "Ivory Coast",
+        "group": "E",
+        "flag": "🇨🇮"
+    },
+    {
+        "code": "CUW",
+        "name": "Curaçao",
+        "group": "E",
+        "flag": "🇨🇼"
+    },
+    {
+        "code": "NED",
+        "name": "Netherlands",
+        "group": "F",
+        "flag": "🇳🇱"
+    },
+    {
+        "code": "JPN",
+        "name": "Japan",
+        "group": "F",
+        "flag": "🇯🇵"
+    },
+    {
+        "code": "PO_B",
+        "name": "UEFA Playoff B Winner",
         "group": "F",
         "flag": "🏳️"
     },
     {
-        "code": "TBD_F3",
-        "name": "TBD",
+        "code": "TUN",
+        "name": "Tunisia",
         "group": "F",
-        "flag": "🏳️"
+        "flag": "🇹🇳"
     },
     {
-        "code": "TBD_F4",
-        "name": "TBD",
-        "group": "F",
-        "flag": "🏳️"
-    },
-    {
-        "code": "ENG",
-        "name": "England",
+        "code": "BEL",
+        "name": "Belgium",
         "group": "G",
-        "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
+        "flag": "🇧🇪"
     },
     {
-        "code": "TBD_G2",
-        "name": "TBD",
+        "code": "IRN",
+        "name": "Iran",
         "group": "G",
-        "flag": "🏳️"
+        "flag": "🇮🇷"
     },
     {
-        "code": "TBD_G3",
-        "name": "TBD",
+        "code": "EGY",
+        "name": "Egypt",
         "group": "G",
-        "flag": "🏳️"
+        "flag": "🇪🇬"
     },
     {
-        "code": "TBD_G4",
-        "name": "TBD",
+        "code": "NZL",
+        "name": "New Zealand",
         "group": "G",
-        "flag": "🏳️"
+        "flag": "🇳🇿"
     },
     {
         "code": "ESP",
@@ -174,117 +174,117 @@
         "flag": "🇪🇸"
     },
     {
-        "code": "TBD_H2",
-        "name": "TBD",
+        "code": "URU",
+        "name": "Uruguay",
         "group": "H",
-        "flag": "🏳️"
+        "flag": "🇺🇾"
     },
     {
-        "code": "TBD_H3",
-        "name": "TBD",
+        "code": "KSA",
+        "name": "Saudi Arabia",
         "group": "H",
-        "flag": "🏳️"
+        "flag": "🇸🇦"
     },
     {
-        "code": "TBD_H4",
-        "name": "TBD",
+        "code": "CPV",
+        "name": "Cape Verde",
         "group": "H",
-        "flag": "🏳️"
+        "flag": "🇨🇻"
     },
     {
-        "code": "GER",
-        "name": "Germany",
+        "code": "FRA",
+        "name": "France",
         "group": "I",
-        "flag": "🇩🇪"
+        "flag": "🇫🇷"
     },
     {
-        "code": "TBD_I2",
-        "name": "TBD",
+        "code": "SEN",
+        "name": "Senegal",
         "group": "I",
-        "flag": "🏳️"
+        "flag": "🇸🇳"
     },
     {
-        "code": "TBD_I3",
-        "name": "TBD",
-        "group": "I",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_I4",
-        "name": "TBD",
+        "code": "PO_F2",
+        "name": "FIFA Playoff 2 Winner",
         "group": "I",
         "flag": "🏳️"
     },
     {
-        "code": "JPN",
-        "name": "Japan",
-        "group": "J",
-        "flag": "🇯🇵"
+        "code": "NOR",
+        "name": "Norway",
+        "group": "I",
+        "flag": "🇳🇴"
     },
     {
-        "code": "TBD_J2",
-        "name": "TBD",
+        "code": "ARG",
+        "name": "Argentina",
         "group": "J",
-        "flag": "🏳️"
+        "flag": "🇦🇷"
     },
     {
-        "code": "TBD_J3",
-        "name": "TBD",
+        "code": "ALG",
+        "name": "Algeria",
         "group": "J",
-        "flag": "🏳️"
+        "flag": "🇩🇿"
     },
     {
-        "code": "TBD_J4",
-        "name": "TBD",
+        "code": "AUT",
+        "name": "Austria",
         "group": "J",
-        "flag": "🏳️"
+        "flag": "🇦🇹"
     },
     {
-        "code": "USA",
-        "name": "United States",
+        "code": "JOR",
+        "name": "Jordan",
+        "group": "J",
+        "flag": "🇯🇴"
+    },
+    {
+        "code": "POR",
+        "name": "Portugal",
         "group": "K",
-        "flag": "🇺🇸"
+        "flag": "🇵🇹"
     },
     {
-        "code": "TBD_K2",
-        "name": "TBD",
-        "group": "K",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_K3",
-        "name": "TBD",
-        "group": "K",
-        "flag": "🏳️"
-    },
-    {
-        "code": "TBD_K4",
-        "name": "TBD",
+        "code": "PO_F1",
+        "name": "FIFA Playoff 1 Winner",
         "group": "K",
         "flag": "🏳️"
     },
     {
-        "code": "CAN",
-        "name": "Canada",
-        "group": "L",
-        "flag": "🇨🇦"
+        "code": "UZB",
+        "name": "Uzbekistan",
+        "group": "K",
+        "flag": "🇺🇿"
     },
     {
-        "code": "TBD_L2",
-        "name": "TBD",
-        "group": "L",
-        "flag": "🏳️"
+        "code": "COL",
+        "name": "Colombia",
+        "group": "K",
+        "flag": "🇨🇴"
     },
     {
-        "code": "TBD_L3",
-        "name": "TBD",
+        "code": "ENG",
+        "name": "England",
         "group": "L",
-        "flag": "🏳️"
+        "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
     },
     {
-        "code": "TBD_L4",
-        "name": "TBD",
+        "code": "CRO",
+        "name": "Croatia",
         "group": "L",
-        "flag": "🏳️"
+        "flag": "🇭🇷"
+    },
+    {
+        "code": "GHA",
+        "name": "Ghana",
+        "group": "L",
+        "flag": "🇬🇭"
+    },
+    {
+        "code": "PAN",
+        "name": "Panama",
+        "group": "L",
+        "flag": "🇵🇦"
     }
 ]
