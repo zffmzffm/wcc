@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Polyline, CircleMarker, Popup, useMap } from 'react-leaflet';
 import { Match, Team } from './CityPopup';
 import { City } from './CityMarker';
@@ -43,7 +43,6 @@ const getOpponent = (match: Match, teamCode: string, teams: Team[]): { name: str
 export default function TeamFlightPath({ teamCode, matches, cities, teams }: TeamFlightPathProps) {
     const [visibleCount, setVisibleCount] = useState(0);
     const map = useMap();
-    const prevTeamCode = useRef(teamCode);
 
     // 计算球队的比赛，按时间排序
     const teamMatches: MatchWithCoords[] = useMemo(() => {
@@ -64,17 +63,16 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
     // 获取当前球队信息
     const currentTeam = useMemo(() => teams.find(t => t.code === teamCode), [teams, teamCode]);
 
-    // 动画效果
+    // 当球队改变时重置动画
     useEffect(() => {
-        // 如果球队改变了，重置
-        if (prevTeamCode.current !== teamCode) {
-            setVisibleCount(0);
-            prevTeamCode.current = teamCode;
-        }
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional: reset state when teamCode prop changes
+        setVisibleCount(0);
+    }, [teamCode]);
 
+    // 调整地图视角
+    useEffect(() => {
         if (teamMatches.length === 0) return;
 
-        // 调整地图视角
         const bounds = teamMatches.map(m => m.coords);
         if (bounds.length > 0) {
             try {
@@ -83,15 +81,19 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                 console.warn('Failed to fit bounds:', e);
             }
         }
+    }, [teamCode, teamMatches, map]);
 
-        // 动画逐步展示
+    // 动画逐步展示
+    useEffect(() => {
+        if (teamMatches.length === 0) return;
+
         if (visibleCount < teamMatches.length) {
             const timer = setTimeout(() => {
                 setVisibleCount(prev => prev + 1);
             }, 600);
             return () => clearTimeout(timer);
         }
-    }, [teamCode, teamMatches, map, visibleCount]);
+    }, [teamMatches.length, visibleCount]);
 
     if (teamMatches.length === 0) {
         return null;
