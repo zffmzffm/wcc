@@ -57,8 +57,15 @@ body {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .popup-header {
@@ -87,7 +94,7 @@ body {
 }
 
 .popup-close {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
   width: 32px;
@@ -102,7 +109,7 @@ body {
 }
 
 .popup-close:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .popup-venue {
@@ -161,7 +168,7 @@ body {
 
 .match-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .match-group {
@@ -234,7 +241,7 @@ body {
   border: none !important;
 }
 
-.custom-marker > div:hover {
+.custom-marker>div:hover {
   transform: scale(1.2);
 }
 
@@ -245,7 +252,7 @@ body {
   border-radius: 8px !important;
   padding: 8px 12px !important;
   color: white !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
 .leaflet-tooltip::before {
@@ -278,7 +285,7 @@ body {
 
 .header-logo {
   font-size: 2rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .header-title h1 {
@@ -291,7 +298,7 @@ body {
 
 .header-subtitle {
   font-size: 0.7rem;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -326,7 +333,7 @@ body {
 
 .badge-group {
   font-size: 0.7rem;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   padding: 0.2rem 0.5rem;
   border-radius: 10px;
 }
@@ -345,7 +352,7 @@ body {
   font-size: 0.9rem;
   border: none;
   border-radius: 10px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: white;
   cursor: pointer;
   min-width: 220px;
@@ -358,7 +365,7 @@ body {
 }
 
 .team-select:hover {
-  background-color: rgba(255,255,255,0.15);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .team-select:focus {
@@ -379,7 +386,7 @@ body {
 }
 
 .clear-selection {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   color: white;
   width: 32px;
@@ -410,7 +417,8 @@ body {
 .map-container {
   width: 100%;
   height: 100%;
-  padding-top: 60px; /* Header 高度 */
+  padding-top: 60px;
+  /* Header 高度 */
 }
 
 /* ============================================
@@ -429,7 +437,7 @@ body {
 .loading-spinner {
   width: 48px;
   height: 48px;
-  border: 4px solid rgba(255,255,255,0.1);
+  border: 4px solid rgba(255, 255, 255, 0.1);
   border-left-color: var(--secondary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -437,12 +445,21 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============================================
@@ -580,3 +597,58 @@ body {
   }
 }
 
+/* ============================================
+   飞行路径动画样式
+   ============================================ */
+.flight-path-svg {
+  overflow: visible;
+}
+
+/* 路径发光效果 */
+.flight-path-glow {
+  fill: none;
+  stroke: rgba(245, 158, 11, 0.3);
+  stroke-width: 12;
+  stroke-linecap: round;
+  filter: blur(4px);
+}
+
+/* 主飞行路径 - 平滑曲线底线 */
+.flight-path {
+  fill: none;
+  stroke: #f59e0b;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+/* 虚线样式 - 用于同城情况 */
+.flight-path-dashed {
+  stroke-dasharray: 8, 6;
+  animation: flightDash 0.8s linear infinite;
+}
+
+/* 》》》》 箭头路径样式 */
+.flight-path-chevron {
+  fill: none;
+  stroke: #f59e0b;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/* 飞行虚线动画 - 方向从起点到终点 */
+@keyframes flightDash {
+  from {
+    stroke-dashoffset: 28;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 路径出现动画 */
+.flight-path,
+.flight-path-glow,
+.flight-path-chevron {
+  animation-fill-mode: forwards;
+}
