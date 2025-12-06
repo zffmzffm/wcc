@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 
 import CityMarker, { City } from './CityMarker';
 import CityPopup, { Match, Team } from './CityPopup';
+import TeamFlightPath from './TeamFlightPath';
 
 import citiesData from '@/data/cities.json';
 import matchesData from '@/data/matches.json';
@@ -19,11 +20,15 @@ L.Icon.Default.mergeOptions({
     shadowUrl: '/marker-shadow.png',
 });
 
-const cities: City[] = citiesData as City[];
-const matches: Match[] = matchesData as Match[];
-const teams: Team[] = teamsData as Team[];
+export const cities: City[] = citiesData as City[];
+export const matches: Match[] = matchesData as Match[];
+export const teams: Team[] = teamsData as Team[];
 
-export default function WorldCupMap() {
+interface WorldCupMapProps {
+    selectedTeam: string | null;
+}
+
+export default function WorldCupMap({ selectedTeam }: WorldCupMapProps) {
     const [selectedCity, setSelectedCity] = useState<City | null>(null);
 
     const handleCityClick = (city: City) => {
@@ -60,6 +65,16 @@ export default function WorldCupMap() {
                         onClick={() => handleCityClick(city)}
                     />
                 ))}
+
+                {/* 球队飞行路线 */}
+                {selectedTeam && (
+                    <TeamFlightPath
+                        teamCode={selectedTeam}
+                        matches={matches}
+                        cities={cities}
+                        teams={teams}
+                    />
+                )}
             </MapContainer>
 
             {/* 城市弹窗 */}
