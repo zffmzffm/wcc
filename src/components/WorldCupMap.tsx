@@ -51,6 +51,13 @@ export default function WorldCupMap({ selectedTeam }: WorldCupMapProps) {
                 zoom={4}
                 style={{ height: '100vh', width: '100%' }}
                 zoomControl={true}
+                minZoom={4}
+                maxZoom={10}
+                maxBounds={[
+                    [18, -126], // 西南角
+                    [50, -70]   // 东北角
+                ]}
+                maxBoundsViscosity={1.0} // 完全限制在边界内
             >
                 <TileLayer
                     url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
