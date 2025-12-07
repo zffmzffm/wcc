@@ -35,11 +35,11 @@ export default function WorldCupMap({ selectedTeam, onCitySelect }: WorldCupMapP
             zoom={4}
             style={{ height: '100%', width: '100%' }}
             zoomControl={true}
-            minZoom={4}
+            minZoom={3}
             maxZoom={10}
             maxBounds={[
-                [18, -126], // 西南角
-                [50, -70]   // 东北角
+                [10, -140], // 西南角 (放宽)
+                [58, -56]   // 东北角 (放宽)
             ]}
             maxBoundsViscosity={1.0} // 完全限制在边界内
         >

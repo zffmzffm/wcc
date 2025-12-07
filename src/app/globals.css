@@ -876,10 +876,10 @@ body {
   animation: flightDash 0.8s linear infinite;
 }
 
-/* 》》》》 箭头路径样式 */
+/* 》》》》 箭头路径样式 - 只显示箭头，不显示实线 */
 .flight-path-chevron {
   fill: none;
-  stroke: #f59e0b;
+  stroke: transparent;
   stroke-width: 3;
   stroke-linecap: round;
 }
@@ -900,4 +900,23 @@ body {
 .flight-path-glow,
 .flight-path-chevron {
   animation-fill-mode: forwards;
+}
+
+/* 路段淡入动画 - 让新路段平滑出现 */
+.segment-fade-in {
+  animation: segmentFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes segmentFadeIn {
+  from {
+    opacity: 0;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+
+  to {
+    opacity: 1;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
 }

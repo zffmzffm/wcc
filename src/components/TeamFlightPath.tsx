@@ -158,6 +158,52 @@ const generateLoopPath = (
     return `M ${startX} ${startY} C ${ctrl1X} ${ctrl1Y} ${ctrl2X} ${ctrl2Y} ${endX} ${endY}`;
 };
 
+// 生成带采样点的小环形路径 - 用于显示 》》》》 箭头
+const generateLoopChevronPath = (
+    centerPixel: { x: number; y: number },
+    radius: number = 25,
+    segmentLength: number = 12
+): string => {
+    const startX = centerPixel.x + radius * 0.7;
+    const startY = centerPixel.y - radius * 0.7;
+    const ctrl1X = centerPixel.x + radius * 1.5;
+    const ctrl1Y = centerPixel.y - radius * 1.8;
+    const ctrl2X = centerPixel.x - radius * 1.5;
+    const ctrl2Y = centerPixel.y - radius * 1.8;
+    const endX = centerPixel.x - radius * 0.7;
+    const endY = centerPixel.y - radius * 0.7;
+
+    // 估算曲线长度
+    const approxLength = Math.sqrt(
+        Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)
+    ) * 1.5;
+    const numSegments = Math.max(4, Math.floor(approxLength / segmentLength));
+
+    // 采样三次贝塞尔曲线上的点
+    const points: { x: number; y: number }[] = [];
+    for (let i = 0; i <= numSegments; i++) {
+        const t = i / numSegments;
+        // 三次贝塞尔曲线公式
+        const x = Math.pow(1 - t, 3) * startX +
+            3 * Math.pow(1 - t, 2) * t * ctrl1X +
+            3 * (1 - t) * Math.pow(t, 2) * ctrl2X +
+            Math.pow(t, 3) * endX;
+        const y = Math.pow(1 - t, 3) * startY +
+            3 * Math.pow(1 - t, 2) * t * ctrl1Y +
+            3 * (1 - t) * Math.pow(t, 2) * ctrl2Y +
+            Math.pow(t, 3) * endY;
+        points.push({ x, y });
+    }
+
+    // 生成多线段路径
+    let path = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+        path += ` L ${points[i].x} ${points[i].y}`;
+    }
+
+    return path;
+};
+
 // 计算小环形路径的箭头位置
 const getLoopArrowTransform = (
     centerPixel: { x: number; y: number },
@@ -279,8 +325,17 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
         return { x: point.x, y: point.y };
     }, [map]);
 
+    // 使用累积式方法：维护已渲染的路段列表，而不是每次重新slice
+    const [renderedSegments, setRenderedSegments] = useState<{ segment: FlightSegment; isNew: boolean }[]>([]);
+    const [renderedMarkers, setRenderedMarkers] = useState<number[]>([]);
+    const animationKeyRef = useRef(0);
+
     // 当球队改变时重置动画
     useEffect(() => {
+        // 重置动画状态
+        animationKeyRef.current += 1;
+        setRenderedSegments([]);
+        setRenderedMarkers([]);
         // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional: reset state when teamCode prop changes
         setVisibleCount(0);
     }, [teamCode]);
@@ -299,17 +354,36 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
         }
     }, [teamCode, teamMatches, map]);
 
-    // 动画逐步展示
+    // 动画逐步展示 - 累积添加，不会触发已渲染内容的重新渲染
     useEffect(() => {
         if (teamMatches.length === 0) return;
 
         if (visibleCount < teamMatches.length) {
             const timer = setTimeout(() => {
-                setVisibleCount(prev => prev + 1);
+                // 第一次：同时显示前两个标记和第一段航线
+                if (visibleCount === 0 && teamMatches.length >= 2) {
+                    setRenderedMarkers([0, 1]);
+                    if (flightSegments[0]) {
+                        setRenderedSegments([{ segment: flightSegments[0], isNew: true }]);
+                    }
+                    setVisibleCount(2);
+                } else {
+                    // 后续：每次添加一个标记和一段航线
+                    setRenderedMarkers(prev => [...prev, visibleCount]);
+
+                    if (flightSegments[visibleCount - 1]) {
+                        setRenderedSegments(prev => {
+                            const updated = prev.map(item => ({ ...item, isNew: false }));
+                            return [...updated, { segment: flightSegments[visibleCount - 1], isNew: true }];
+                        });
+                    }
+
+                    setVisibleCount(prev => prev + 1);
+                }
             }, 600);
             return () => clearTimeout(timer);
         }
-    }, [teamMatches.length, visibleCount]);
+    }, [teamMatches.length, visibleCount, flightSegments]);
 
     // 监听地图移动/缩放，更新SVG路径
     useEffect(() => {
@@ -325,10 +399,6 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
     if (teamMatches.length === 0) {
         return null;
     }
-
-    // 获取可见的路段
-    const visibleSegments = flightSegments.slice(0, visibleCount - 1);
-    const visiblePath = teamMatches.slice(0, visibleCount).map(m => m.coords);
 
     // 获取地图容器尺寸
     const mapSize = map.getSize();
@@ -371,25 +441,30 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                     </marker>
                 </defs>
                 {/* 渲染每条飞行路径 */}
-                {visibleSegments.map((segment, idx) => {
+                {renderedSegments.map(({ segment, isNew }, idx) => {
                     const startPixel = latLngToPixel(segment.from);
                     const endPixel = latLngToPixel(segment.to);
 
-                    // 同城情况：画小环形
+                    // 同城情况：画小环形 - 使用与普通路径相同的箭头样式
                     if (segment.isSameCity) {
-                        const loopPath = generateLoopPath(startPixel, 20);
+                        const loopGlowPath = generateLoopPath(startPixel, 20);
+                        const loopChevronPath = generateLoopChevronPath(startPixel, 20, 12);
 
                         return (
-                            <g key={`segment-${idx}`}>
-                                {/* 小环形路径底色 */}
+                            <g
+                                key={`segment-${animationKeyRef.current}-${idx}`}
+                                className={isNew ? 'segment-fade-in' : ''}
+                            >
+                                {/* 小环形路径底色（发光效果） */}
                                 <path
-                                    d={loopPath}
+                                    d={loopGlowPath}
                                     className="flight-path-glow"
                                 />
-                                {/* 小环形主路径 - 虚线样式 */}
+                                {/* 小环形主路径 - 只显示箭头 */}
                                 <path
-                                    d={loopPath}
-                                    className="flight-path flight-path-dashed"
+                                    d={loopChevronPath}
+                                    className="flight-path-chevron"
+                                    markerMid="url(#chevron-marker)"
                                 />
                             </g>
                         );
@@ -401,7 +476,10 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                     const chevronPathD = generateChevronPath(startPixel, endPixel, curvature, 18);
 
                     return (
-                        <g key={`segment-${idx}`}>
+                        <g
+                            key={`segment-${animationKeyRef.current}-${idx}`}
+                            className={isNew ? 'segment-fade-in' : ''}
+                        >
                             {/* 路径底色（发光效果） */}
                             <path
                                 d={glowPathD}
@@ -419,19 +497,19 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
             </svg>
 
             {/* 比赛落脚点 */}
-            {visiblePath.map((pos, i) => {
-                const matchInfo = teamMatches[i];
+            {renderedMarkers.map((markerIndex) => {
+                const matchInfo = teamMatches[markerIndex];
                 if (!matchInfo) return null;
 
-                const { match, city } = matchInfo;
+                const { match, city, coords } = matchInfo;
                 const opponent = getOpponent(match, teamCode, teams);
                 const { date, time } = formatDateTime(match.datetime);
-                const isLatest = i === visibleCount - 1;
+                const isLatest = markerIndex === renderedMarkers[renderedMarkers.length - 1];
 
                 return (
                     <CircleMarker
-                        key={`marker-${match.id}`}
-                        center={pos}
+                        key={`marker-${animationKeyRef.current}-${match.id}`}
+                        center={coords}
                         radius={isLatest ? 14 : 10}
                         pathOptions={{
                             color: '#fff',
@@ -443,7 +521,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         <Popup className="match-popup">
                             <div className="flight-popup">
                                 <div className="flight-popup-header">
-                                    <span className="match-number">比赛 {i + 1}</span>
+                                    <span className="match-number">比赛 {markerIndex + 1}</span>
                                     <span className="match-group-badge">小组 {match.group}</span>
                                 </div>
                                 <div className="flight-popup-venue">

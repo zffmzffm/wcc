@@ -71,7 +71,9 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
                     <p className="no-matches">暂无比赛数据</p>
                 ) : (
                     <ul className="match-list">
-                        {matches.map(match => {
+                        {[...matches].sort((a, b) =>
+                            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+                        ).map(match => {
                             const team1 = getTeamDisplay(match.team1, teams);
                             const team2 = getTeamDisplay(match.team2, teams);
                             const { date, time } = formatDateTime(match.datetime);
