@@ -3,9 +3,9 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import CityMarker, { City } from './CityMarker';
-import { Match, Team } from './CityPopup';
+import CityMarker from './CityMarker';
 import TeamFlightPath from './TeamFlightPath';
+import { City, Match, Team } from '@/types';
 
 import citiesData from '@/data/cities.json';
 import matchesData from '@/data/matches.json';

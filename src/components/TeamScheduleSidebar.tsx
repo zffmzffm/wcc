@@ -1,13 +1,7 @@
 'use client';
-import { Match, Team } from './CityPopup';
+import { Match, Team, City } from '@/types';
+import { formatDateTime, getTeamDisplay } from '@/utils/formatters';
 import FlagIcon from './FlagIcon';
-
-interface City {
-    id: string;
-    name: string;
-    country: string;
-    venue: string;
-}
 
 interface TeamScheduleSidebarProps {
     team: Team | null;
@@ -17,35 +11,15 @@ interface TeamScheduleSidebarProps {
     onClose: () => void;
 }
 
-const getTeamDisplay = (teamCode: string, teams: Team[]): { name: string; code: string } => {
-    const team = teams.find(t => t.code === teamCode);
-    return team ? { name: team.name, code: team.code } : { name: teamCode, code: teamCode };
-};
-
 const getCityName = (cityId: string, cities: City[]): string => {
     const city = cities.find(c => c.id === cityId);
     return city ? city.name : cityId;
 };
 
-const formatDateTime = (datetime: string): { date: string; time: string } => {
-    const d = new Date(datetime);
-    const date = d.toLocaleDateString('zh-CN', {
-        month: 'long',
-        day: 'numeric',
-        weekday: 'short'
-    });
-    const time = d.toLocaleTimeString('zh-CN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-    return { date, time };
-};
-
 export default function TeamScheduleSidebar({ team, matches, teams, cities, onClose }: TeamScheduleSidebarProps) {
     if (!team) {
         return (
-            <aside className="sidebar sidebar-right">
+            <aside className="sidebar sidebar-right" role="complementary" aria-label="球队信息侧边栏">
                 <div className="sidebar-placeholder">
                     <span className="sidebar-placeholder-icon">⚽</span>
                     <p>在顶部选择球队</p>
@@ -61,7 +35,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, onCl
     );
 
     return (
-        <aside className="sidebar sidebar-right">
+        <aside className="sidebar sidebar-right" role="complementary" aria-label={`${team.name} 球队行程`}>
             {/* Header */}
             <div className="sidebar-header">
                 <div className="sidebar-title">
@@ -82,7 +56,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, onCl
                 {sortedMatches.length === 0 ? (
                     <p className="no-matches">暂无比赛数据</p>
                 ) : (
-                    <ul className="match-list">
+                    <ul className="match-list" role="list">
                         {sortedMatches.map((match, index) => {
                             const team1 = getTeamDisplay(match.team1, teams);
                             const team2 = getTeamDisplay(match.team2, teams);
@@ -91,7 +65,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, onCl
                             const isHomeTeam = match.team1 === team.code;
 
                             return (
-                                <li key={match.id} className="match-item schedule-item">
+                                <li key={match.id} className="match-item schedule-item" role="listitem">
                                     <div className="match-header">
                                         <span className="match-number">第 {index + 1} 场</span>
                                         <span className="match-venue">📍 {cityName}</span>

@@ -5,15 +5,14 @@ import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
 import CitySidebar from '@/components/CitySidebar';
 import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
-import { Team, Match } from '@/components/CityPopup';
-import { City } from '@/components/CityMarker';
+import { Team, Match, City } from '@/types';
 import teamsData from '@/data/teams.json';
 import matchesData from '@/data/matches.json';
 import citiesData from '@/data/cities.json';
 
 const teams: Team[] = teamsData as Team[];
 const matches: Match[] = matchesData as Match[];
-const cities = citiesData;
+const cities: City[] = citiesData as City[];
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
   ssr: false, // Leaflet 不支持 SSR
@@ -61,7 +60,7 @@ export default function Home() {
           teams={teams}
           onClose={() => setSelectedCity(null)}
         />
-        <div className="map-container">
+        <div className="map-container" role="application" aria-label="2026 世界杯场馆地图">
           <WorldCupMap
             selectedTeam={selectedTeam}
             onCitySelect={setSelectedCity}

@@ -1,10 +1,52 @@
 @import "tailwindcss";
 
+/* ============================================
+   Designali Creative Suite 风格设计系统
+   ============================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #7c3aed;
+  /* 主色调 */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
   --secondary: #f59e0b;
+  --secondary-light: #fbbf24;
+
+  /* 背景色 */
+  --background: #f8fafc;
+  --foreground: #1e293b;
+  --sidebar-bg: #0f0f23;
+  --sidebar-bg-light: #1a1a36;
+  --card-bg: #ffffff;
+
+  /* 文字色 */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --text-light: rgba(255, 255, 255, 0.9);
+  --text-light-muted: rgba(255, 255, 255, 0.6);
+
+  /* 边框和阴影 */
+  --border-light: #e2e8f0;
+  --border-dark: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  /* 渐变 */
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  --gradient-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-sidebar: linear-gradient(180deg, #0f0f23 0%, #1a1a36 100%);
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* 国家主题色 */
   --usa: #1e40af;
   --mexico: #166534;
   --canada: #dc2626;
@@ -17,42 +59,463 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
   padding: 0;
+  line-height: 1.5;
 }
 
-/* 弹窗样式 */
+/* ============================================
+   Header 样式 - Designali 风格
+   ============================================ */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  background: var(--sidebar-bg);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-lg);
+  margin-left: -0.5rem;
+}
+
+.header-logo {
+  font-size: 1.75rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-light);
+  letter-spacing: -0.3px;
+}
+
+.header-subtitle {
+  font-size: 0.65rem;
+  color: var(--text-light-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-team-info {
+  display: flex;
+  align-items: center;
+}
+
+.team-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--gradient-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  animation: fadeIn 0.3s ease;
+}
+
+.badge-flag {
+  font-size: 1.2rem;
+}
+
+.badge-group {
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+/* ============================================
+   TeamSelector 样式 - 现代下拉框
+   ============================================ */
+.team-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.team-select {
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  min-width: 220px;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  font-weight: 500;
+}
+
+.team-select:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.team-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.team-select option {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  padding: 8px;
+}
+
+.team-select optgroup {
+  background: var(--background);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.clear-selection {
+  background: var(--background);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.clear-selection:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.team-group-badge {
+  background: var(--gradient-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.3s ease;
+}
+
+.team-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select-flag {
+  position: absolute;
+  left: 12px;
+  z-index: 1;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.team-select-wrapper .team-select {
+  padding-left: 40px;
+}
+
+/* 国旗图标样式 */
+.flag-icon {
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+/* ============================================
+   主容器样式
+   ============================================ */
+.main-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+}
+
+.content-wrapper {
+  display: flex;
+  flex: 1;
+  margin-top: 64px;
+  height: calc(100vh - 64px);
+}
+
+.map-container {
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  background: #e8eef5;
+  border-radius: var(--radius-lg);
+  margin: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   侧边栏样式 - Designali 深色风格
+   ============================================ */
+.sidebar {
+  width: 340px;
+  height: 100%;
+  background: var(--gradient-sidebar);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.sidebar-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light-muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+.sidebar-placeholder-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.25rem;
+  opacity: 0.7;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-placeholder p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--text-light-muted);
+}
+
+.sidebar-placeholder p:first-of-type {
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* 侧边栏头部 - 渐变横幅 */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: var(--gradient-primary);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.sidebar-flag {
+  font-size: 1.75rem;
+}
+
+.sidebar-title h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.sidebar-close {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+/* 场馆信息区 */
+.sidebar-venue {
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.sidebar-venue .venue-name {
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.sidebar-venue .venue-capacity {
+  color: var(--text-light-muted);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* 比赛列表区 */
+.sidebar-matches {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.sidebar-matches h3 {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  color: var(--text-light-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-matches .match-list {
+  gap: 0.75rem;
+}
+
+/* 比赛卡片 - 现代卡片风格 */
+.sidebar-matches .match-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  transition: all 0.25s ease;
+}
+
+.sidebar-matches .match-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-matches .team-name {
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.sidebar-matches .match-date {
+  color: var(--text-light-muted);
+}
+
+.sidebar-matches .no-matches {
+  color: var(--text-light-muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+/* 右侧边栏（球队日程） */
+.sidebar-right {
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-subtitle {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* 球队日程特定样式 */
+.schedule-item .match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.625rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.schedule-item .match-number {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.schedule-item .match-venue {
+  font-size: 0.7rem;
+  color: var(--text-light-muted);
+}
+
+.sidebar-matches .highlight-team .team-name {
+  color: var(--secondary);
+  font-weight: 700;
+}
+
+/* ============================================
+   弹窗样式 - 现代卡片风格
+   ============================================ */
 .popup-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
 }
 
 .popup-content {
-  background: white;
-  border-radius: 16px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
   padding: 0;
   width: 90%;
   max-width: 420px;
   max-height: 80vh;
   overflow: hidden;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease;
 }
 
@@ -73,7 +536,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary), #6d28d9);
+  background: var(--gradient-primary);
   color: white;
 }
 
@@ -94,61 +557,63 @@ body {
 }
 
 .popup-close {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   color: white;
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
 }
 
 .popup-close:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .popup-venue {
   padding: 1rem 1.5rem;
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--background);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .venue-name {
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
 .venue-capacity {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-top: 0.25rem;
 }
 
 .popup-matches {
-  padding: 1rem 1.5rem 1.5rem;
+  padding: 1.25rem 1.5rem 1.5rem;
   overflow-y: auto;
   max-height: 400px;
 }
 
 .popup-matches h3 {
   margin: 0 0 1rem;
-  font-size: 0.9rem;
-  color: #64748b;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
 .no-matches {
-  color: #94a3b8;
+  color: var(--text-muted);
   text-align: center;
   padding: 2rem;
 }
 
+/* 比赛列表通用样式 */
 .match-list {
   list-style: none;
   padding: 0;
@@ -159,16 +624,17 @@ body {
 }
 
 .match-item {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 0.875rem 1rem;
-  border: 1px solid #e2e8f0;
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: var(--background);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px solid var(--border-light);
+  transition: all 0.25s ease;
 }
 
 .match-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
 }
 
 .match-group {
@@ -210,15 +676,15 @@ body {
 .team-name {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .vs {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding: 0.25rem 0.5rem;
-  background: #e2e8f0;
+  background: var(--border-light);
   border-radius: 4px;
 }
 
@@ -227,7 +693,7 @@ body {
   justify-content: center;
   gap: 0.75rem;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .match-time {
@@ -235,407 +701,31 @@ body {
   color: var(--secondary);
 }
 
-/* 自定义标记样式 */
+/* ============================================
+   自定义标记样式
+   ============================================ */
 .custom-marker {
   background: none !important;
   border: none !important;
 }
 
 .custom-marker>div:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
 }
 
 /* Leaflet tooltip 样式覆盖 */
 .leaflet-tooltip {
-  background: rgba(15, 23, 42, 0.95) !important;
+  background: var(--sidebar-bg) !important;
   border: none !important;
-  border-radius: 8px !important;
-  padding: 8px 12px !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 8px 14px !important;
   color: white !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  font-weight: 500 !important;
 }
 
 .leaflet-tooltip::before {
-  border-top-color: rgba(15, 23, 42, 0.95) !important;
-}
-
-/* ============================================
-   Header 样式
-   ============================================ */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
-  padding: 0.75rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.header-logo {
-  font-size: 2rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.header-title h1 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: white;
-  letter-spacing: -0.5px;
-}
-
-.header-subtitle {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.header-team-info {
-  display: flex;
-  align-items: center;
-}
-
-.team-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, var(--primary), #6d28d9);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: white;
-  font-size: 0.9rem;
-  font-weight: 600;
-  animation: fadeIn 0.3s ease;
-}
-
-.badge-flag {
-  font-size: 1.2rem;
-}
-
-.badge-group {
-  font-size: 0.7rem;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 0.2rem 0.5rem;
-  border-radius: 10px;
-}
-
-/* ============================================
-   TeamSelector 样式
-   ============================================ */
-.team-selector {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.team-select {
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  cursor: pointer;
-  min-width: 220px;
-  transition: all 0.2s ease;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
-.team-select:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.team-select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--secondary);
-}
-
-.team-select option {
-  background: #1e293b;
-  color: white;
-  padding: 8px;
-}
-
-.team-select optgroup {
-  background: #0f172a;
-  color: var(--secondary);
-  font-weight: 700;
-}
-
-.clear-selection {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.clear-selection:hover {
-  background: rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-}
-
-.team-group-badge {
-  background: linear-gradient(135deg, var(--primary), #6d28d9);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: white;
-  font-size: 0.8rem;
-  font-weight: 600;
-  animation: fadeIn 0.3s ease;
-}
-
-.team-select-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.select-flag {
-  position: absolute;
-  left: 12px;
-  z-index: 1;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-}
-
-.team-select-wrapper .team-select {
-  padding-left: 40px;
-}
-
-/* 国旗图标样式 */
-.flag-icon {
-  display: inline-block;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* ============================================
-   主容器样式
-   ============================================ */
-.main-container {
-  width: 100%;
-  height: 100vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.content-wrapper {
-  display: flex;
-  flex: 1;
-  margin-top: 60px;
-  /* Header 高度 */
-  height: calc(100vh - 60px);
-}
-
-.map-container {
-  flex: 1;
-  height: 100%;
-  min-width: 0;
-}
-
-/* ============================================
-   侧边栏样式
-   ============================================ */
-.sidebar {
-  width: 320px;
-  height: 100%;
-  background: linear-gradient(180deg, #0f172a, #1e293b);
-  overflow-y: auto;
-  flex-shrink: 0;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
-}
-
-.sidebar-placeholder {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
-  padding: 2rem;
-}
-
-.sidebar-placeholder-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.6;
-}
-
-.sidebar-placeholder p {
-  margin: 0.25rem 0;
-  font-size: 0.9rem;
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary), #6d28d9);
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.sidebar-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.sidebar-flag {
-  font-size: 1.75rem;
-}
-
-.sidebar-title h2 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.sidebar-close {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-
-.sidebar-close:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.sidebar-venue {
-  padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-venue .venue-name {
-  color: white;
-}
-
-.sidebar-venue .venue-capacity {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.sidebar-matches {
-  padding: 1rem 1.5rem 1.5rem;
-}
-
-.sidebar-matches h3 {
-  margin: 0 0 1rem;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 600;
-}
-
-.sidebar-matches .match-list {
-  gap: 0.6rem;
-}
-
-.sidebar-matches .match-item {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-matches .match-item:hover {
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.sidebar-matches .team-name {
-  color: white;
-}
-
-.sidebar-matches .match-date {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.sidebar-matches .no-matches {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* 右侧边栏（球队日程） */
-.sidebar-right {
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
-}
-
-.sidebar-subtitle {
-  font-size: 0.75rem;
-  opacity: 0.7;
-  font-weight: 400;
-  display: block;
-  margin-top: 0.2rem;
-}
-
-/* 球队日程特定样式 */
-.schedule-item .match-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.schedule-item .match-number {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.schedule-item .match-venue {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.sidebar-matches .highlight-team .team-name {
-  color: var(--secondary);
-  font-weight: 700;
+  border-top-color: var(--sidebar-bg) !important;
 }
 
 /* ============================================
@@ -647,7 +737,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
+  background: var(--gradient-sidebar);
   color: white;
 }
 
@@ -655,7 +745,7 @@ body {
   width: 48px;
   height: 48px;
   border: 4px solid rgba(255, 255, 255, 0.1);
-  border-left-color: var(--secondary);
+  border-left-color: var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -703,16 +793,16 @@ body {
   background: var(--primary);
   color: white;
   padding: 0.2rem 0.5rem;
-  border-radius: 10px;
+  border-radius: var(--radius-full);
   font-weight: 600;
 }
 
 .flight-popup-venue {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .flight-popup-teams {
@@ -736,14 +826,14 @@ body {
 .flight-popup-teams .team-name {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .flight-popup-teams .vs {
   font-size: 0.65rem;
   font-weight: 700;
-  color: #94a3b8;
-  background: #e2e8f0;
+  color: var(--text-muted);
+  background: var(--border-light);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
 }
@@ -753,11 +843,11 @@ body {
   justify-content: center;
   gap: 0.75rem;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .flight-popup-datetime .date {
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .flight-popup-datetime .time {
@@ -768,16 +858,28 @@ body {
 /* ============================================
    响应式设计
    ============================================ */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 300px;
+  }
+
+  .map-container {
+    margin: 0.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
     gap: 0.75rem;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+    height: auto;
   }
 
   .header-brand {
     width: 100%;
     justify-content: center;
+    margin-left: 0;
   }
 
   .header-nav {
@@ -802,6 +904,10 @@ body {
   .sidebar {
     width: 260px;
   }
+
+  .map-container {
+    margin: 0.5rem;
+  }
 }
 
 @media (max-width: 600px) {
@@ -819,6 +925,8 @@ body {
   .map-container {
     height: 55vh;
     order: 1;
+    margin: 0.5rem 0.5rem 0;
+    border-radius: var(--radius-md);
   }
 
   .sidebar-placeholder {
@@ -865,7 +973,7 @@ body {
 /* 主飞行路径 - 平滑曲线底线 */
 .flight-path {
   fill: none;
-  stroke: #f59e0b;
+  stroke: var(--secondary);
   stroke-width: 4;
   stroke-linecap: round;
 }
@@ -918,5 +1026,191 @@ body {
     opacity: 1;
     stroke-dasharray: none;
     stroke-dashoffset: 0;
+  }
+}
+
+/* ============================================
+   滚动条美化
+   ============================================ */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================
+   无障碍样式
+   ============================================ */
+
+/* 跳转链接 - 用于键盘导航 */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+  background: var(--primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 var(--radius-md) 0;
+  font-weight: 600;
+  text-decoration: none;
+  transition: left 0.2s ease;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* 视觉隐藏但可被屏幕阅读器读取 */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* 焦点指示器增强 */
+:focus-visible {
+  outline: 3px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   减少动画偏好支持
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .flight-path-glow,
+  .flight-path,
+  .segment-fade-in {
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   暗色模式支持
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f172a;
+    --foreground: #f1f5f9;
+    --card-bg: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border-light: #334155;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .map-container {
+    background: #1e293b;
+  }
+
+  .team-select {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  }
+
+  .team-select option {
+    background: var(--card-bg);
+    color: var(--text-primary);
+  }
+
+  .popup-content {
+    background: var(--card-bg);
+  }
+
+  .popup-venue {
+    background: var(--background);
+    border-color: var(--border-light);
+  }
+
+  .match-item {
+    background: var(--background);
+    border-color: var(--border-light);
+  }
+
+  .match-item:hover {
+    border-color: var(--primary-light);
+  }
+
+  .vs {
+    background: var(--border-light);
+  }
+
+  .clear-selection {
+    background: var(--card-bg);
+    border-color: var(--border-light);
+    color: var(--text-secondary);
+  }
+
+  .clear-selection:hover {
+    background: #422424;
+    border-color: #7f1d1d;
+  }
+
+  .leaflet-tooltip {
+    background: var(--card-bg) !important;
+  }
+
+  .leaflet-tooltip::before {
+    border-top-color: var(--card-bg) !important;
+  }
+
+  /* Leaflet 地图控件暗色适配 */
+  .leaflet-control-zoom a {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-light) !important;
+  }
+
+  .leaflet-control-zoom a:hover {
+    background: var(--sidebar-bg) !important;
+  }
+
+  .leaflet-control-attribution {
+    background: rgba(30, 41, 59, 0.8) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .leaflet-control-attribution a {
+    color: var(--primary-light) !important;
   }
 }

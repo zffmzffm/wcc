@@ -1,5 +1,5 @@
 'use client';
-import { Team } from './CityPopup';
+import { Team } from '@/types';
 import FlagIcon from './FlagIcon';
 
 interface TeamSelectorProps {
@@ -33,17 +33,22 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
     const selectedTeamInfo = selectedTeam ? teams.find(t => t.code === selectedTeam) : null;
 
     return (
-        <div className="team-selector">
+        <div className="team-selector" role="search">
+            <label htmlFor="team-select" className="visually-hidden">
+                选择球队
+            </label>
             <div className="team-select-wrapper">
                 {selectedTeamInfo && (
-                    <span className="select-flag">
+                    <span className="select-flag" aria-hidden="true">
                         <FlagIcon code={selectedTeamInfo.code} size={18} />
                     </span>
                 )}
                 <select
+                    id="team-select"
                     value={selectedTeam || ''}
                     onChange={handleChange}
                     className="team-select"
+                    aria-expanded={!!selectedTeam}
                 >
                     <option value="">🌍 选择球队查看行程</option>
                     {sortedGroups.map(group => (
@@ -63,10 +68,13 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
                         className="clear-selection"
                         onClick={() => onSelect(null)}
                         aria-label="清除选择"
+                        type="button"
                     >
                         ✕
                     </button>
-                    <span className="team-group-badge">小组 {selectedTeamInfo.group}</span>
+                    <span className="team-group-badge" aria-label={`小组 ${selectedTeamInfo.group}`}>
+                        小组 {selectedTeamInfo.group}
+                    </span>
                 </>
             )}
         </div>

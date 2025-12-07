@@ -1,6 +1,6 @@
 'use client';
-import { City } from './CityMarker';
-import { Match, Team } from './CityPopup';
+import { City, Match, Team } from '@/types';
+import { formatDateTime, getTeamDisplay, getCountryCode } from '@/utils/formatters';
 import FlagIcon from './FlagIcon';
 
 interface CitySidebarProps {
@@ -10,30 +10,10 @@ interface CitySidebarProps {
     onClose: () => void;
 }
 
-const getTeamDisplay = (teamCode: string, teams: Team[]): { name: string; code: string } => {
-    const team = teams.find(t => t.code === teamCode);
-    return team ? { name: team.name, code: team.code } : { name: teamCode, code: teamCode };
-};
-
-const formatDateTime = (datetime: string): { date: string; time: string } => {
-    const d = new Date(datetime);
-    const date = d.toLocaleDateString('zh-CN', {
-        month: 'long',
-        day: 'numeric',
-        weekday: 'short'
-    });
-    const time = d.toLocaleTimeString('zh-CN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-    return { date, time };
-};
-
 export default function CitySidebar({ city, matches, teams, onClose }: CitySidebarProps) {
     if (!city) {
         return (
-            <aside className="sidebar">
+            <aside className="sidebar" role="complementary" aria-label="城市信息侧边栏">
                 <div className="sidebar-placeholder">
                     <span className="sidebar-placeholder-icon">🏟️</span>
                     <p>点击地图上的城市</p>
@@ -43,17 +23,17 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
         );
     }
 
-    const countryCode = city.country === 'USA' ? 'USA' : city.country === 'Mexico' ? 'MEX' : 'CAN';
+    const countryCode = getCountryCode(city.country);
 
     return (
-        <aside className="sidebar">
+        <aside className="sidebar" role="complementary" aria-label={`${city.name} 城市信息`}>
             {/* Header */}
             <div className="sidebar-header">
                 <div className="sidebar-title">
                     <FlagIcon code={countryCode} size={28} />
                     <h2>{city.name}</h2>
                 </div>
-                <button className="sidebar-close" onClick={onClose} aria-label="关闭">
+                <button className="sidebar-close" onClick={onClose} aria-label="关闭侧边栏">
                     ✕
                 </button>
             </div>
@@ -70,7 +50,7 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
                 {matches.length === 0 ? (
                     <p className="no-matches">暂无比赛数据</p>
                 ) : (
-                    <ul className="match-list">
+                    <ul className="match-list" role="list">
                         {[...matches].sort((a, b) =>
                             new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
                         ).map(match => {
@@ -79,7 +59,7 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
                             const { date, time } = formatDateTime(match.datetime);
 
                             return (
-                                <li key={match.id} className="match-item">
+                                <li key={match.id} className="match-item" role="listitem">
                                     <div className="match-group">小组 {match.group}</div>
                                     <div className="match-teams">
                                         <span className="team">

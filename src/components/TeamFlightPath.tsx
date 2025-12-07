@@ -1,8 +1,8 @@
 'use client';
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback, memo } from 'react';
 import { CircleMarker, Popup, useMap } from 'react-leaflet';
-import { Match, Team } from './CityPopup';
-import { City } from './CityMarker';
+import { Match, Team, City, MatchWithCoords, FlightSegment } from '@/types';
+import { formatDateTimeShort, getTeamDisplay } from '@/utils/formatters';
 import FlagIcon from './FlagIcon';
 import { LatLngTuple } from 'leaflet';
 
@@ -12,35 +12,6 @@ interface TeamFlightPathProps {
     cities: City[];
     teams: Team[];
 }
-
-interface MatchWithCoords {
-    match: Match;
-    coords: LatLngTuple;
-    city: City;
-}
-
-interface FlightSegment {
-    from: LatLngTuple;
-    to: LatLngTuple;
-    segmentIndex: number;
-    isReturn: boolean; // 是否是返程（用于镜像弧线）
-    isSameCity: boolean; // 是否在同一城市（原地待命）
-}
-
-// 格式化日期时间
-const formatDateTime = (datetime: string): { date: string; time: string } => {
-    const d = new Date(datetime);
-    const date = d.toLocaleDateString('zh-CN', {
-        month: 'short',
-        day: 'numeric',
-    });
-    const time = d.toLocaleTimeString('zh-CN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-    return { date, time };
-};
 
 // 获取对手球队信息
 const getOpponent = (match: Match, teamCode: string, teams: Team[]): { name: string; code: string } => {
@@ -503,7 +474,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
 
                 const { match, city, coords } = matchInfo;
                 const opponent = getOpponent(match, teamCode, teams);
-                const { date, time } = formatDateTime(match.datetime);
+                const { date, time } = formatDateTimeShort(match.datetime);
                 const isLatest = markerIndex === renderedMarkers[renderedMarkers.length - 1];
 
                 return (

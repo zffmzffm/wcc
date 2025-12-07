@@ -1,4 +1,6 @@
 'use client';
+import Image from 'next/image';
+import { useState } from 'react';
 
 interface FlagIconProps {
     code: string; // ISO 3166-1 alpha-2 country code (e.g., "US", "MX", "CA")
@@ -71,17 +73,41 @@ export function getISO2Code(code: string): string {
 }
 
 export default function FlagIcon({ code, size = 20, className = '' }: FlagIconProps) {
+    const [hasError, setHasError] = useState(false);
     const iso2 = getISO2Code(code);
 
     // 使用 flagcdn.com CDN 获取国旗图片
     const flagUrl = `https://flagcdn.com/w40/${iso2}.png`;
+    const height = Math.round(size * 0.75);
+
+    // Fallback to emoji if image fails to load
+    if (hasError) {
+        return (
+            <span
+                className={`flag-icon flag-fallback ${className}`}
+                style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: size,
+                    height: height,
+                    fontSize: size * 0.8,
+                    borderRadius: '2px',
+                    backgroundColor: '#f3f4f6',
+                }}
+                aria-label={`${code} 国旗`}
+            >
+                🏳️
+            </span>
+        );
+    }
 
     return (
-        <img
+        <Image
             src={flagUrl}
-            alt={`${code} flag`}
+            alt={`${code} 国旗`}
             width={size}
-            height={Math.round(size * 0.75)} // 4:3 aspect ratio
+            height={height}
             className={`flag-icon ${className}`}
             style={{
                 objectFit: 'contain',
@@ -89,6 +115,8 @@ export default function FlagIcon({ code, size = 20, className = '' }: FlagIconPr
                 borderRadius: '2px',
             }}
             loading="lazy"
+            unoptimized // CDN images don't need Next.js optimization
+            onError={() => setHasError(true)}
         />
     );
 }
