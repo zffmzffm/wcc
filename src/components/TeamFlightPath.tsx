@@ -404,7 +404,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         <path
                             d="M 1 1 L 6 4 L 1 7"
                             fill="none"
-                            stroke="#f59e0b"
+                            stroke="#2D5A3D"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -485,7 +485,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         pathOptions={{
                             color: '#fff',
                             weight: 3,
-                            fillColor: isLatest ? '#f59e0b' : '#7c3aed',
+                            fillColor: isLatest ? '#D88A8A' : '#2D5A3D',
                             fillOpacity: 0.95
                         }}
                     >

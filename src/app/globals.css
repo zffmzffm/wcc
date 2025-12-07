@@ -5,39 +5,56 @@
    ============================================ */
 
 :root {
-  /* 主色调 */
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-light: #818cf8;
-  --secondary: #f59e0b;
-  --secondary-light: #fbbf24;
+  /* 主色调 - 三色系 */
+  --primary: #2D5A3D;
+  /* 深绿色 - 主色 */
+  --primary-dark: #1E4530;
+  /* 更深的绿色 */
+  --primary-light: #3D7A53;
+  /* 较亮的深绿 */
+  --secondary: #D88A8A;
+  /* 暗红/珊瑚色 - 强调色 */
+  --secondary-light: #E5A5A5;
+  /* 浅珊瑚色 */
+  --accent: #B5C9B1;
+  /* 浅绿色/鼠尾草绿 - 辅助色 */
+  --accent-light: #D0DFCd;
+  /* 更浅的绿色 */
 
   /* 背景色 */
-  --background: #f8fafc;
-  --foreground: #1e293b;
-  --sidebar-bg: #0f0f23;
-  --sidebar-bg-light: #1a1a36;
+  --background: #F5F7F5;
+  /* 微绿调的浅灰 */
+  --foreground: #2D3A2D;
+  /* 绿调的深灰 */
+  --sidebar-bg: #E8EDE8;
+  /* 浅灰绿背景 */
+  --sidebar-bg-light: #F0F4F0;
+  /* 更浅的灰绿 */
   --card-bg: #ffffff;
 
   /* 文字色 */
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --text-light: rgba(255, 255, 255, 0.9);
-  --text-light-muted: rgba(255, 255, 255, 0.6);
+  --text-primary: #2D3A2D;
+  /* 绿调深灰 */
+  --text-secondary: #5A6B5A;
+  /* 绿调中灰 */
+  --text-muted: #8A9B8A;
+  /* 绿调浅灰 */
+  --text-light: rgba(255, 255, 255, 0.95);
+  --text-light-muted: rgba(255, 255, 255, 0.7);
 
   /* 边框和阴影 */
-  --border-light: #e2e8f0;
-  --border-dark: rgba(255, 255, 255, 0.1);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --border-light: #D0DFCd;
+  /* 浅绿边框 */
+  --border-dark: rgba(45, 90, 61, 0.15);
+  --shadow-sm: 0 1px 2px rgba(45, 90, 61, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(45, 90, 61, 0.12);
+  --shadow-lg: 0 10px 25px -5px rgba(45, 90, 61, 0.15);
+  --shadow-card: 0 2px 8px rgba(45, 90, 61, 0.1);
 
   /* 渐变 */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-  --gradient-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-sidebar: linear-gradient(180deg, #0f0f23 0%, #1a1a36 100%);
+  --gradient-primary: linear-gradient(135deg, #2D5A3D 0%, #3D7A53 50%, #4D8A63 100%);
+  --gradient-header: linear-gradient(135deg, #B5C9B1 0%, #8FB58B 100%);
+  --gradient-sidebar: linear-gradient(180deg, #E8EDE8 0%, #F0F4F0 100%);
 
   /* 圆角 */
   --radius-sm: 8px;
@@ -48,8 +65,8 @@
 
   /* 国家主题色 */
   --usa: #1e40af;
-  --mexico: #166534;
-  --canada: #dc2626;
+  --mexico: #2D5A3D;
+  --canada: #D88A8A;
 }
 
 @theme inline {
@@ -69,50 +86,56 @@ body {
 }
 
 /* ============================================
-   Header 样式 - Designali 风格
+   Header 样式 - 倒圆角矩形风格 (Squircle / Soft UI)
    ============================================ */
 .header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 12px;
+  left: 12px;
+  right: 12px;
   z-index: 1000;
   height: 64px;
-  background: var(--card-bg);
+  background: var(--sidebar-bg-light);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1.5rem;
-  border-bottom: 1px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
+  /* 倒圆角效果 - 使用较大的圆角模拟内凹效果 */
+  border-radius: 24px;
+  /* 软阴影 - 内外双层阴影营造立体感 */
+  box-shadow:
+    8px 8px 16px rgba(45, 90, 61, 0.12),
+    -8px -8px 16px rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  border: none;
 }
 
 .header-brand {
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  background: var(--sidebar-bg);
-  padding: 0.5rem 1.25rem;
-  border-radius: var(--radius-lg);
-  margin-left: -0.5rem;
+  background: transparent;
+  padding: 0.5rem 0;
+  border-radius: 0;
+  margin-left: 0;
 }
 
 .header-logo {
   font-size: 1.75rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .header-title h1 {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--text-light);
+  color: var(--text-primary);
   letter-spacing: -0.3px;
 }
 
 .header-subtitle {
   font-size: 0.65rem;
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -276,30 +299,43 @@ body {
 .content-wrapper {
   display: flex;
   flex: 1;
-  margin-top: 64px;
-  height: calc(100vh - 64px);
+  margin-top: 88px;
+  /* 增加顶部间距以适应浮动 header */
+  height: calc(100vh - 88px);
+  padding: 12px;
+  gap: 12px;
 }
 
 .map-container {
   flex: 1;
   height: 100%;
   min-width: 0;
-  background: #e8eef5;
-  border-radius: var(--radius-lg);
-  margin: 1rem;
+  background: var(--accent-light);
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  /* 倒圆角矩形阴影 */
+  box-shadow:
+    8px 8px 16px rgba(45, 90, 61, 0.12),
+    -8px -8px 16px rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
 /* ============================================
-   侧边栏样式 - Designali 深色风格
+   侧边栏样式 - 倒圆角矩形风格 (Squircle / Soft UI)
    ============================================ */
 .sidebar {
   width: 340px;
   height: 100%;
-  background: var(--gradient-sidebar);
+  background: var(--sidebar-bg-light);
   overflow-y: auto;
   flex-shrink: 0;
+  /* 倒圆角效果 */
+  border-radius: 24px;
+  /* 软阴影 */
+  box-shadow:
+    8px 8px 16px rgba(45, 90, 61, 0.12),
+    -8px -8px 16px rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
 .sidebar-placeholder {
@@ -308,7 +344,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
   text-align: center;
   padding: 2rem;
 }
@@ -316,8 +352,8 @@ body {
 .sidebar-placeholder-icon {
   font-size: 3.5rem;
   margin-bottom: 1.25rem;
-  opacity: 0.7;
-  background: linear-gradient(135deg, var(--primary), #a855f7);
+  opacity: 0.85;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -326,25 +362,31 @@ body {
 .sidebar-placeholder p {
   margin: 0.25rem 0;
   font-size: 0.9rem;
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
 }
 
 .sidebar-placeholder p:first-of-type {
   font-weight: 600;
-  color: var(--text-light);
+  color: var(--text-primary);
 }
 
-/* 侧边栏头部 - 渐变横幅 */
+/* 侧边栏头部 - 倒圆角内嵌风格 */
 .sidebar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem;
-  background: var(--gradient-primary);
-  color: white;
+  padding: 1rem 1.25rem;
+  margin: 12px;
+  background: var(--accent);
+  color: var(--text-primary);
   position: sticky;
-  top: 0;
+  top: 12px;
   z-index: 10;
+  /* 内嵌倒圆角效果 */
+  border-radius: 16px;
+  box-shadow:
+    inset 4px 4px 8px rgba(45, 90, 61, 0.15),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
 }
 
 .sidebar-title {
@@ -361,57 +403,69 @@ body {
   margin: 0;
   font-size: 1.2rem;
   font-weight: 700;
+  color: var(--text-primary);
 }
 
 .sidebar-close {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--sidebar-bg-light);
   border: none;
-  color: white;
+  color: var(--text-secondary);
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  backdrop-filter: blur(4px);
+  /* 凸起按钮效果 */
+  box-shadow:
+    3px 3px 6px rgba(45, 90, 61, 0.15),
+    -3px -3px 6px rgba(255, 255, 255, 0.9);
 }
 
 .sidebar-close:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.05);
+  background: var(--accent-light);
+  color: var(--primary);
+  box-shadow:
+    inset 2px 2px 4px rgba(45, 90, 61, 0.12),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.8);
 }
 
 /* 场馆信息区 */
 .sidebar-venue {
-  padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--border-dark);
+  padding: 1rem 1.25rem;
+  margin: 0 12px;
+  background: var(--accent-light);
+  border-radius: 12px;
+  box-shadow:
+    inset 2px 2px 4px rgba(45, 90, 61, 0.08),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.6);
 }
 
 .sidebar-venue .venue-name {
-  color: var(--text-light);
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 0.95rem;
 }
 
 .sidebar-venue .venue-capacity {
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   margin-top: 0.25rem;
 }
 
 /* 比赛列表区 */
 .sidebar-matches {
-  padding: 1.25rem 1.5rem 1.5rem;
+  padding: 1rem 12px 1.5rem;
 }
 
 .sidebar-matches h3 {
   margin: 0 0 1rem;
+  padding: 0 4px;
   font-size: 0.8rem;
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -421,45 +475,47 @@ body {
   gap: 0.75rem;
 }
 
-/* 比赛卡片 - 现代卡片风格 */
+/* 比赛卡片 - 倒圆角凸起卡片风格 */
 .sidebar-matches .match-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
+  background: var(--sidebar-bg-light);
+  border: none;
+  border-radius: 16px;
   padding: 1rem;
   transition: all 0.25s ease;
+  /* 凸起卡片阴影 */
+  box-shadow:
+    4px 4px 8px rgba(45, 90, 61, 0.1),
+    -4px -4px 8px rgba(255, 255, 255, 0.9);
 }
 
 .sidebar-matches .match-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(99, 102, 241, 0.3);
+  background: var(--accent-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    6px 6px 12px rgba(45, 90, 61, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.95);
 }
 
 .sidebar-matches .team-name {
-  color: var(--text-light);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .sidebar-matches .match-date {
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
 }
 
 .sidebar-matches .no-matches {
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
   text-align: center;
   padding: 2rem;
 }
 
-/* 右侧边栏（球队日程） */
-.sidebar-right {
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
-}
+/* 右侧边栏（球队日程） - 继承倒圆角风格，与左侧边栏使用相同的阴影效果 */
 
 .sidebar-subtitle {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   font-weight: 400;
   display: block;
   margin-top: 0.2rem;
@@ -472,7 +528,7 @@ body {
   align-items: center;
   margin-bottom: 0.625rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .schedule-item .match-number {
@@ -485,7 +541,7 @@ body {
 
 .schedule-item .match-venue {
   font-size: 0.7rem;
-  color: var(--text-light-muted);
+  color: var(--text-secondary);
 }
 
 .sidebar-matches .highlight-team .team-name {
@@ -889,10 +945,12 @@ body {
   }
 
   .content-wrapper {
-    margin-top: 110px;
-    height: calc(100vh - 110px);
+    margin-top: 120px;
+    height: calc(100vh - 120px);
     flex-direction: column;
     overflow: hidden;
+    padding: 8px;
+    gap: 8px;
   }
 
   .sidebar {
@@ -901,6 +959,7 @@ body {
     max-height: 30vh;
     order: 2;
     flex-shrink: 1;
+    border-radius: 20px;
   }
 
   .map-container {
@@ -909,8 +968,7 @@ body {
     height: auto;
     flex: 1;
     order: 1;
-    margin: 0.5rem 0.5rem 0;
-    border-radius: var(--radius-md);
+    border-radius: 20px;
   }
 
   /* 右侧侧边栏放在最下面 */
@@ -923,15 +981,18 @@ body {
   .content-wrapper {
     flex-direction: column;
     overflow: hidden;
+    padding: 8px;
+    gap: 8px;
   }
 
   .sidebar {
     width: 100%;
     height: auto;
-    max-height: calc(66.67vh - 110px);
+    max-height: calc(66.67vh - 130px);
     /* 确保侧边栏最多占 2/3 减去 header 高度 */
     order: 2;
     flex-shrink: 1;
+    border-radius: 16px;
   }
 
   .map-container {
@@ -940,8 +1001,7 @@ body {
     height: auto;
     flex: 1;
     order: 1;
-    margin: 0.5rem 0.5rem 0;
-    border-radius: var(--radius-md);
+    border-radius: 16px;
   }
 
   .sidebar-placeholder {
@@ -955,7 +1015,7 @@ body {
 
   /* 当两个侧边栏同时显示时，确保地图仍有足够空间 */
   .sidebar+.map-container+.sidebar {
-    max-height: calc(33.33vh - 55px);
+    max-height: calc(33.33vh - 65px);
     /* 每个侧边栏最多占约 1/3 减去部分 header */
   }
 }
@@ -985,7 +1045,7 @@ body {
 /* 路径发光效果 */
 .flight-path-glow {
   fill: none;
-  stroke: rgba(245, 158, 11, 0.3);
+  stroke: rgba(45, 90, 61, 0.25);
   stroke-width: 12;
   stroke-linecap: round;
   filter: blur(4px);
