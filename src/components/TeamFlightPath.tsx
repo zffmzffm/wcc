@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { CircleMarker, Popup, useMap } from 'react-leaflet';
 import { Match, Team } from './CityPopup';
 import { City } from './CityMarker';
+import FlagIcon from './FlagIcon';
 import { LatLngTuple } from 'leaflet';
 
 interface TeamFlightPathProps {
@@ -42,10 +43,10 @@ const formatDateTime = (datetime: string): { date: string; time: string } => {
 };
 
 // 获取对手球队信息
-const getOpponent = (match: Match, teamCode: string, teams: Team[]): { name: string; flag: string } => {
+const getOpponent = (match: Match, teamCode: string, teams: Team[]): { name: string; code: string } => {
     const opponentCode = match.team1 === teamCode ? match.team2 : match.team1;
     const team = teams.find(t => t.code === opponentCode);
-    return team ? { name: team.name, flag: team.flag } : { name: opponentCode, flag: '🏳️' };
+    return team ? { name: team.name, code: team.code } : { name: opponentCode, code: opponentCode };
 };
 
 // 生成弧形路径的SVG path
@@ -450,12 +451,12 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                                 </div>
                                 <div className="flight-popup-teams">
                                     <span className="team-info">
-                                        <span className="team-flag">{currentTeam?.flag}</span>
+                                        <FlagIcon code={currentTeam?.code || teamCode} size={18} />
                                         <span className="team-name">{currentTeam?.name}</span>
                                     </span>
                                     <span className="vs">VS</span>
                                     <span className="team-info">
-                                        <span className="team-flag">{opponent.flag}</span>
+                                        <FlagIcon code={opponent.code} size={18} />
                                         <span className="team-name">{opponent.name}</span>
                                     </span>
                                 </div>

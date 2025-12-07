@@ -3,10 +3,14 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
-import { Team } from '@/components/CityPopup';
+import CitySidebar from '@/components/CitySidebar';
+import { Team, Match } from '@/components/CityPopup';
+import { City } from '@/components/CityMarker';
 import teamsData from '@/data/teams.json';
+import matchesData from '@/data/matches.json';
 
 const teams: Team[] = teamsData as Team[];
+const matches: Match[] = matchesData as Match[];
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
   ssr: false, // Leaflet 不支持 SSR
@@ -20,21 +24,21 @@ const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
 
 export default function Home() {
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
 
   // 获取选中球队的信息
   const selectedTeamInfo = selectedTeam
     ? teams.find(t => t.code === selectedTeam)
     : null;
 
+  // 获取选中城市的比赛
+  const cityMatches = selectedCity
+    ? matches.filter(m => m.cityId === selectedCity.id)
+    : [];
+
   return (
     <main className="main-container">
-      <Header
-        selectedTeam={selectedTeamInfo ? {
-          name: selectedTeamInfo.name,
-          flag: selectedTeamInfo.flag,
-          group: selectedTeamInfo.group
-        } : null}
-      >
+      <Header>
         <TeamSelector
           teams={teams}
           selectedTeam={selectedTeam}
@@ -42,8 +46,19 @@ export default function Home() {
         />
       </Header>
 
-      <div className="map-container">
-        <WorldCupMap selectedTeam={selectedTeam} />
+      <div className="content-wrapper">
+        <CitySidebar
+          city={selectedCity}
+          matches={cityMatches}
+          teams={teams}
+          onClose={() => setSelectedCity(null)}
+        />
+        <div className="map-container">
+          <WorldCupMap
+            selectedTeam={selectedTeam}
+            onCitySelect={setSelectedCity}
+          />
+        </div>
       </div>
     </main>
   );

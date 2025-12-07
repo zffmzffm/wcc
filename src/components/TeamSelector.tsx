@@ -1,5 +1,6 @@
 'use client';
 import { Team } from './CityPopup';
+import FlagIcon from './FlagIcon';
 
 interface TeamSelectorProps {
     teams: Team[];
@@ -28,32 +29,45 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
         onSelect(value === '' ? null : value);
     };
 
+    // 获取当前选中球队的信息
+    const selectedTeamInfo = selectedTeam ? teams.find(t => t.code === selectedTeam) : null;
+
     return (
         <div className="team-selector">
-            <select
-                value={selectedTeam || ''}
-                onChange={handleChange}
-                className="team-select"
-            >
-                <option value="">🌍 选择球队查看行程</option>
-                {sortedGroups.map(group => (
-                    <optgroup key={group} label={`小组 ${group}`}>
-                        {groupedTeams[group].map(team => (
-                            <option key={team.code} value={team.code}>
-                                {team.flag} {team.name}
-                            </option>
-                        ))}
-                    </optgroup>
-                ))}
-            </select>
-            {selectedTeam && (
-                <button
-                    className="clear-selection"
-                    onClick={() => onSelect(null)}
-                    aria-label="清除选择"
+            <div className="team-select-wrapper">
+                {selectedTeamInfo && (
+                    <span className="select-flag">
+                        <FlagIcon code={selectedTeamInfo.code} size={18} />
+                    </span>
+                )}
+                <select
+                    value={selectedTeam || ''}
+                    onChange={handleChange}
+                    className="team-select"
                 >
-                    ✕
-                </button>
+                    <option value="">🌍 选择球队查看行程</option>
+                    {sortedGroups.map(group => (
+                        <optgroup key={group} label={`小组 ${group}`}>
+                            {groupedTeams[group].map(team => (
+                                <option key={team.code} value={team.code}>
+                                    {team.name}
+                                </option>
+                            ))}
+                        </optgroup>
+                    ))}
+                </select>
+            </div>
+            {selectedTeamInfo && (
+                <>
+                    <button
+                        className="clear-selection"
+                        onClick={() => onSelect(null)}
+                        aria-label="清除选择"
+                    >
+                        ✕
+                    </button>
+                    <span className="team-group-badge">小组 {selectedTeamInfo.group}</span>
+                </>
             )}
         </div>
     );

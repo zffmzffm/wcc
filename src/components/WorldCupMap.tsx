@@ -1,11 +1,10 @@
 'use client';
-import { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import CityMarker, { City } from './CityMarker';
-import CityPopup, { Match, Team } from './CityPopup';
+import { Match, Team } from './CityPopup';
 import TeamFlightPath from './TeamFlightPath';
 
 import citiesData from '@/data/cities.json';
@@ -26,73 +25,47 @@ export const teams: Team[] = teamsData as Team[];
 
 interface WorldCupMapProps {
     selectedTeam: string | null;
+    onCitySelect: (city: City | null) => void;
 }
 
-export default function WorldCupMap({ selectedTeam }: WorldCupMapProps) {
-    const [selectedCity, setSelectedCity] = useState<City | null>(null);
-
-    const handleCityClick = (city: City) => {
-        setSelectedCity(city);
-    };
-
-    const handleClosePopup = () => {
-        setSelectedCity(null);
-    };
-
-    // 获取选中城市的比赛
-    const cityMatches = selectedCity
-        ? matches.filter(m => m.cityId === selectedCity.id)
-        : [];
-
+export default function WorldCupMap({ selectedTeam, onCitySelect }: WorldCupMapProps) {
     return (
-        <>
-            <MapContainer
-                center={[39.8283, -98.5795]} // 北美中心点
-                zoom={4}
-                style={{ height: '100vh', width: '100%' }}
-                zoomControl={true}
-                minZoom={4}
-                maxZoom={10}
-                maxBounds={[
-                    [18, -126], // 西南角
-                    [50, -70]   // 东北角
-                ]}
-                maxBoundsViscosity={1.0} // 完全限制在边界内
-            >
-                <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                    attribution='&copy; OpenStreetMap, &copy; CartoDB'
+        <MapContainer
+            center={[39.8283, -98.5795]} // 北美中心点
+            zoom={4}
+            style={{ height: '100%', width: '100%' }}
+            zoomControl={true}
+            minZoom={4}
+            maxZoom={10}
+            maxBounds={[
+                [18, -126], // 西南角
+                [50, -70]   // 东北角
+            ]}
+            maxBoundsViscosity={1.0} // 完全限制在边界内
+        >
+            <TileLayer
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution='&copy; OpenStreetMap, &copy; CartoDB'
+            />
+
+            {/* 城市标记 */}
+            {cities.map(city => (
+                <CityMarker
+                    key={city.id}
+                    city={city}
+                    onClick={() => onCitySelect(city)}
                 />
+            ))}
 
-                {/* 城市标记 */}
-                {cities.map(city => (
-                    <CityMarker
-                        key={city.id}
-                        city={city}
-                        onClick={() => handleCityClick(city)}
-                    />
-                ))}
-
-                {/* 球队飞行路线 */}
-                {selectedTeam && (
-                    <TeamFlightPath
-                        teamCode={selectedTeam}
-                        matches={matches}
-                        cities={cities}
-                        teams={teams}
-                    />
-                )}
-            </MapContainer>
-
-            {/* 城市弹窗 */}
-            {selectedCity && (
-                <CityPopup
-                    city={selectedCity}
-                    matches={cityMatches}
+            {/* 球队飞行路线 */}
+            {selectedTeam && (
+                <TeamFlightPath
+                    teamCode={selectedTeam}
+                    matches={matches}
+                    cities={cities}
                     teams={teams}
-                    onClose={handleClosePopup}
                 />
             )}
-        </>
+        </MapContainer>
     );
 }
