@@ -122,10 +122,17 @@
     cursor: pointer;
     width: 180px;
     transition: all 0.2s ease;
+    /* Chrome 142 兼容性修复：使用完整的浏览器前缀 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
+    /* 额外的 Chrome 兼容性修复 */
+    text-indent: 0.01px;
+    text-overflow: '';
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
+    background-size: 16px 16px;
     padding-right: 36px;
     font-weight: 500;
 }
