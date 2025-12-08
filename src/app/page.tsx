@@ -100,7 +100,10 @@ export default function Home() {
         <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
           <WorldCupMap
             selectedTeam={selectedTeam}
+            selectedCity={selectedCity}
             onCitySelect={handleCitySelect}
+            isSidebarOpen={!!selectedCity || !!selectedTeam}
+            isMobile={isMobile}
           />
         </div>
         <TeamScheduleSidebar
