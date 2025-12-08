@@ -1,8 +1,9 @@
 'use client';
-import { useState, useEffect, useMemo, useRef, useCallback, memo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { CircleMarker, Popup, useMap } from 'react-leaflet';
 import { Match, Team, City, MatchWithCoords, FlightSegment } from '@/types';
-import { formatDateTimeShort, getTeamDisplay } from '@/utils/formatters';
+import { formatDateTimeShort } from '@/utils/formatters';
+import { generateArcPath, generateChevronPath, generateLoopPath, generateLoopChevronPath } from '@/utils/pathGenerators';
 import FlagIcon from './FlagIcon';
 import { LatLngTuple } from 'leaflet';
 
@@ -18,215 +19,6 @@ const getOpponent = (match: Match, teamCode: string, teams: Team[]): { name: str
     const opponentCode = match.team1 === teamCode ? match.team2 : match.team1;
     const team = teams.find(t => t.code === opponentCode);
     return team ? { name: team.name, code: team.code } : { name: opponentCode, code: opponentCode };
-};
-
-// Generate arc path SVG
-// curvature > 0: bend right (relative to start-to-end direction)
-// curvature < 0: bend left
-const generateArcPath = (
-    startPixel: { x: number; y: number },
-    endPixel: { x: number; y: number },
-    curvature: number = 0.3
-): string => {
-    const dx = endPixel.x - startPixel.x;
-    const dy = endPixel.y - startPixel.y;
-
-    // Midpoint
-    const midX = (startPixel.x + endPixel.x) / 2;
-    const midY = (startPixel.y + endPixel.y) / 2;
-
-    // Distance
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance < 1) {
-        // Points too close, return straight line
-        return `M ${startPixel.x} ${startPixel.y} L ${endPixel.x} ${endPixel.y}`;
-    }
-
-    // Offset (using absolute curvature ratio)
-    const offset = distance * Math.abs(curvature);
-
-    // Perpendicular vector (always use consistent direction: positive is right, negative is left)
-    // Curvature sign controls bend direction
-    const sign = curvature >= 0 ? 1 : -1;
-    const perpX = (-dy / distance) * sign;
-    const perpY = (dx / distance) * sign;
-
-    // Control point
-    const controlX = midX + perpX * offset;
-    const controlY = midY + perpY * offset;
-
-    return `M ${startPixel.x} ${startPixel.y} Q ${controlX} ${controlY} ${endPixel.x} ${endPixel.y}`;
-};
-
-// Generate arc path with multiple points for chevron arrows display
-// Sample Bezier curve into multiple segments so marker-mid can display at each node
-const generateChevronPath = (
-    startPixel: { x: number; y: number },
-    endPixel: { x: number; y: number },
-    curvature: number = 0.3,
-    segmentLength: number = 20 // Spacing between arrows (pixels)
-): string => {
-    const dx = endPixel.x - startPixel.x;
-    const dy = endPixel.y - startPixel.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance < 1) {
-        return `M ${startPixel.x} ${startPixel.y} L ${endPixel.x} ${endPixel.y}`;
-    }
-
-    // Calculate control point
-    const midX = (startPixel.x + endPixel.x) / 2;
-    const midY = (startPixel.y + endPixel.y) / 2;
-    const offset = distance * Math.abs(curvature);
-    const sign = curvature >= 0 ? 1 : -1;
-    const perpX = (-dy / distance) * sign;
-    const perpY = (dx / distance) * sign;
-    const controlX = midX + perpX * offset;
-    const controlY = midY + perpY * offset;
-
-    // Determine sample count based on path length
-    const numSegments = Math.max(3, Math.floor(distance / segmentLength));
-
-    // Sample points on Bezier curve
-    const points: { x: number; y: number }[] = [];
-    for (let i = 0; i <= numSegments; i++) {
-        const t = i / numSegments;
-        // Quadratic Bezier curve formula: B(t) = (1-t)²P₀ + 2(1-t)tP₁ + t²P₂
-        const x = (1 - t) * (1 - t) * startPixel.x + 2 * (1 - t) * t * controlX + t * t * endPixel.x;
-        const y = (1 - t) * (1 - t) * startPixel.y + 2 * (1 - t) * t * controlY + t * t * endPixel.y;
-        points.push({ x, y });
-    }
-
-    // Generate multi-segment path
-    let path = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 1; i < points.length; i++) {
-        path += ` L ${points[i].x} ${points[i].y}`;
-    }
-
-    return path;
-};
-
-// Generate small loop path for same-city matches
-const generateLoopPath = (
-    centerPixel: { x: number; y: number },
-    radius: number = 25
-): string => {
-    // Start from upper right, draw small arc back to near starting point
-    const startX = centerPixel.x + radius * 0.7;
-    const startY = centerPixel.y - radius * 0.7;
-
-    // Control points above
-    const ctrl1X = centerPixel.x + radius * 1.5;
-    const ctrl1Y = centerPixel.y - radius * 1.8;
-    const ctrl2X = centerPixel.x - radius * 1.5;
-    const ctrl2Y = centerPixel.y - radius * 1.8;
-
-    // End point at upper left
-    const endX = centerPixel.x - radius * 0.7;
-    const endY = centerPixel.y - radius * 0.7;
-
-    return `M ${startX} ${startY} C ${ctrl1X} ${ctrl1Y} ${ctrl2X} ${ctrl2Y} ${endX} ${endY}`;
-};
-
-// Generate loop path with sample points - for chevron arrows display
-const generateLoopChevronPath = (
-    centerPixel: { x: number; y: number },
-    radius: number = 25,
-    segmentLength: number = 12
-): string => {
-    const startX = centerPixel.x + radius * 0.7;
-    const startY = centerPixel.y - radius * 0.7;
-    const ctrl1X = centerPixel.x + radius * 1.5;
-    const ctrl1Y = centerPixel.y - radius * 1.8;
-    const ctrl2X = centerPixel.x - radius * 1.5;
-    const ctrl2Y = centerPixel.y - radius * 1.8;
-    const endX = centerPixel.x - radius * 0.7;
-    const endY = centerPixel.y - radius * 0.7;
-
-    // Estimate curve length
-    const approxLength = Math.sqrt(
-        Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)
-    ) * 1.5;
-    const numSegments = Math.max(4, Math.floor(approxLength / segmentLength));
-
-    // Sample points on cubic Bezier curve
-    const points: { x: number; y: number }[] = [];
-    for (let i = 0; i <= numSegments; i++) {
-        const t = i / numSegments;
-        // Cubic Bezier curve formula
-        const x = Math.pow(1 - t, 3) * startX +
-            3 * Math.pow(1 - t, 2) * t * ctrl1X +
-            3 * (1 - t) * Math.pow(t, 2) * ctrl2X +
-            Math.pow(t, 3) * endX;
-        const y = Math.pow(1 - t, 3) * startY +
-            3 * Math.pow(1 - t, 2) * t * ctrl1Y +
-            3 * (1 - t) * Math.pow(t, 2) * ctrl2Y +
-            Math.pow(t, 3) * endY;
-        points.push({ x, y });
-    }
-
-    // Generate multi-segment path
-    let path = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 1; i < points.length; i++) {
-        path += ` L ${points[i].x} ${points[i].y}`;
-    }
-
-    return path;
-};
-
-// Calculate arrow position for loop path
-const getLoopArrowTransform = (
-    centerPixel: { x: number; y: number },
-    radius: number = 25
-): { x: number; y: number; angle: number } => {
-    // Arrow at upper left of arc, pointing lower left
-    return {
-        x: centerPixel.x - radius * 0.5,
-        y: centerPixel.y - radius * 1.5,
-        angle: -135 // Point lower left
-    };
-};
-
-// Calculate arrow position and angle
-const getArrowTransform = (
-    startPixel: { x: number; y: number },
-    endPixel: { x: number; y: number },
-    curvature: number = 0.3
-): { x: number; y: number; angle: number } => {
-    const dx = endPixel.x - startPixel.x;
-    const dy = endPixel.y - startPixel.y;
-
-    const midX = (startPixel.x + endPixel.x) / 2;
-    const midY = (startPixel.y + endPixel.y) / 2;
-
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance < 1) {
-        return { x: midX, y: midY, angle: Math.atan2(dy, dx) * 180 / Math.PI };
-    }
-
-    // Use same logic as generateArcPath
-    const offset = distance * Math.abs(curvature);
-    const sign = curvature >= 0 ? 1 : -1;
-    const perpX = (-dy / distance) * sign;
-    const perpY = (dx / distance) * sign;
-
-    const controlX = midX + perpX * offset;
-    const controlY = midY + perpY * offset;
-
-    // Curve midpoint (Bezier curve point at t=0.5)
-    const t = 0.5;
-    const x = (1 - t) * (1 - t) * startPixel.x + 2 * (1 - t) * t * controlX + t * t * endPixel.x;
-    const y = (1 - t) * (1 - t) * startPixel.y + 2 * (1 - t) * t * controlY + t * t * endPixel.y;
-
-    // Calculate tangent direction (derivative of Bezier curve at point t)
-    const tangentX = 2 * (1 - t) * (controlX - startPixel.x) + 2 * t * (endPixel.x - controlX);
-    const tangentY = 2 * (1 - t) * (controlY - startPixel.y) + 2 * t * (endPixel.y - controlY);
-
-    const angle = Math.atan2(tangentY, tangentX) * 180 / Math.PI;
-
-    return { x, y, angle };
 };
 
 
@@ -307,9 +99,9 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
         animationKeyRef.current += 1;
         setRenderedSegments([]);
         setRenderedMarkers([]);
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional: reset state when teamCode prop changes
         setVisibleCount(0);
     }, [teamCode]);
+
 
     // Adjust map view
     useEffect(() => {

@@ -44,5 +44,3 @@ export default function CityMarker({ city, onClick }: CityMarkerProps) {
     );
 }
 
-// Re-export City type for backward compatibility
-export type { City } from '@/types';

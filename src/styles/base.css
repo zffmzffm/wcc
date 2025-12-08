@@ -1,0 +1,218 @@
+/* ============================================
+   Base Styles - Variables, Reset, Typography
+   ============================================ */
+
+:root {
+    /* Primary color palette - Three-color scheme */
+    --primary: #2D5A3D;
+    /* Deep green - Primary color */
+    --primary-dark: #1E4530;
+    /* Darker green */
+    --primary-light: #3D7A53;
+    /* Lighter deep green */
+    --secondary: #D88A8A;
+    /* Dark red/coral - Accent color */
+    --secondary-light: #E5A5A5;
+    /* Light coral */
+    --accent: #B5C9B1;
+    /* Light green/sage green - Secondary accent */
+    --accent-light: #D0DFCd;
+    /* Lighter green */
+
+    /* Background colors */
+    --background: #F5F7F5;
+    /* Light gray with green tint */
+    --foreground: #2D3A2D;
+    /* Dark gray with green tint */
+    --sidebar-bg: #E8EDE8;
+    /* Light gray-green background */
+    --sidebar-bg-light: #F0F4F0;
+    /* Lighter gray-green */
+    --card-bg: #ffffff;
+
+    /* Text colors */
+    --text-primary: #2D3A2D;
+    /* Dark gray with green tint */
+    --text-secondary: #5A6B5A;
+    /* Medium gray with green tint */
+    --text-muted: #8A9B8A;
+    /* Light gray with green tint */
+    --text-light: rgba(255, 255, 255, 0.95);
+    --text-light-muted: rgba(255, 255, 255, 0.7);
+
+    /* Borders and shadows */
+    --border-light: #D0DFCd;
+    /* Light green border */
+    --border-dark: rgba(45, 90, 61, 0.15);
+    --shadow-sm: 0 1px 2px rgba(45, 90, 61, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(45, 90, 61, 0.12);
+    --shadow-lg: 0 10px 25px -5px rgba(45, 90, 61, 0.15);
+    --shadow-card: 0 2px 8px rgba(45, 90, 61, 0.1);
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #2D5A3D 0%, #3D7A53 50%, #4D8A63 100%);
+    --gradient-header: linear-gradient(135deg, #B5C9B1 0%, #8FB58B 100%);
+    --gradient-sidebar: linear-gradient(180deg, #E8EDE8 0%, #F0F4F0 100%);
+
+    /* Border radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    /* Country theme colors */
+    --usa: #1e40af;
+    --mexico: #2D5A3D;
+    --canada: #D88A8A;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+/* Main Container Styles */
+.main-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--background);
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    margin-top: 88px;
+    height: calc(100vh - 88px);
+    padding: 12px;
+    gap: 12px;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading State Styles */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: var(--gradient-sidebar);
+    color: white;
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+/* Scrollbar Styles */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Accessibility Styles */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 9999;
+    background: var(--primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 0 var(--radius-md) 0;
+    font-weight: 600;
+    text-decoration: none;
+    transition: left 0.2s ease;
+}
+
+.skip-link:focus {
+    left: 0;
+}
+
+/* Visually hidden but accessible to screen readers */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Enhanced focus indicators */
+:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+select:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 2px;
+}

@@ -32,12 +32,6 @@ const timezones = [
     { value: 'Pacific/Auckland', label: 'New Zealand (NZST, UTC+12)', offset: '+12' },
 ];
 
-// Get timezone display name
-const getTimezoneLabel = (value: string): string => {
-    const tz = timezones.find(t => t.value === value);
-    return tz ? tz.label : value;
-};
-
 export default function TimezoneSelector({ selectedTimezone, onSelect }: TimezoneSelectorProps) {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
@@ -107,4 +101,5 @@ export default function TimezoneSelector({ selectedTimezone, onSelect }: Timezon
     );
 }
 
-export { timezones, getTimezoneLabel };
+export { timezones };
+

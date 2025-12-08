@@ -5,11 +5,8 @@ import 'leaflet/dist/leaflet.css';
 
 import CityMarker from './CityMarker';
 import TeamFlightPath from './TeamFlightPath';
-import { City, Match, Team } from '@/types';
-
-import citiesData from '@/data/cities.json';
-import matchesData from '@/data/matches.json';
-import teamsData from '@/data/teams.json';
+import { City } from '@/types';
+import { cities, matches, teams } from '@/data';
 
 // Fix Leaflet default icon path issue
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: () => void })._getIconUrl;
@@ -19,9 +16,6 @@ L.Icon.Default.mergeOptions({
     shadowUrl: '/marker-shadow.png',
 });
 
-export const cities: City[] = citiesData as City[];
-export const matches: Match[] = matchesData as Match[];
-export const teams: Team[] = teamsData as Team[];
 
 interface WorldCupMapProps {
     selectedTeam: string | null;

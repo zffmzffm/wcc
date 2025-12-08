@@ -1,0 +1,213 @@
+/* ============================================
+   Header and Navigation Component Styles
+   ============================================ */
+.header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 1000;
+    height: 64px;
+    background: var(--sidebar-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    /* Squircle effect */
+    border-radius: 24px;
+    /* Soft shadow - inner and outer shadows for 3D effect */
+    box-shadow:
+        8px 8px 16px rgba(45, 90, 61, 0.12),
+        -8px -8px 16px rgba(255, 255, 255, 0.9),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    border: none;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    background: transparent;
+    padding: 0.5rem 0;
+    border-radius: 0;
+    margin-left: 0;
+}
+
+.header-logo {
+    font-size: 1.75rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.header-title h1 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+.header-subtitle {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-team-info {
+    display: flex;
+    align-items: center;
+}
+
+/* Team Badge Styles */
+.team-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--gradient-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+    animation: fadeIn 0.3s ease;
+}
+
+.badge-flag {
+    font-size: 1.2rem;
+}
+
+.badge-group {
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-full);
+}
+
+.team-group-badge {
+    background: var(--gradient-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    animation: fadeIn 0.3s ease;
+}
+
+/* ============================================
+   Select/Dropdown Common Styles
+   ============================================ */
+.team-selector,
+.timezone-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.team-select,
+.timezone-select {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+    width: 180px;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    font-weight: 500;
+}
+
+.team-select:hover,
+.timezone-select:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.team-select:focus,
+.timezone-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.team-select option,
+.timezone-select option {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 8px;
+}
+
+.team-select optgroup,
+.timezone-select optgroup {
+    background: var(--background);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.team-select-wrapper,
+.timezone-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.select-flag,
+.select-icon {
+    position: absolute;
+    left: 12px;
+    z-index: 1;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.select-icon {
+    font-size: 1rem;
+}
+
+.team-select-wrapper .team-select,
+.timezone-select-wrapper .timezone-select {
+    padding-left: 40px;
+}
+
+/* Clear Selection Button */
+.clear-selection {
+    background: var(--background);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.clear-selection:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+/* Flag icon styles */
+.flag-icon {
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+}

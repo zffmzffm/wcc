@@ -1,7 +1,9 @@
 'use client';
+import { useMemo } from 'react';
 import { City, Match, Team } from '@/types';
-import { formatDateTimeWithTimezone, getTeamDisplay, getCountryCode } from '@/utils/formatters';
+import { getCountryCode } from '@/utils/formatters';
 import FlagIcon from './FlagIcon';
+import MatchItem from './MatchItem';
 import Image from 'next/image';
 
 // Map city IDs to venue images (when available)
@@ -33,6 +35,13 @@ interface CitySidebarProps {
 }
 
 export default function CitySidebar({ city, matches, teams, timezone, onClose }: CitySidebarProps) {
+    // Memoize sorted matches to avoid re-sorting on every render
+    const sortedMatches = useMemo(() => {
+        return [...matches].sort((a, b) =>
+            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+        );
+    }, [matches]);
+
     if (!city) {
         return (
             <aside className="sidebar" role="complementary" aria-label="City Information">
@@ -81,43 +90,22 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
             </div>
             {/* Matches List */}
             <div className="sidebar-matches">
-                {matches.length === 0 ? (
+                {sortedMatches.length === 0 ? (
                     <p className="no-matches">No match data available</p>
                 ) : (
                     <ul className="match-list" role="list">
-                        {[...matches].sort((a, b) =>
-                            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-                        ).map(match => {
-                            const team1 = getTeamDisplay(match.team1, teams);
-                            const team2 = getTeamDisplay(match.team2, teams);
-                            const { date, time } = formatDateTimeWithTimezone(match.datetime, timezone);
-
-                            return (
-                                <li key={match.id} className="match-item" role="listitem">
-                                    <div className="match-header">
-                                        <span className="match-group">Group {match.group}</span>
-                                        <span className="match-datetime">
-                                            <span className="match-date">{date}</span>
-                                            <span className="match-time">{time}</span>
-                                        </span>
-                                    </div>
-                                    <div className="match-teams">
-                                        <span className="team">
-                                            <FlagIcon code={team1.code} size={20} />
-                                            <span className="team-name">{team1.name}</span>
-                                        </span>
-                                        <span className="vs">VS</span>
-                                        <span className="team">
-                                            <FlagIcon code={team2.code} size={20} />
-                                            <span className="team-name">{team2.name}</span>
-                                        </span>
-                                    </div>
-                                </li>
-                            );
-                        })}
+                        {sortedMatches.map(match => (
+                            <MatchItem
+                                key={match.id}
+                                match={match}
+                                teams={teams}
+                                timezone={timezone}
+                            />
+                        ))}
                     </ul>
                 )}
             </div>
         </aside>
     );
 }
+

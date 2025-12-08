@@ -6,14 +6,9 @@ import TeamSelector from '@/components/TeamSelector';
 import TimezoneSelector from '@/components/TimezoneSelector';
 import CitySidebar from '@/components/CitySidebar';
 import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
-import { Team, Match, City } from '@/types';
-import teamsData from '@/data/teams.json';
-import matchesData from '@/data/matches.json';
-import citiesData from '@/data/cities.json';
+import { City } from '@/types';
+import { teams, matches, cities } from '@/data';
 
-const teams: Team[] = teamsData as Team[];
-const matches: Match[] = matchesData as Match[];
-const cities: City[] = citiesData as City[];
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
   ssr: false, // Leaflet doesn't support SSR
@@ -78,6 +73,10 @@ export default function Home() {
 
   return (
     <main className="main-container">
+      {/* Skip navigation link for keyboard users */}
+      <a href="#main-map" className="skip-link">
+        Skip to map
+      </a>
       <Header>
         <TimezoneSelector
           selectedTimezone={selectedTimezone}
@@ -98,7 +97,7 @@ export default function Home() {
           timezone={displayTimezone}
           onClose={() => setSelectedCity(null)}
         />
-        <div className="map-container" role="application" aria-label="2026 World Cup Venue Map">
+        <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
           <WorldCupMap
             selectedTeam={selectedTeam}
             onCitySelect={handleCitySelect}

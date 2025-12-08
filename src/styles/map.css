@@ -1,0 +1,204 @@
+/* ============================================
+   Map Container Styles
+   ============================================ */
+.map-container {
+    flex: 1;
+    height: 100%;
+    min-width: 0;
+    background: var(--accent-light);
+    border-radius: 24px;
+    overflow: hidden;
+    /* Squircle shadow */
+    box-shadow:
+        8px 8px 16px rgba(45, 90, 61, 0.12),
+        -8px -8px 16px rgba(255, 255, 255, 0.9),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================
+   Custom Marker Styles
+   ============================================ */
+.custom-marker {
+    background: none !important;
+    border: none !important;
+}
+
+.custom-marker>div:hover {
+    transform: scale(1.15);
+}
+
+/* Leaflet tooltip style overrides */
+.leaflet-tooltip {
+    background: var(--sidebar-bg) !important;
+    border: none !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 8px 14px !important;
+    color: white !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    font-weight: 500 !important;
+}
+
+.leaflet-tooltip::before {
+    border-top-color: var(--sidebar-bg) !important;
+}
+
+/* ============================================
+   Flight Path Animation Styles
+   ============================================ */
+.flight-path-svg {
+    overflow: visible;
+}
+
+/* Path glow effect */
+.flight-path-glow {
+    fill: none;
+    stroke: rgba(45, 90, 61, 0.25);
+    stroke-width: 12;
+    stroke-linecap: round;
+    filter: blur(4px);
+}
+
+/* Main flight path - smooth curve baseline */
+.flight-path {
+    fill: none;
+    stroke: var(--secondary);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+/* Dashed style - for same-city cases */
+.flight-path-dashed {
+    stroke-dasharray: 8, 6;
+    animation: flightDash 0.8s linear infinite;
+}
+
+/* Chevron arrow path style - only shows arrows, no solid line */
+.flight-path-chevron {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+/* Flight dash animation - direction from start to end */
+@keyframes flightDash {
+    from {
+        stroke-dashoffset: 28;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Path appearance animation */
+.flight-path,
+.flight-path-glow,
+.flight-path-chevron {
+    animation-fill-mode: forwards;
+}
+
+/* Segment fade-in animation - smooth appearance for new segments */
+.segment-fade-in {
+    animation: segmentFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes segmentFadeIn {
+    from {
+        opacity: 0;
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+    }
+
+    to {
+        opacity: 1;
+        stroke-dasharray: none;
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ============================================
+   Flight Path Popup Styles
+   ============================================ */
+.flight-popup {
+    min-width: 200px;
+}
+
+.flight-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.match-number {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.match-group-badge {
+    font-size: 0.65rem;
+    background: var(--primary);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+}
+
+.flight-popup-venue {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.flight-popup-teams {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.flight-popup-teams .team-info {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.flight-popup-teams .team-flag {
+    font-size: 1.1rem;
+}
+
+.flight-popup-teams .team-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.flight-popup-teams .vs {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--border-light);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+}
+
+.flight-popup-datetime {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.flight-popup-datetime .date {
+    color: var(--text-secondary);
+}
+
+.flight-popup-datetime .time {
+    font-weight: 600;
+    color: var(--secondary);
+}
