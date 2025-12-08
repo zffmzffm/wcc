@@ -37,7 +37,7 @@ export default function CityMarker({ city, onClick }: CityMarkerProps) {
             eventHandlers={{ click: onClick }}
         >
             <Tooltip direction="top" offset={[0, -12]} opacity={0.95}>
-                <div style={{ fontWeight: 600, fontSize: '14px' }}>{city.name}</div>
+                <div style={{ fontWeight: 600, fontSize: '14px', color: '#2D5A3D' }}>{city.name}</div>
                 <div style={{ fontSize: '12px', color: '#666' }}>{city.venue}</div>
             </Tooltip>
         </Marker>

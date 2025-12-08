@@ -13,12 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "2026 FIFA World Cup Map | 世界杯赛程地图",
-  description: "Interactive map showing host cities, match schedules, and team flight paths for FIFA World Cup 2026 in USA, Mexico, and Canada. 2026年FIFA世界杯交互式地图，展示美国、加拿大、墨西哥的比赛场馆、赛程和球队行程路线。",
-  keywords: ["FIFA World Cup 2026", "世界杯2026", "World Cup Map", "比赛赛程", "足球", "Soccer", "Football"],
+  title: "WORLD CUP '26 TRACKER | 2026世界杯赛程追踪",
+  description: "World Cup '26 Tracker - Interactive map showing host cities, match schedules, and team flight paths for 2026 FIFA World Cup. 2026世界杯赛程追踪，实时展示比赛场馆、赛程和球队行程路线。",
+  keywords: ["World Cup 26 Tracker", "World Cup 2026", "FIFA World Cup 2026", "世界杯2026", "2026 World Cup Schedule", "World Cup Map", "比赛赛程", "足球", "Soccer", "Football"],
   openGraph: {
-    title: "2026 FIFA World Cup Map | 世界杯赛程地图",
-    description: "Interactive map for FIFA World Cup 2026 - USA, Mexico, Canada",
+    title: "WORLD CUP '26 TRACKER | 2026世界杯赛程追踪",
+    description: "World Cup '26 Tracker - Interactive map for 2026 FIFA World Cup",
     type: "website",
   },
 };

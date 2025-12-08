@@ -2,6 +2,27 @@
 import { City, Match, Team } from '@/types';
 import { formatDateTime, getTeamDisplay, getCountryCode } from '@/utils/formatters';
 import FlagIcon from './FlagIcon';
+import Image from 'next/image';
+
+// Map city IDs to venue images (when available)
+const venueImages: Record<string, string> = {
+    'atlanta': '/venues/atlanta.jpg',
+    'boston': '/venues/boston.jpg',
+    'dallas': '/venues/dallas.jpg',
+    'guadalajara': '/venues/guadalajara.jpg',
+    'houston': '/venues/houston.jpg',
+    'kansas_city': '/venues/kansas_city.jpg',
+    'los_angeles': '/venues/los_angeles.jpg',
+    'mexico_city': '/venues/mexico_city.jpg',
+    'miami': '/venues/miami.jpg',
+    'monterrey': '/venues/monterrey.jpg',
+    'new_york': '/venues/new_york.jpg',
+    'philadelphia': '/venues/philadelphia.jpg',
+    'san_francisco': '/venues/san_francisco.jpg',
+    'seattle': '/venues/seattle.jpg',
+    'toronto': '/venues/toronto.jpg',
+    'vancouver': '/venues/vancouver.jpg',
+};
 
 interface CitySidebarProps {
     city: City | null;
@@ -38,12 +59,25 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
                 </button>
             </div>
 
-            {/* Venue Info */}
-            <div className="sidebar-venue">
-                <div className="venue-name">🏟️ {city.venue}</div>
-                <div className="venue-capacity">容量: {city.capacity.toLocaleString()} 人</div>
+            {/* Venue Card - Info + Image merged */}
+            <div className="sidebar-venue-card">
+                <div className="sidebar-venue">
+                    <span className="venue-name">🏟️ {city.venue}</span>
+                    <span className="venue-capacity">{city.capacity.toLocaleString()} 人</span>
+                </div>
+                {venueImages[city.id] && (
+                    <div className="sidebar-venue-image">
+                        <Image
+                            src={venueImages[city.id]}
+                            alt={`${city.venue} 体育场`}
+                            width={600}
+                            height={360}
+                            style={{ width: '100%', height: 'auto' }}
+                            priority={false}
+                        />
+                    </div>
+                )}
             </div>
-
             {/* Matches List */}
             <div className="sidebar-matches">
                 <h3>小组赛比赛 ({matches.length} 场)</h3>
@@ -60,7 +94,13 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
 
                             return (
                                 <li key={match.id} className="match-item" role="listitem">
-                                    <div className="match-group">小组 {match.group}</div>
+                                    <div className="match-header">
+                                        <span className="match-group">小组 {match.group}</span>
+                                        <span className="match-datetime">
+                                            <span className="match-date">{date}</span>
+                                            <span className="match-time">{time}</span>
+                                        </span>
+                                    </div>
                                     <div className="match-teams">
                                         <span className="team">
                                             <FlagIcon code={team1.code} size={20} />
@@ -71,10 +111,6 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
                                             <FlagIcon code={team2.code} size={20} />
                                             <span className="team-name">{team2.name}</span>
                                         </span>
-                                    </div>
-                                    <div className="match-datetime">
-                                        <span className="match-date">{date}</span>
-                                        <span className="match-time">{time}</span>
                                     </div>
                                 </li>
                             );

@@ -382,11 +382,11 @@ body {
   position: sticky;
   top: 12px;
   z-index: 10;
-  /* 内嵌倒圆角效果 */
   border-radius: 16px;
-  box-shadow:
-    inset 4px 4px 8px rgba(45, 90, 61, 0.15),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+}
+
+.sidebar-header-compact {
+  padding: 0.625rem 1rem;
 }
 
 .sidebar-title {
@@ -407,53 +407,65 @@ body {
 }
 
 .sidebar-close {
-  background: var(--sidebar-bg-light);
-  border: none;
-  color: var(--text-secondary);
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
+  background: var(--sidebar-bg-light) !important;
+  border: none !important;
+  color: var(--text-secondary) !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px !important;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  /* 凸起按钮效果 */
-  box-shadow:
-    3px 3px 6px rgba(45, 90, 61, 0.15),
-    -3px -3px 6px rgba(255, 255, 255, 0.9);
+  box-shadow: none !important;
 }
 
 .sidebar-close:hover {
+  background: var(--accent-light) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+}
+
+/* 场馆卡片 - 信息+图片合并 */
+.sidebar-venue-card {
+  margin: 0 12px;
   background: var(--accent-light);
-  color: var(--primary);
-  box-shadow:
-    inset 2px 2px 4px rgba(45, 90, 61, 0.12),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 /* 场馆信息区 */
 .sidebar-venue {
-  padding: 1rem 1.25rem;
-  margin: 0 12px;
-  background: var(--accent-light);
-  border-radius: 12px;
-  box-shadow:
-    inset 2px 2px 4px rgba(45, 90, 61, 0.08),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 1rem;
 }
 
 .sidebar-venue .venue-name {
   color: var(--text-primary);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  line-height: 1;
 }
 
 .sidebar-venue .venue-capacity {
   color: var(--text-secondary);
   font-size: 0.8rem;
-  margin-top: 0.25rem;
+  line-height: 1;
+}
+
+/* 场馆图片区 */
+.sidebar-venue-image {
+  padding: 0;
+}
+
+.sidebar-venue-image img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 /* 比赛列表区 */
@@ -693,13 +705,25 @@ body {
   border-color: var(--primary-light);
 }
 
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
 .match-group {
   font-size: 0.7rem;
   color: var(--primary);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 0.5rem;
+}
+
+.match-header .match-datetime {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.75rem;
 }
 
 .match-teams {
@@ -707,7 +731,6 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
 }
 
 .team {

@@ -19,7 +19,7 @@
     },
     {
         "code": "PO_D",
-        "name": "UEFA Playoff D Winner",
+        "name": "UEFA D",
         "group": "A",
         "flag": "🏳️"
     },
@@ -31,7 +31,7 @@
     },
     {
         "code": "PO_A",
-        "name": "UEFA Playoff A Winner",
+        "name": "UEFA A",
         "group": "B",
         "flag": "🏳️"
     },
@@ -91,7 +91,7 @@
     },
     {
         "code": "PO_C",
-        "name": "UEFA Playoff C Winner",
+        "name": "UEFA C",
         "group": "D",
         "flag": "🏳️"
     },
@@ -133,7 +133,7 @@
     },
     {
         "code": "PO_B",
-        "name": "UEFA Playoff B Winner",
+        "name": "UEFA B",
         "group": "F",
         "flag": "🏳️"
     },
@@ -205,7 +205,7 @@
     },
     {
         "code": "PO_F2",
-        "name": "FIFA Playoff 2 Winner",
+        "name": "FIFA 2",
         "group": "I",
         "flag": "🏳️"
     },
@@ -247,7 +247,7 @@
     },
     {
         "code": "PO_F1",
-        "name": "FIFA Playoff 1 Winner",
+        "name": "FIFA 1",
         "group": "K",
         "flag": "🏳️"
     },

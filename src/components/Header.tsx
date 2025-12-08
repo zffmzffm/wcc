@@ -11,8 +11,7 @@ export default function Header({ children }: HeaderProps) {
             <div className="header-brand">
                 <span className="header-logo" aria-hidden="true">🏆</span>
                 <div className="header-title">
-                    <h1>FIFA World Cup 2026</h1>
-                    <span className="header-subtitle">美国 · 加拿大 · 墨西哥</span>
+                    <h1>WORLD CUP '26 TRACKER</h1>
                 </div>
             </div>
 

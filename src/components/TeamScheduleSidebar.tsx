@@ -37,13 +37,10 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, onCl
     return (
         <aside className="sidebar sidebar-right" role="complementary" aria-label={`${team.name} 球队行程`}>
             {/* Header */}
-            <div className="sidebar-header">
+            <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
                     <FlagIcon code={team.code} size={28} />
-                    <div>
-                        <h2>{team.name}</h2>
-                        <span className="sidebar-subtitle">小组 {team.group}</span>
-                    </div>
+                    <h2>{team.name}</h2>
                 </div>
                 <button className="sidebar-close" onClick={onClose} aria-label="清除选择">
                     ✕
