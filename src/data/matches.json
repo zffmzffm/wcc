@@ -95,7 +95,7 @@
         "team1": "SUI",
         "team2": "CAN",
         "cityId": "vancouver",
-        "datetime": "2026-06-24T18:00:00-04:00",
+        "datetime": "2026-06-24T15:00:00-04:00",
         "stage": "group"
     },
     {
@@ -212,7 +212,7 @@
         "team1": "PAR",
         "team2": "AUS",
         "cityId": "san_francisco",
-        "datetime": "2026-06-25T18:00:00-04:00",
+        "datetime": "2026-06-25T22:00:00-04:00",
         "stage": "group"
     },
     {
@@ -364,8 +364,8 @@
         "group": "G",
         "team1": "NZL",
         "team2": "BEL",
-        "cityId": "seattle",
-        "datetime": "2026-06-26T18:00:00-04:00",
+        "cityId": "vancouver",
+        "datetime": "2026-06-26T23:00:00-04:00",
         "stage": "group"
     },
     {
@@ -373,8 +373,8 @@
         "group": "G",
         "team1": "EGY",
         "team2": "IRN",
-        "cityId": "vancouver",
-        "datetime": "2026-06-26T18:00:00-04:00",
+        "cityId": "seattle",
+        "datetime": "2026-06-26T23:00:00-04:00",
         "stage": "group"
     },
     {
