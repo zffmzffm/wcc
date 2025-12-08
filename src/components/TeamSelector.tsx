@@ -51,13 +51,6 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
                     onChange={handleChange}
                     className="team-select"
                     aria-expanded={!!selectedTeam}
-                    style={{
-                        color: '#2D3A2D',
-                        backgroundColor: '#ffffff',
-                        WebkitAppearance: 'none',
-                        MozAppearance: 'none',
-                        appearance: 'none',
-                    }}
                 >
                     <option value="">TEAM</option>
                     {sortedGroups.map(group => (

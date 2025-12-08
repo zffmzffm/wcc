@@ -62,7 +62,7 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
             <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
                     <FlagIcon code={countryCode} size={28} />
-                    <h2 style={{ color: '#2D3A2D' }}>{city.name}</h2>
+                    <h2>{city.name}</h2>
                 </div>
                 <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
                     ✕

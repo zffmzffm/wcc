@@ -29,27 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      data-darkreader-mode="disabled"
-      data-darkreader-scheme="light"
-      style={{ colorScheme: 'light only', filter: 'none' }}
-    >
+    <html lang="en">
       <head>
-        <meta name="color-scheme" content="light only" />
-        <meta name="supported-color-schemes" content="light only" />
-        <meta name="darkreader-lock" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        data-darkreader-mode="disabled"
-        style={{
-          backgroundColor: '#F5F7F5',
-          color: '#2D3A2D',
-          filter: 'none',
-          colorScheme: 'light only'
-        }}
       >
         <a href="#main-content" className="skip-link">
           Skip to main content

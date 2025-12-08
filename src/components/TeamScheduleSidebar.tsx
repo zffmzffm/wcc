@@ -44,7 +44,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
             <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
                     <FlagIcon code={team.code} size={28} />
-                    <h2 style={{ color: '#2D3A2D' }}>{team.name}</h2>
+                    <h2>{team.name}</h2>
                 </div>
                 <div className="sidebar-header-actions">
                     <span className="team-group-badge" aria-label={`Group ${team.group}`}>
