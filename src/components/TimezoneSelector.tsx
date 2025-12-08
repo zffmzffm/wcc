@@ -51,6 +51,13 @@ export default function TimezoneSelector({ selectedTimezone, onSelect }: Timezon
                     onChange={handleChange}
                     className="timezone-select"
                     aria-label="Select timezone"
+                    style={{
+                        color: '#2D3A2D',
+                        backgroundColor: '#ffffff',
+                        WebkitAppearance: 'none',
+                        MozAppearance: 'none',
+                        appearance: 'none',
+                    }}
                 >
                     <option value="">TIME ZONE</option>
                     <optgroup label="North America">
