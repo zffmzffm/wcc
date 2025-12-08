@@ -4,8 +4,45 @@
 
 /* Force light color scheme to prevent browser dark mode override */
 html {
-    color-scheme: light only;
-    forced-color-adjust: none;
+    color-scheme: light only !important;
+    forced-color-adjust: none !important;
+}
+
+/* Aggressive reset for Chrome Auto Dark Mode on Android */
+@media (prefers-color-scheme: dark) {
+
+    html,
+    body {
+        color-scheme: light only !important;
+        background-color: #F5F7F5 !important;
+        color: #2D3A2D !important;
+    }
+}
+
+/* Force all text elements to use explicit colors - prevents Chrome dark mode inversion */
+body,
+p,
+span,
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+a,
+li,
+td,
+th,
+button,
+input,
+select,
+textarea,
+option,
+optgroup {
+    color: inherit;
+    -webkit-text-fill-color: currentColor;
 }
 
 :root {

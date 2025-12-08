@@ -118,26 +118,48 @@
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
     background: var(--card-bg);
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
     cursor: pointer;
     width: 180px;
     transition: all 0.2s ease;
     /* Remove native appearance with vendor prefixes */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
     /* Custom dropdown arrow */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
+    background-size: 16px;
     padding-right: 36px;
     font-weight: 500;
+    /* Force hide native arrow in some browsers */
+    text-indent: 0.01px;
+    text-overflow: '';
 }
 
 /* Hide native arrow in IE/Edge */
 .team-select::-ms-expand,
 .timezone-select::-ms-expand {
-    display: none;
+    display: none !important;
+}
+
+/* Hide native arrow in WebKit shadow DOM */
+.team-select::-webkit-inner-spin-button,
+.timezone-select::-webkit-inner-spin-button,
+.team-select::-webkit-outer-spin-button,
+.timezone-select::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+
+/* Additional WebKit select arrow hiding */
+select.team-select,
+select.timezone-select {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background-clip: padding-box;
 }
 
 .team-select:hover,
