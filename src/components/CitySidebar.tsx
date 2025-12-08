@@ -1,5 +1,5 @@
 'use client';
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 import { City, Match, Team } from '@/types';
 import { getCountryCode } from '@/utils/formatters';
 import FlagIcon from './FlagIcon';
@@ -35,6 +35,16 @@ interface CitySidebarProps {
 }
 
 export default function CitySidebar({ city, matches, teams, timezone, onClose }: CitySidebarProps) {
+    // Ref to the sidebar container for scroll reset
+    const sidebarRef = useRef<HTMLElement>(null);
+
+    // Reset scroll position to top when city changes
+    useEffect(() => {
+        if (city && sidebarRef.current) {
+            sidebarRef.current.scrollTop = 0;
+        }
+    }, [city?.id]);
+
     // Memoize sorted matches to avoid re-sorting on every render
     const sortedMatches = useMemo(() => {
         return [...matches].sort((a, b) =>
@@ -57,7 +67,7 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
     const countryCode = getCountryCode(city.country);
 
     return (
-        <aside className="sidebar" role="complementary" aria-label={`${city.name} City Information`}>
+        <aside ref={sidebarRef} className="sidebar" role="complementary" aria-label={`${city.name} City Information`}>
             {/* Header */}
             <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
