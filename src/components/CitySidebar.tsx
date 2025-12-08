@@ -35,11 +35,11 @@ interface CitySidebarProps {
 export default function CitySidebar({ city, matches, teams, timezone, onClose }: CitySidebarProps) {
     if (!city) {
         return (
-            <aside className="sidebar" role="complementary" aria-label="城市信息侧边栏">
+            <aside className="sidebar" role="complementary" aria-label="City Information">
                 <div className="sidebar-placeholder">
                     <span className="sidebar-placeholder-icon">🏟️</span>
-                    <p>点击地图上的城市</p>
-                    <p>查看场馆和比赛信息</p>
+                    <p>Click a city on the map</p>
+                    <p>to view venue and match info</p>
                 </div>
             </aside>
         );
@@ -48,14 +48,14 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
     const countryCode = getCountryCode(city.country);
 
     return (
-        <aside className="sidebar" role="complementary" aria-label={`${city.name} 城市信息`}>
+        <aside className="sidebar" role="complementary" aria-label={`${city.name} City Information`}>
             {/* Header */}
             <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
                     <FlagIcon code={countryCode} size={28} />
                     <h2>{city.name}</h2>
                 </div>
-                <button className="sidebar-close" onClick={onClose} aria-label="关闭侧边栏">
+                <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
                     ✕
                 </button>
             </div>
@@ -64,13 +64,13 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
             <div className="sidebar-venue-card">
                 <div className="sidebar-venue">
                     <span className="venue-name">🏟️ {city.venue}</span>
-                    <span className="venue-capacity">{city.capacity.toLocaleString()} 人</span>
+                    <span className="venue-capacity">{city.capacity.toLocaleString()} seats</span>
                 </div>
                 {venueImages[city.id] && (
                     <div className="sidebar-venue-image">
                         <Image
                             src={venueImages[city.id]}
-                            alt={`${city.venue} 体育场`}
+                            alt={`${city.venue} Stadium`}
                             width={600}
                             height={360}
                             style={{ width: '100%', height: 'auto' }}
@@ -82,7 +82,7 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
             {/* Matches List */}
             <div className="sidebar-matches">
                 {matches.length === 0 ? (
-                    <p className="no-matches">暂无比赛数据</p>
+                    <p className="no-matches">No match data available</p>
                 ) : (
                     <ul className="match-list" role="list">
                         {[...matches].sort((a, b) =>
@@ -95,7 +95,7 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
                             return (
                                 <li key={match.id} className="match-item" role="listitem">
                                     <div className="match-header">
-                                        <span className="match-group">小组 {match.group}</span>
+                                        <span className="match-group">Group {match.group}</span>
                                         <span className="match-datetime">
                                             <span className="match-date">{date}</span>
                                             <span className="match-time">{time}</span>

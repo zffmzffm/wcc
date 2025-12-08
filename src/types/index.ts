@@ -1,4 +1,4 @@
-// 统一类型定义 - 消除各组件中的重复定义
+// Unified type definitions - eliminating duplicate definitions across components
 
 export interface City {
     id: string;

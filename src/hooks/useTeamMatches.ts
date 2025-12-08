@@ -3,7 +3,7 @@ import { Match, City, MatchWithCoords, FlightSegment } from '@/types';
 import { LatLngTuple } from 'leaflet';
 
 /**
- * 根据球队代码获取该球队的所有比赛及坐标
+ * Get all matches and coordinates for a team by team code
  */
 export function useTeamMatches(
     teamCode: string,
@@ -27,7 +27,7 @@ export function useTeamMatches(
 }
 
 /**
- * 根据球队比赛列表计算飞行路段
+ * Calculate flight segments from team matches list
  */
 export function useFlightSegments(teamMatches: MatchWithCoords[]): FlightSegment[] {
     return useMemo(() => {

@@ -20,11 +20,11 @@ const getCityName = (cityId: string, cities: City[]): string => {
 export default function TeamScheduleSidebar({ team, matches, teams, cities, timezone, onClose }: TeamScheduleSidebarProps) {
     if (!team) {
         return (
-            <aside className="sidebar sidebar-right" role="complementary" aria-label="球队信息侧边栏">
+            <aside className="sidebar sidebar-right" role="complementary" aria-label="Team Information">
                 <div className="sidebar-placeholder">
                     <span className="sidebar-placeholder-icon">⚽</span>
-                    <p>在顶部选择球队</p>
-                    <p>查看小组赛行程</p>
+                    <p>Select a team above</p>
+                    <p>to view group stage schedule</p>
                 </div>
             </aside>
         );
@@ -36,7 +36,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
     );
 
     return (
-        <aside className="sidebar sidebar-right" role="complementary" aria-label={`${team.name} 球队行程`}>
+        <aside className="sidebar sidebar-right" role="complementary" aria-label={`${team.name} Schedule`}>
             {/* Header */}
             <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
@@ -44,10 +44,10 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                     <h2>{team.name}</h2>
                 </div>
                 <div className="sidebar-header-actions">
-                    <span className="team-group-badge" aria-label={`小组 ${team.group}`}>
+                    <span className="team-group-badge" aria-label={`Group ${team.group}`}>
                         {team.group}
                     </span>
-                    <button className="sidebar-close" onClick={onClose} aria-label="清除选择">
+                    <button className="sidebar-close" onClick={onClose} aria-label="Clear selection">
                         ✕
                     </button>
                 </div>
@@ -56,7 +56,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
             {/* Schedule */}
             <div className="sidebar-matches">
                 {sortedMatches.length === 0 ? (
-                    <p className="no-matches">暂无比赛数据</p>
+                    <p className="no-matches">No match data available</p>
                 ) : (
                     <ul className="match-list" role="list">
                         {sortedMatches.map((match, index) => {
@@ -69,7 +69,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                             return (
                                 <li key={match.id} className="match-item schedule-item" role="listitem">
                                     <div className="match-info-row">
-                                        <span className="match-number">第 {index + 1} 场</span>
+                                        <span className="match-number">Match {index + 1}</span>
                                         <span className="match-datetime-inline">
                                             <span className="match-date">{date}</span>
                                             <span className="match-time">{time}</span>

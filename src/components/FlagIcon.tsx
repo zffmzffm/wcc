@@ -8,13 +8,13 @@ interface FlagIconProps {
     className?: string;
 }
 
-// 将 3 字母或特殊代码转换为 2 字母 ISO 代码
+// Convert 3-letter or special codes to 2-letter ISO codes
 const codeToISO2: Record<string, string> = {
-    // 北美三国
+    // North America
     'USA': 'us',
     'MEX': 'mx',
     'CAN': 'ca',
-    // 参赛国家
+    // Participating countries
     'RSA': 'za', // South Africa
     'KOR': 'kr', // South Korea
     'BRA': 'br', // Brazil
@@ -64,11 +64,11 @@ const codeToISO2: Record<string, string> = {
 };
 
 export function getISO2Code(code: string): string {
-    // 检查是否已经是 2 字母代码
+    // Check if already a 2-letter code
     if (code.length === 2) {
         return code.toLowerCase();
     }
-    // 查找映射
+    // Find mapping
     return codeToISO2[code] || code.toLowerCase().slice(0, 2);
 }
 
@@ -76,7 +76,7 @@ export default function FlagIcon({ code, size = 20, className = '' }: FlagIconPr
     const [hasError, setHasError] = useState(false);
     const iso2 = getISO2Code(code);
 
-    // 使用 flagcdn.com CDN 获取国旗图片
+    // Use flagcdn.com CDN to get flag images
     const flagUrl = `https://flagcdn.com/w40/${iso2}.png`;
     const height = Math.round(size * 0.75);
 
@@ -95,7 +95,7 @@ export default function FlagIcon({ code, size = 20, className = '' }: FlagIconPr
                     borderRadius: '2px',
                     backgroundColor: '#f3f4f6',
                 }}
-                aria-label={`${code} 国旗`}
+                aria-label={`${code} flag`}
             >
                 🏳️
             </span>
@@ -105,7 +105,7 @@ export default function FlagIcon({ code, size = 20, className = '' }: FlagIconPr
     return (
         <Image
             src={flagUrl}
-            alt={`${code} 国旗`}
+            alt={`${code} flag`}
             width={size}
             height={height}
             className={`flag-icon ${className}`}

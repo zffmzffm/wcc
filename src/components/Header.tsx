@@ -15,7 +15,7 @@ export default function Header({ children }: HeaderProps) {
                 </div>
             </div>
 
-            <nav className="header-nav" aria-label="主导航">
+            <nav className="header-nav" aria-label="Main navigation">
                 {children}
             </nav>
         </header>

@@ -21,7 +21,7 @@ export default function CityPopup({ city, matches, teams, onClose }: CityPopupPr
                         <span className="popup-flag">{countryFlag}</span>
                         <h2 id="popup-title">{city.name}</h2>
                     </div>
-                    <button className="popup-close" onClick={onClose} aria-label="关闭">
+                    <button className="popup-close" onClick={onClose} aria-label="Close">
                         ✕
                     </button>
                 </div>
@@ -29,14 +29,14 @@ export default function CityPopup({ city, matches, teams, onClose }: CityPopupPr
                 {/* Venue Info */}
                 <div className="popup-venue">
                     <div className="venue-name">🏟️ {city.venue}</div>
-                    <div className="venue-capacity">容量: {city.capacity.toLocaleString()} 人</div>
+                    <div className="venue-capacity">Capacity: {city.capacity.toLocaleString()} seats</div>
                 </div>
 
                 {/* Matches List */}
                 <div className="popup-matches">
-                    <h3>小组赛比赛 ({matches.length} 场)</h3>
+                    <h3>Group Stage Matches ({matches.length})</h3>
                     {matches.length === 0 ? (
-                        <p className="no-matches">暂无比赛数据</p>
+                        <p className="no-matches">No match data available</p>
                     ) : (
                         <ul className="match-list" role="list">
                             {matches.map(match => {
@@ -46,7 +46,7 @@ export default function CityPopup({ city, matches, teams, onClose }: CityPopupPr
 
                                 return (
                                     <li key={match.id} className="match-item" role="listitem">
-                                        <div className="match-group">小组 {match.group}</div>
+                                        <div className="match-group">Group {match.group}</div>
                                         <div className="match-teams">
                                             <span className="team">
                                                 <span className="team-flag">{team1.flag}</span>

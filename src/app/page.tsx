@@ -16,11 +16,11 @@ const matches: Match[] = matchesData as Match[];
 const cities: City[] = citiesData as City[];
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
-  ssr: false, // Leaflet 不支持 SSR
+  ssr: false, // Leaflet doesn't support SSR
   loading: () => (
     <div className="loading-container">
       <div className="loading-spinner"></div>
-      <p>加载地图中...</p>
+      <p>Loading map...</p>
     </div>
   )
 });
@@ -58,22 +58,22 @@ export default function Home() {
     }
   }, [isMobile]);
 
-  // 获取选中球队的信息
+  // Get selected team info
   const selectedTeamInfo = selectedTeam
     ? teams.find(t => t.code === selectedTeam)
     : null;
 
-  // 获取选中城市的比赛
+  // Get matches for selected city
   const cityMatches = selectedCity
     ? matches.filter(m => m.cityId === selectedCity.id)
     : [];
 
-  // 获取选中球队的比赛
+  // Get matches for selected team
   const teamMatches = selectedTeam
     ? matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam)
     : [];
 
-  // 用于显示的时区，未选择时使用默认值
+  // Timezone for display, use default if not selected
   const displayTimezone = selectedTimezone || 'America/Toronto';
 
   return (
@@ -98,7 +98,7 @@ export default function Home() {
           timezone={displayTimezone}
           onClose={() => setSelectedCity(null)}
         />
-        <div className="map-container" role="application" aria-label="2026 世界杯场馆地图">
+        <div className="map-container" role="application" aria-label="2026 World Cup Venue Map">
           <WorldCupMap
             selectedTeam={selectedTeam}
             onCitySelect={handleCitySelect}

@@ -11,7 +11,7 @@ import citiesData from '@/data/cities.json';
 import matchesData from '@/data/matches.json';
 import teamsData from '@/data/teams.json';
 
-// 修复 Leaflet 默认图标路径问题
+// Fix Leaflet default icon path issue
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: () => void })._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: '/marker-icon-2x.png',
@@ -31,24 +31,24 @@ interface WorldCupMapProps {
 export default function WorldCupMap({ selectedTeam, onCitySelect }: WorldCupMapProps) {
     return (
         <MapContainer
-            center={[39.8283, -98.5795]} // 北美中心点
+            center={[39.8283, -98.5795]} // North America center
             zoom={4}
             style={{ height: '100%', width: '100%' }}
             zoomControl={true}
             minZoom={3}
             maxZoom={10}
             maxBounds={[
-                [10, -140], // 西南角 (放宽)
-                [58, -56]   // 东北角 (放宽)
+                [10, -140], // Southwest corner (relaxed)
+                [58, -56]   // Northeast corner (relaxed)
             ]}
-            maxBoundsViscosity={1.0} // 完全限制在边界内
+            maxBoundsViscosity={1.0} // Restrict to bounds completely
         >
             <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                 attribution='&copy; OpenStreetMap, &copy; CartoDB'
             />
 
-            {/* 城市标记 */}
+            {/* City markers */}
             {cities.map(city => (
                 <CityMarker
                     key={city.id}
@@ -57,7 +57,7 @@ export default function WorldCupMap({ selectedTeam, onCitySelect }: WorldCupMapP
                 />
             ))}
 
-            {/* 球队飞行路线 */}
+            {/* Team flight path */}
             {selectedTeam && (
                 <TeamFlightPath
                     teamCode={selectedTeam}

@@ -1,16 +1,16 @@
 import { Team } from '@/types';
 
 /**
- * 格式化日期时间为中文显示格式
+ * Format datetime for display
  */
 export const formatDateTime = (datetime: string): { date: string; time: string } => {
     const d = new Date(datetime);
-    const date = d.toLocaleDateString('zh-CN', {
+    const date = d.toLocaleDateString('en-US', {
         month: 'long',
         day: 'numeric',
         weekday: 'short'
     });
-    const time = d.toLocaleTimeString('zh-CN', {
+    const time = d.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
@@ -19,22 +19,22 @@ export const formatDateTime = (datetime: string): { date: string; time: string }
 };
 
 /**
- * 格式化日期时间为指定时区的中文显示格式
- * @param datetime ISO格式的日期时间字符串
- * @param timezone IANA时区名称，如 'America/New_York'
+ * Format datetime for specified timezone
+ * @param datetime ISO format datetime string
+ * @param timezone IANA timezone name, e.g. 'America/New_York'
  */
 export const formatDateTimeWithTimezone = (
     datetime: string,
     timezone: string
 ): { date: string; time: string } => {
     const d = new Date(datetime);
-    const date = d.toLocaleDateString('zh-CN', {
+    const date = d.toLocaleDateString('en-US', {
         month: 'long',
         day: 'numeric',
         weekday: 'short',
         timeZone: timezone
     });
-    const time = d.toLocaleTimeString('zh-CN', {
+    const time = d.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false,
@@ -44,15 +44,15 @@ export const formatDateTimeWithTimezone = (
 };
 
 /**
- * 格式化日期时间为短格式（用于飞行路线弹窗）
+ * Format datetime for short display (used in flight path popups)
  */
 export const formatDateTimeShort = (datetime: string): { date: string; time: string } => {
     const d = new Date(datetime);
-    const date = d.toLocaleDateString('zh-CN', {
+    const date = d.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
     });
-    const time = d.toLocaleTimeString('zh-CN', {
+    const time = d.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
@@ -61,7 +61,7 @@ export const formatDateTimeShort = (datetime: string): { date: string; time: str
 };
 
 /**
- * 获取球队显示信息
+ * Get team display information
  */
 export const getTeamDisplay = (
     teamCode: string,
@@ -74,7 +74,7 @@ export const getTeamDisplay = (
 };
 
 /**
- * 根据国家名获取国旗 emoji
+ * Get country flag emoji by country name
  */
 export const getCountryFlag = (country: string): string => {
     switch (country) {
@@ -90,7 +90,7 @@ export const getCountryFlag = (country: string): string => {
 };
 
 /**
- * 根据国家名获取国家代码
+ * Get country code by country name
  */
 export const getCountryCode = (country: string): string => {
     switch (country) {
@@ -106,7 +106,7 @@ export const getCountryCode = (country: string): string => {
 };
 
 /**
- * 根据国家名获取主题颜色
+ * Get theme color by country name
  */
 export const getCountryColor = (country: string): string => {
     switch (country) {

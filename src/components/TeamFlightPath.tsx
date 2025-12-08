@@ -13,16 +13,16 @@ interface TeamFlightPathProps {
     teams: Team[];
 }
 
-// 获取对手球队信息
+// Get opponent team info
 const getOpponent = (match: Match, teamCode: string, teams: Team[]): { name: string; code: string } => {
     const opponentCode = match.team1 === teamCode ? match.team2 : match.team1;
     const team = teams.find(t => t.code === opponentCode);
     return team ? { name: team.name, code: team.code } : { name: opponentCode, code: opponentCode };
 };
 
-// 生成弧形路径的SVG path
-// curvature > 0: 向右弯曲（相对于从起点看向终点）
-// curvature < 0: 向左弯曲
+// Generate arc path SVG
+// curvature > 0: bend right (relative to start-to-end direction)
+// curvature < 0: bend left
 const generateArcPath = (
     startPixel: { x: number; y: number },
     endPixel: { x: number; y: number },
@@ -31,41 +31,41 @@ const generateArcPath = (
     const dx = endPixel.x - startPixel.x;
     const dy = endPixel.y - startPixel.y;
 
-    // 中点
+    // Midpoint
     const midX = (startPixel.x + endPixel.x) / 2;
     const midY = (startPixel.y + endPixel.y) / 2;
 
-    // 距离
+    // Distance
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance < 1) {
-        // 两点太近，返回直线
+        // Points too close, return straight line
         return `M ${startPixel.x} ${startPixel.y} L ${endPixel.x} ${endPixel.y}`;
     }
 
-    // 偏移量（使用绝对值的弧度比例）
+    // Offset (using absolute curvature ratio)
     const offset = distance * Math.abs(curvature);
 
-    // 垂直向量（始终使用一致的方向：向右为正，向左为负）
-    // 通过 curvature 的符号来控制弯曲方向
+    // Perpendicular vector (always use consistent direction: positive is right, negative is left)
+    // Curvature sign controls bend direction
     const sign = curvature >= 0 ? 1 : -1;
     const perpX = (-dy / distance) * sign;
     const perpY = (dx / distance) * sign;
 
-    // 控制点
+    // Control point
     const controlX = midX + perpX * offset;
     const controlY = midY + perpY * offset;
 
     return `M ${startPixel.x} ${startPixel.y} Q ${controlX} ${controlY} ${endPixel.x} ${endPixel.y}`;
 };
 
-// 生成带有多个点的弧线路径，用于显示 》》》》 箭头
-// 将贝塞尔曲线采样成多个线段，这样 marker-mid 可以在每个节点显示
+// Generate arc path with multiple points for chevron arrows display
+// Sample Bezier curve into multiple segments so marker-mid can display at each node
 const generateChevronPath = (
     startPixel: { x: number; y: number },
     endPixel: { x: number; y: number },
     curvature: number = 0.3,
-    segmentLength: number = 20 // 每个箭头之间的间距（像素）
+    segmentLength: number = 20 // Spacing between arrows (pixels)
 ): string => {
     const dx = endPixel.x - startPixel.x;
     const dy = endPixel.y - startPixel.y;
@@ -75,7 +75,7 @@ const generateChevronPath = (
         return `M ${startPixel.x} ${startPixel.y} L ${endPixel.x} ${endPixel.y}`;
     }
 
-    // 计算控制点
+    // Calculate control point
     const midX = (startPixel.x + endPixel.x) / 2;
     const midY = (startPixel.y + endPixel.y) / 2;
     const offset = distance * Math.abs(curvature);
@@ -85,20 +85,20 @@ const generateChevronPath = (
     const controlX = midX + perpX * offset;
     const controlY = midY + perpY * offset;
 
-    // 根据路径长度确定采样点数量
+    // Determine sample count based on path length
     const numSegments = Math.max(3, Math.floor(distance / segmentLength));
 
-    // 采样贝塞尔曲线上的点
+    // Sample points on Bezier curve
     const points: { x: number; y: number }[] = [];
     for (let i = 0; i <= numSegments; i++) {
         const t = i / numSegments;
-        // 二次贝塞尔曲线公式: B(t) = (1-t)²P₀ + 2(1-t)tP₁ + t²P₂
+        // Quadratic Bezier curve formula: B(t) = (1-t)²P₀ + 2(1-t)tP₁ + t²P₂
         const x = (1 - t) * (1 - t) * startPixel.x + 2 * (1 - t) * t * controlX + t * t * endPixel.x;
         const y = (1 - t) * (1 - t) * startPixel.y + 2 * (1 - t) * t * controlY + t * t * endPixel.y;
         points.push({ x, y });
     }
 
-    // 生成多线段路径
+    // Generate multi-segment path
     let path = `M ${points[0].x} ${points[0].y}`;
     for (let i = 1; i < points.length; i++) {
         path += ` L ${points[i].x} ${points[i].y}`;
@@ -107,29 +107,29 @@ const generateChevronPath = (
     return path;
 };
 
-// 生成原地待命的小环形路径
+// Generate small loop path for same-city matches
 const generateLoopPath = (
     centerPixel: { x: number; y: number },
     radius: number = 25
 ): string => {
-    // 从右上方开始，画一个小圆弧回到起点附近
+    // Start from upper right, draw small arc back to near starting point
     const startX = centerPixel.x + radius * 0.7;
     const startY = centerPixel.y - radius * 0.7;
 
-    // 控制点在上方
+    // Control points above
     const ctrl1X = centerPixel.x + radius * 1.5;
     const ctrl1Y = centerPixel.y - radius * 1.8;
     const ctrl2X = centerPixel.x - radius * 1.5;
     const ctrl2Y = centerPixel.y - radius * 1.8;
 
-    // 终点在左上方
+    // End point at upper left
     const endX = centerPixel.x - radius * 0.7;
     const endY = centerPixel.y - radius * 0.7;
 
     return `M ${startX} ${startY} C ${ctrl1X} ${ctrl1Y} ${ctrl2X} ${ctrl2Y} ${endX} ${endY}`;
 };
 
-// 生成带采样点的小环形路径 - 用于显示 》》》》 箭头
+// Generate loop path with sample points - for chevron arrows display
 const generateLoopChevronPath = (
     centerPixel: { x: number; y: number },
     radius: number = 25,
@@ -144,17 +144,17 @@ const generateLoopChevronPath = (
     const endX = centerPixel.x - radius * 0.7;
     const endY = centerPixel.y - radius * 0.7;
 
-    // 估算曲线长度
+    // Estimate curve length
     const approxLength = Math.sqrt(
         Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)
     ) * 1.5;
     const numSegments = Math.max(4, Math.floor(approxLength / segmentLength));
 
-    // 采样三次贝塞尔曲线上的点
+    // Sample points on cubic Bezier curve
     const points: { x: number; y: number }[] = [];
     for (let i = 0; i <= numSegments; i++) {
         const t = i / numSegments;
-        // 三次贝塞尔曲线公式
+        // Cubic Bezier curve formula
         const x = Math.pow(1 - t, 3) * startX +
             3 * Math.pow(1 - t, 2) * t * ctrl1X +
             3 * (1 - t) * Math.pow(t, 2) * ctrl2X +
@@ -166,7 +166,7 @@ const generateLoopChevronPath = (
         points.push({ x, y });
     }
 
-    // 生成多线段路径
+    // Generate multi-segment path
     let path = `M ${points[0].x} ${points[0].y}`;
     for (let i = 1; i < points.length; i++) {
         path += ` L ${points[i].x} ${points[i].y}`;
@@ -175,20 +175,20 @@ const generateLoopChevronPath = (
     return path;
 };
 
-// 计算小环形路径的箭头位置
+// Calculate arrow position for loop path
 const getLoopArrowTransform = (
     centerPixel: { x: number; y: number },
     radius: number = 25
 ): { x: number; y: number; angle: number } => {
-    // 箭头在弧线的左上角位置，指向左下
+    // Arrow at upper left of arc, pointing lower left
     return {
         x: centerPixel.x - radius * 0.5,
         y: centerPixel.y - radius * 1.5,
-        angle: -135 // 指向左下
+        angle: -135 // Point lower left
     };
 };
 
-// 计算箭头位置和角度
+// Calculate arrow position and angle
 const getArrowTransform = (
     startPixel: { x: number; y: number },
     endPixel: { x: number; y: number },
@@ -206,7 +206,7 @@ const getArrowTransform = (
         return { x: midX, y: midY, angle: Math.atan2(dy, dx) * 180 / Math.PI };
     }
 
-    // 使用与 generateArcPath 相同的逻辑
+    // Use same logic as generateArcPath
     const offset = distance * Math.abs(curvature);
     const sign = curvature >= 0 ? 1 : -1;
     const perpX = (-dy / distance) * sign;
@@ -215,12 +215,12 @@ const getArrowTransform = (
     const controlX = midX + perpX * offset;
     const controlY = midY + perpY * offset;
 
-    // 曲线中点（t=0.5时的贝塞尔曲线点）
+    // Curve midpoint (Bezier curve point at t=0.5)
     const t = 0.5;
     const x = (1 - t) * (1 - t) * startPixel.x + 2 * (1 - t) * t * controlX + t * t * endPixel.x;
     const y = (1 - t) * (1 - t) * startPixel.y + 2 * (1 - t) * t * controlY + t * t * endPixel.y;
 
-    // 计算切线方向（贝塞尔曲线在t点的导数）
+    // Calculate tangent direction (derivative of Bezier curve at point t)
     const tangentX = 2 * (1 - t) * (controlX - startPixel.x) + 2 * t * (endPixel.x - controlX);
     const tangentY = 2 * (1 - t) * (controlY - startPixel.y) + 2 * t * (endPixel.y - controlY);
 
@@ -236,7 +236,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
     const map = useMap();
     const [, forceUpdate] = useState({});
 
-    // 计算球队的比赛，按时间排序
+    // Calculate team matches, sorted by time
     const teamMatches: MatchWithCoords[] = useMemo(() => {
         return matches
             .filter(m => m.team1 === teamCode || m.team2 === teamCode)
@@ -252,20 +252,20 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
             .filter((item): item is MatchWithCoords => item !== null);
     }, [teamCode, matches, cities]);
 
-    // 计算飞行路段，检测重复路径
+    // Calculate flight segments, detect duplicate paths
     const flightSegments: FlightSegment[] = useMemo(() => {
         const segments: FlightSegment[] = [];
-        const pathMap = new Map<string, number>(); // 记录已经出现过的路径
+        const pathMap = new Map<string, number>(); // Track paths that have appeared
 
         for (let i = 0; i < teamMatches.length - 1; i++) {
             const from = teamMatches[i].coords;
             const to = teamMatches[i + 1].coords;
 
-            // 创建路径key（无方向）- 始终按坐标排序确保一致性
+            // Create path key (directionless) - always sort by coordinates for consistency
             const fromKey = `${from[0].toFixed(4)},${from[1].toFixed(4)}`;
             const toKey = `${to[0].toFixed(4)},${to[1].toFixed(4)}`;
 
-            // 检测是否在同一城市
+            // Detect if in same city
             const isSameCity = fromKey === toKey;
 
             const pathKey = [fromKey, toKey].sort().join('|');
@@ -287,23 +287,23 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
     }, [teamMatches]);
 
 
-    // 获取当前球队信息
+    // Get current team info
     const currentTeam = useMemo(() => teams.find(t => t.code === teamCode), [teams, teamCode]);
 
-    // 坐标转换函数
+    // Coordinate conversion function
     const latLngToPixel = useCallback((coords: LatLngTuple): { x: number; y: number } => {
         const point = map.latLngToContainerPoint(coords);
         return { x: point.x, y: point.y };
     }, [map]);
 
-    // 使用累积式方法：维护已渲染的路段列表，而不是每次重新slice
+    // Use cumulative method: maintain list of rendered segments instead of slicing each time
     const [renderedSegments, setRenderedSegments] = useState<{ segment: FlightSegment; isNew: boolean }[]>([]);
     const [renderedMarkers, setRenderedMarkers] = useState<number[]>([]);
     const animationKeyRef = useRef(0);
 
-    // 当球队改变时重置动画
+    // Reset animation when team changes
     useEffect(() => {
-        // 重置动画状态
+        // Reset animation state
         animationKeyRef.current += 1;
         setRenderedSegments([]);
         setRenderedMarkers([]);
@@ -311,7 +311,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
         setVisibleCount(0);
     }, [teamCode]);
 
-    // 调整地图视角
+    // Adjust map view
     useEffect(() => {
         if (teamMatches.length === 0) return;
 
@@ -325,13 +325,13 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
         }
     }, [teamCode, teamMatches, map]);
 
-    // 动画逐步展示 - 累积添加，不会触发已渲染内容的重新渲染
+    // Animation reveal - cumulative addition, won't trigger re-render of already rendered content
     useEffect(() => {
         if (teamMatches.length === 0) return;
 
         if (visibleCount < teamMatches.length) {
             const timer = setTimeout(() => {
-                // 第一次：同时显示前两个标记和第一段航线
+                // First time: show first two markers and first flight segment simultaneously
                 if (visibleCount === 0 && teamMatches.length >= 2) {
                     setRenderedMarkers([0, 1]);
                     if (flightSegments[0]) {
@@ -339,7 +339,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                     }
                     setVisibleCount(2);
                 } else {
-                    // 后续：每次添加一个标记和一段航线
+                    // Subsequent: add one marker and one flight segment at a time
                     setRenderedMarkers(prev => [...prev, visibleCount]);
 
                     if (flightSegments[visibleCount - 1]) {
@@ -356,7 +356,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
         }
     }, [teamMatches.length, visibleCount, flightSegments]);
 
-    // 监听地图移动/缩放，更新SVG路径
+    // Listen for map move/zoom, update SVG paths
     useEffect(() => {
         const handleMoveEnd = () => forceUpdate({});
         map.on('move', handleMoveEnd);
@@ -371,12 +371,12 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
         return null;
     }
 
-    // 获取地图容器尺寸
+    // Get map container size
     const mapSize = map.getSize();
 
     return (
         <>
-            {/* SVG 飞行路线覆盖层 */}
+            {/* SVG flight path overlay */}
             <svg
                 ref={svgRef}
                 className="flight-path-svg"
@@ -390,7 +390,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                     zIndex: 400
                 }}
             >
-                {/* 定义箭头 marker - 类似 》 的形状 */}
+                {/* Define chevron marker - similar to > shape */}
                 <defs>
                     <marker
                         id="chevron-marker"
@@ -411,12 +411,12 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         />
                     </marker>
                 </defs>
-                {/* 渲染每条飞行路径 */}
+                {/* Render each flight path */}
                 {renderedSegments.map(({ segment, isNew }, idx) => {
                     const startPixel = latLngToPixel(segment.from);
                     const endPixel = latLngToPixel(segment.to);
 
-                    // 同城情况：画小环形 - 使用与普通路径相同的箭头样式
+                    // Same city: draw small loop - use same arrow style as normal paths
                     if (segment.isSameCity) {
                         const loopGlowPath = generateLoopPath(startPixel, 20);
                         const loopChevronPath = generateLoopChevronPath(startPixel, 20, 12);
@@ -426,12 +426,12 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                                 key={`segment-${animationKeyRef.current}-${idx}`}
                                 className={isNew ? 'segment-fade-in' : ''}
                             >
-                                {/* 小环形路径底色（发光效果） */}
+                                {/* Loop path base (glow effect) */}
                                 <path
                                     d={loopGlowPath}
                                     className="flight-path-glow"
                                 />
-                                {/* 小环形主路径 - 只显示箭头 */}
+                                {/* Loop main path - arrows only */}
                                 <path
                                     d={loopChevronPath}
                                     className="flight-path-chevron"
@@ -441,7 +441,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         );
                     }
 
-                    // 正常飞行路径
+                    // Normal flight path
                     const curvature = 0.4;
                     const glowPathD = generateArcPath(startPixel, endPixel, curvature);
                     const chevronPathD = generateChevronPath(startPixel, endPixel, curvature, 18);
@@ -451,12 +451,12 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                             key={`segment-${animationKeyRef.current}-${idx}`}
                             className={isNew ? 'segment-fade-in' : ''}
                         >
-                            {/* 路径底色（发光效果） */}
+                            {/* Path base (glow effect) */}
                             <path
                                 d={glowPathD}
                                 className="flight-path-glow"
                             />
-                            {/* 主路径 - 使用 》》》》 箭头表示方向 */}
+                            {/* Main path - use chevron arrows to indicate direction */}
                             <path
                                 d={chevronPathD}
                                 className="flight-path-chevron"
@@ -467,7 +467,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                 })}
             </svg>
 
-            {/* 比赛落脚点 */}
+            {/* Match markers */}
             {renderedMarkers.map((markerIndex) => {
                 const matchInfo = teamMatches[markerIndex];
                 if (!matchInfo) return null;
@@ -492,8 +492,8 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         <Popup className="match-popup">
                             <div className="flight-popup">
                                 <div className="flight-popup-header">
-                                    <span className="match-number">比赛 {markerIndex + 1}</span>
-                                    <span className="match-group-badge">小组 {match.group}</span>
+                                    <span className="match-number">Match {markerIndex + 1}</span>
+                                    <span className="match-group-badge">Group {match.group}</span>
                                 </div>
                                 <div className="flight-popup-venue">
                                     🏟️ {city.name} - {city.venue}

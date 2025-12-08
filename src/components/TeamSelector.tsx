@@ -8,7 +8,7 @@ interface TeamSelectorProps {
     onSelect: (teamCode: string | null) => void;
 }
 
-// 按小组分组
+// Group by key
 const groupBy = <T, K extends keyof T>(array: T[], key: K): Record<string, T[]> => {
     return array.reduce((result, item) => {
         const groupKey = String(item[key]);
@@ -29,13 +29,13 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
         onSelect(value === '' ? null : value);
     };
 
-    // 获取当前选中球队的信息
+    // Get current selected team info
     const selectedTeamInfo = selectedTeam ? teams.find(t => t.code === selectedTeam) : null;
 
     return (
         <div className="team-selector" role="search">
             <label htmlFor="team-select" className="visually-hidden">
-                选择球队
+                Select team
             </label>
             <div className="team-select-wrapper">
                 {selectedTeamInfo ? (
@@ -54,7 +54,7 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
                 >
                     <option value="">TEAM</option>
                     {sortedGroups.map(group => (
-                        <optgroup key={group} label={`小组 ${group}`}>
+                        <optgroup key={group} label={`Group ${group}`}>
                             {groupedTeams[group].map(team => (
                                 <option key={team.code} value={team.code}>
                                     {team.name}

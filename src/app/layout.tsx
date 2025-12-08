@@ -13,11 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WORLD CUP '26 TRACKER | 2026世界杯赛程追踪",
-  description: "World Cup '26 Tracker - Interactive map showing host cities, match schedules, and team flight paths for 2026 FIFA World Cup. 2026世界杯赛程追踪，实时展示比赛场馆、赛程和球队行程路线。",
-  keywords: ["World Cup 26 Tracker", "World Cup 2026", "FIFA World Cup 2026", "世界杯2026", "2026 World Cup Schedule", "World Cup Map", "比赛赛程", "足球", "Soccer", "Football"],
+  title: "WORLD CUP '26 TRACKER",
+  description: "World Cup '26 Tracker - Interactive map showing host cities, match schedules, and team flight paths for 2026 FIFA World Cup.",
+  keywords: ["World Cup 26 Tracker", "World Cup 2026", "FIFA World Cup 2026", "2026 World Cup Schedule", "World Cup Map", "Soccer", "Football"],
   openGraph: {
-    title: "WORLD CUP '26 TRACKER | 2026世界杯赛程追踪",
+    title: "WORLD CUP '26 TRACKER",
     description: "World Cup '26 Tracker - Interactive map for 2026 FIFA World Cup",
     type: "website",
   },
@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
@@ -37,7 +37,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <a href="#main-content" className="skip-link">
-          跳转到主要内容
+          Skip to main content
         </a>
         <div id="main-content">
           {children}

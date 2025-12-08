@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================
-   Designali Creative Suite 风格设计系统
+   Designali Creative Suite Style Design System
    ============================================ */
 
 :root {
@@ -21,49 +21,49 @@
   --accent-light: #D0DFCd;
   /* 更浅的绿色 */
 
-  /* 背景色 */
+  /* Background colors */
   --background: #F5F7F5;
-  /* 微绿调的浅灰 */
+  /* Light gray with green tint */
   --foreground: #2D3A2D;
-  /* 绿调的深灰 */
+  /* Dark gray with green tint */
   --sidebar-bg: #E8EDE8;
-  /* 浅灰绿背景 */
+  /* Light gray-green background */
   --sidebar-bg-light: #F0F4F0;
-  /* 更浅的灰绿 */
+  /* Lighter gray-green */
   --card-bg: #ffffff;
 
-  /* 文字色 */
+  /* Text colors */
   --text-primary: #2D3A2D;
-  /* 绿调深灰 */
+  /* Dark gray with green tint */
   --text-secondary: #5A6B5A;
-  /* 绿调中灰 */
+  /* Medium gray with green tint */
   --text-muted: #8A9B8A;
-  /* 绿调浅灰 */
+  /* Light gray with green tint */
   --text-light: rgba(255, 255, 255, 0.95);
   --text-light-muted: rgba(255, 255, 255, 0.7);
 
-  /* 边框和阴影 */
+  /* Borders and shadows */
   --border-light: #D0DFCd;
-  /* 浅绿边框 */
+  /* Light green border */
   --border-dark: rgba(45, 90, 61, 0.15);
   --shadow-sm: 0 1px 2px rgba(45, 90, 61, 0.08);
   --shadow-md: 0 4px 6px -1px rgba(45, 90, 61, 0.12);
   --shadow-lg: 0 10px 25px -5px rgba(45, 90, 61, 0.15);
   --shadow-card: 0 2px 8px rgba(45, 90, 61, 0.1);
 
-  /* 渐变 */
+  /* Gradients */
   --gradient-primary: linear-gradient(135deg, #2D5A3D 0%, #3D7A53 50%, #4D8A63 100%);
   --gradient-header: linear-gradient(135deg, #B5C9B1 0%, #8FB58B 100%);
   --gradient-sidebar: linear-gradient(180deg, #E8EDE8 0%, #F0F4F0 100%);
 
-  /* 圆角 */
+  /* Border radius */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
 
-  /* 国家主题色 */
+  /* Country theme colors */
   --usa: #1e40af;
   --mexico: #2D5A3D;
   --canada: #D88A8A;
@@ -86,7 +86,7 @@ body {
 }
 
 /* ============================================
-   Header 样式 - 倒圆角矩形风格 (Squircle / Soft UI)
+   Header Styles - Squircle / Soft UI Style
    ============================================ */
 .header {
   position: fixed;
@@ -100,9 +100,9 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 1.5rem;
-  /* 倒圆角效果 - 使用较大的圆角模拟内凹效果 */
+  /* Squircle effect - using large border-radius to simulate inset effect */
   border-radius: 24px;
-  /* 软阴影 - 内外双层阴影营造立体感 */
+  /* Soft shadow - inner and outer shadows for 3D effect */
   box-shadow:
     8px 8px 16px rgba(45, 90, 61, 0.12),
     -8px -8px 16px rgba(255, 255, 255, 0.9),
@@ -177,7 +177,7 @@ body {
 }
 
 /* ============================================
-   TeamSelector 样式 - 现代下拉框
+   TeamSelector Styles - Modern Dropdown
    ============================================ */
 .team-selector {
   display: flex;
@@ -278,7 +278,7 @@ body {
 }
 
 /* ============================================
-   TimezoneSelector 样式 - 与 TeamSelector 风格一致
+   TimezoneSelector Styles - Consistent with TeamSelector
    ============================================ */
 .timezone-selector {
   display: flex;
@@ -347,7 +347,7 @@ body {
   padding-left: 40px;
 }
 
-/* 国旗图标样式 */
+/* Flag icon styles */
 .flag-icon {
   display: inline-block;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
@@ -355,7 +355,7 @@ body {
 }
 
 /* ============================================
-   主容器样式
+   Main Container Styles
    ============================================ */
 .main-container {
   width: 100%;
@@ -370,7 +370,7 @@ body {
   display: flex;
   flex: 1;
   margin-top: 88px;
-  /* 增加顶部间距以适应浮动 header */
+  /* Increased top margin for floating header */
   height: calc(100vh - 88px);
   padding: 12px;
   gap: 12px;
@@ -383,7 +383,7 @@ body {
   background: var(--accent-light);
   border-radius: 24px;
   overflow: hidden;
-  /* 倒圆角矩形阴影 */
+  /* Squircle shadow */
   box-shadow:
     8px 8px 16px rgba(45, 90, 61, 0.12),
     -8px -8px 16px rgba(255, 255, 255, 0.9),
@@ -391,7 +391,7 @@ body {
 }
 
 /* ============================================
-   侧边栏样式 - 倒圆角矩形风格 (Squircle / Soft UI)
+   Sidebar Styles - Squircle / Soft UI Style
    ============================================ */
 .sidebar {
   width: 340px;
@@ -399,9 +399,9 @@ body {
   background: var(--sidebar-bg-light);
   overflow-y: auto;
   flex-shrink: 0;
-  /* 倒圆角效果 */
+  /* Squircle effect */
   border-radius: 24px;
-  /* 软阴影 */
+  /* Soft shadow */
   box-shadow:
     8px 8px 16px rgba(45, 90, 61, 0.12),
     -8px -8px 16px rgba(255, 255, 255, 0.9),
@@ -440,7 +440,7 @@ body {
   color: var(--text-primary);
 }
 
-/* 侧边栏头部 - 倒圆角内嵌风格 */
+/* Sidebar header - Squircle inset style */
 .sidebar-header {
   display: flex;
   justify-content: space-between;
@@ -504,7 +504,7 @@ body {
   box-shadow: none !important;
 }
 
-/* 场馆卡片 - 信息+图片合并 */
+/* Venue card - Info + Image merged */
 .sidebar-venue-card {
   margin: 0 12px;
   background: var(--accent-light);
@@ -512,7 +512,7 @@ body {
   overflow: hidden;
 }
 
-/* 场馆信息区 */
+/* Venue info area */
 .sidebar-venue {
   display: flex;
   justify-content: space-between;
@@ -533,7 +533,7 @@ body {
   line-height: 1;
 }
 
-/* 场馆图片区 */
+/* Venue image area */
 .sidebar-venue-image {
   padding: 0;
 }
@@ -545,7 +545,7 @@ body {
 }
 
 /* ============================================
-   精简版侧边栏样式
+   Compact Sidebar Styles
    ============================================ */
 .sidebar-compact {
   height: auto;
@@ -591,7 +591,7 @@ body {
   padding: 0.5rem 12px 1rem !important;
 }
 
-/* 比赛列表区 */
+/* Match list area */
 .sidebar-matches {
   padding: 0.5rem 12px 1rem;
 }
@@ -610,14 +610,14 @@ body {
   gap: 0.75rem;
 }
 
-/* 比赛卡片 - 倒圆角凸起卡片风格 */
+/* Match card - Squircle raised card style */
 .sidebar-matches .match-item {
   background: var(--sidebar-bg-light);
   border: none;
   border-radius: 16px;
   padding: 1rem;
   transition: all 0.25s ease;
-  /* 凸起卡片阴影 */
+  /* Raised card shadow */
   box-shadow:
     4px 4px 8px rgba(45, 90, 61, 0.1),
     -4px -4px 8px rgba(255, 255, 255, 0.9);
@@ -646,7 +646,7 @@ body {
   padding: 2rem;
 }
 
-/* 右侧边栏（球队日程） - 继承倒圆角风格，与左侧边栏使用相同的阴影效果 */
+/* Right sidebar (Team schedule) - Inherits squircle style, uses same shadow effect as left sidebar */
 
 .sidebar-subtitle {
   font-size: 0.75rem;
@@ -656,7 +656,7 @@ body {
   margin-top: 0.2rem;
 }
 
-/* 球队日程特定样式 - 精简版 */
+/* Team schedule specific styles - Compact version */
 .schedule-item {
   padding: 0.75rem !important;
 }
@@ -709,7 +709,7 @@ body {
 }
 
 /* ============================================
-   弹窗样式 - 现代卡片风格
+   Popup Styles - Modern Card Style
    ============================================ */
 .popup-overlay {
   position: fixed;
