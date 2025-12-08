@@ -3,6 +3,7 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
+import TimezoneSelector from '@/components/TimezoneSelector';
 import CitySidebar from '@/components/CitySidebar';
 import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
 import { Team, Match, City } from '@/types';
@@ -27,6 +28,7 @@ const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
 export default function Home() {
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [selectedTimezone, setSelectedTimezone] = useState<string>('America/New_York');
 
   // 获取选中球队的信息
   const selectedTeamInfo = selectedTeam
@@ -46,6 +48,10 @@ export default function Home() {
   return (
     <main className="main-container">
       <Header>
+        <TimezoneSelector
+          selectedTimezone={selectedTimezone}
+          onSelect={setSelectedTimezone}
+        />
         <TeamSelector
           teams={teams}
           selectedTeam={selectedTeam}
@@ -58,6 +64,7 @@ export default function Home() {
           city={selectedCity}
           matches={cityMatches}
           teams={teams}
+          timezone={selectedTimezone}
           onClose={() => setSelectedCity(null)}
         />
         <div className="map-container" role="application" aria-label="2026 世界杯场馆地图">
@@ -71,6 +78,7 @@ export default function Home() {
           matches={teamMatches}
           teams={teams}
           cities={cities}
+          timezone={selectedTimezone}
           onClose={() => setSelectedTeam(null)}
         />
       </div>

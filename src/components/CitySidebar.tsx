@@ -1,6 +1,6 @@
 'use client';
 import { City, Match, Team } from '@/types';
-import { formatDateTime, getTeamDisplay, getCountryCode } from '@/utils/formatters';
+import { formatDateTimeWithTimezone, getTeamDisplay, getCountryCode } from '@/utils/formatters';
 import FlagIcon from './FlagIcon';
 import Image from 'next/image';
 
@@ -28,10 +28,11 @@ interface CitySidebarProps {
     city: City | null;
     matches: Match[];
     teams: Team[];
+    timezone: string;
     onClose: () => void;
 }
 
-export default function CitySidebar({ city, matches, teams, onClose }: CitySidebarProps) {
+export default function CitySidebar({ city, matches, teams, timezone, onClose }: CitySidebarProps) {
     if (!city) {
         return (
             <aside className="sidebar" role="complementary" aria-label="城市信息侧边栏">
@@ -49,7 +50,7 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
     return (
         <aside className="sidebar" role="complementary" aria-label={`${city.name} 城市信息`}>
             {/* Header */}
-            <div className="sidebar-header">
+            <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
                     <FlagIcon code={countryCode} size={28} />
                     <h2>{city.name}</h2>
@@ -80,7 +81,6 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
             </div>
             {/* Matches List */}
             <div className="sidebar-matches">
-                <h3>小组赛比赛 ({matches.length} 场)</h3>
                 {matches.length === 0 ? (
                     <p className="no-matches">暂无比赛数据</p>
                 ) : (
@@ -90,7 +90,7 @@ export default function CitySidebar({ city, matches, teams, onClose }: CitySideb
                         ).map(match => {
                             const team1 = getTeamDisplay(match.team1, teams);
                             const team2 = getTeamDisplay(match.team2, teams);
-                            const { date, time } = formatDateTime(match.datetime);
+                            const { date, time } = formatDateTimeWithTimezone(match.datetime, timezone);
 
                             return (
                                 <li key={match.id} className="match-item" role="listitem">

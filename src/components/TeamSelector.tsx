@@ -62,21 +62,6 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
                     ))}
                 </select>
             </div>
-            {selectedTeamInfo && (
-                <>
-                    <button
-                        className="clear-selection"
-                        onClick={() => onSelect(null)}
-                        aria-label="清除选择"
-                        type="button"
-                    >
-                        ✕
-                    </button>
-                    <span className="team-group-badge" aria-label={`小组 ${selectedTeamInfo.group}`}>
-                        小组 {selectedTeamInfo.group}
-                    </span>
-                </>
-            )}
         </div>
     );
 }

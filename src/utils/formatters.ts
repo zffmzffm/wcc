@@ -19,6 +19,31 @@ export const formatDateTime = (datetime: string): { date: string; time: string }
 };
 
 /**
+ * 格式化日期时间为指定时区的中文显示格式
+ * @param datetime ISO格式的日期时间字符串
+ * @param timezone IANA时区名称，如 'America/New_York'
+ */
+export const formatDateTimeWithTimezone = (
+    datetime: string,
+    timezone: string
+): { date: string; time: string } => {
+    const d = new Date(datetime);
+    const date = d.toLocaleDateString('zh-CN', {
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+        timeZone: timezone
+    });
+    const time = d.toLocaleTimeString('zh-CN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: timezone
+    });
+    return { date, time };
+};
+
+/**
  * 格式化日期时间为短格式（用于飞行路线弹窗）
  */
 export const formatDateTimeShort = (datetime: string): { date: string; time: string } => {
