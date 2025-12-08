@@ -8,41 +8,96 @@ html {
     forced-color-adjust: none !important;
 }
 
-/* Aggressive reset for Chrome Auto Dark Mode on Android */
+/* 
+   CRITICAL: Comprehensive dark mode override for Chrome 142+
+   We provide explicit "light mode" styles when browser is in dark mode,
+   so Chrome thinks we handle dark mode ourselves and won't force-convert colors.
+*/
 @media (prefers-color-scheme: dark) {
 
+    /* Root level overrides */
     html,
     body {
         color-scheme: light only !important;
         background-color: #F5F7F5 !important;
         color: #2D3A2D !important;
+        -webkit-text-fill-color: #2D3A2D !important;
     }
-}
 
-/* Force all text elements to use explicit colors - prevents Chrome dark mode inversion */
-body,
-p,
-span,
-div,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-label,
-a,
-li,
-td,
-th,
-button,
-input,
-select,
-textarea,
-option,
-optgroup {
-    color: inherit;
-    -webkit-text-fill-color: currentColor;
+    /* All text elements - explicit dark colors on light backgrounds */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: #2D3A2D !important;
+        -webkit-text-fill-color: #2D3A2D !important;
+    }
+
+    p,
+    span,
+    div,
+    label,
+    a,
+    li {
+        color: inherit !important;
+        -webkit-text-fill-color: inherit !important;
+    }
+
+    /* Form elements */
+    select,
+    option,
+    optgroup,
+    input,
+    textarea,
+    button {
+        color: #2D3A2D !important;
+        -webkit-text-fill-color: #2D3A2D !important;
+        background-color: #ffffff !important;
+    }
+
+    /* Sidebar specific */
+    .sidebar,
+    .sidebar-header,
+    .sidebar-venue,
+    .sidebar-matches {
+        background-color: #F0F4F0 !important;
+        color: #2D3A2D !important;
+    }
+
+    .sidebar h2,
+    .sidebar-title h2 {
+        color: #2D3A2D !important;
+        -webkit-text-fill-color: #2D3A2D !important;
+    }
+
+    .venue-name,
+    .venue-capacity {
+        color: #2D3A2D !important;
+        -webkit-text-fill-color: #2D3A2D !important;
+    }
+
+    /* Header specific */
+    .header,
+    .header-brand,
+    .header-title {
+        background-color: #F0F4F0 !important;
+        color: #2D3A2D !important;
+    }
+
+    .header-title h1 {
+        color: #2D3A2D !important;
+        -webkit-text-fill-color: #2D3A2D !important;
+    }
+
+    /* Select dropdowns */
+    .team-select,
+    .timezone-select {
+        color: #2D3A2D !important;
+        -webkit-text-fill-color: #2D3A2D !important;
+        background-color: #ffffff !important;
+    }
 }
 
 :root {
