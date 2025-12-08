@@ -2,6 +2,12 @@
    Base Styles - Variables, Reset, Typography
    ============================================ */
 
+/* Force light color scheme to prevent browser dark mode override */
+html {
+    color-scheme: light only;
+    forced-color-adjust: none;
+}
+
 :root {
     /* Primary color palette - Three-color scheme */
     --primary: #2D5A3D;
