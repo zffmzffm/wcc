@@ -1,8 +1,8 @@
 'use client';
 
 interface TimezoneSelectorProps {
-    selectedTimezone: string;
-    onSelect: (timezone: string) => void;
+    selectedTimezone: string | null;
+    onSelect: (timezone: string | null) => void;
 }
 
 // 常用时区列表 - 2026世界杯期间 (6月11日-7月19日) 的夏令时偏移
@@ -40,7 +40,8 @@ const getTimezoneLabel = (value: string): string => {
 
 export default function TimezoneSelector({ selectedTimezone, onSelect }: TimezoneSelectorProps) {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        onSelect(e.target.value);
+        const value = e.target.value;
+        onSelect(value === '' ? null : value);
     };
 
     return (
@@ -52,11 +53,12 @@ export default function TimezoneSelector({ selectedTimezone, onSelect }: Timezon
                 <span className="select-icon" aria-hidden="true">🕐</span>
                 <select
                     id="timezone-select"
-                    value={selectedTimezone}
+                    value={selectedTimezone || ''}
                     onChange={handleChange}
                     className="timezone-select"
                     aria-label="选择时区"
                 >
+                    <option value="">TIME ZONE</option>
                     <optgroup label="北美">
                         {timezones.filter(tz =>
                             tz.value.startsWith('America/') &&

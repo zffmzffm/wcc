@@ -45,7 +45,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                 </div>
                 <div className="sidebar-header-actions">
                     <span className="team-group-badge" aria-label={`小组 ${team.group}`}>
-                        小组 {team.group}
+                        {team.group}
                     </span>
                     <button className="sidebar-close" onClick={onClose} aria-label="清除选择">
                         ✕

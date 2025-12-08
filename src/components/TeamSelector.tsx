@@ -38,10 +38,12 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
                 选择球队
             </label>
             <div className="team-select-wrapper">
-                {selectedTeamInfo && (
+                {selectedTeamInfo ? (
                     <span className="select-flag" aria-hidden="true">
                         <FlagIcon code={selectedTeamInfo.code} size={18} />
                     </span>
+                ) : (
+                    <span className="select-icon" aria-hidden="true">⚽</span>
                 )}
                 <select
                     id="team-select"
@@ -50,7 +52,7 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
                     className="team-select"
                     aria-expanded={!!selectedTeam}
                 >
-                    <option value="">🌍 选择球队查看行程</option>
+                    <option value="">TEAM</option>
                     {sortedGroups.map(group => (
                         <optgroup key={group} label={`小组 ${group}`}>
                             {groupedTeams[group].map(team => (

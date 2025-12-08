@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
@@ -25,10 +25,38 @@ const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
   )
 });
 
+// Mobile breakpoint (matches CSS)
+const MOBILE_BREAKPOINT = 600;
+
 export default function Home() {
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [selectedTimezone, setSelectedTimezone] = useState<string>('America/New_York');
+  const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Mobile-aware city selection: close team sidebar when selecting city
+  const handleCitySelect = useCallback((city: City | null) => {
+    setSelectedCity(city);
+    if (isMobile && city) {
+      setSelectedTeam(null);
+    }
+  }, [isMobile]);
+
+  // Mobile-aware team selection: close city sidebar when selecting team
+  const handleTeamSelect = useCallback((teamCode: string | null) => {
+    setSelectedTeam(teamCode);
+    if (isMobile && teamCode) {
+      setSelectedCity(null);
+    }
+  }, [isMobile]);
 
   // 获取选中球队的信息
   const selectedTeamInfo = selectedTeam
@@ -45,6 +73,9 @@ export default function Home() {
     ? matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam)
     : [];
 
+  // 用于显示的时区，未选择时使用默认值
+  const displayTimezone = selectedTimezone || 'America/Toronto';
+
   return (
     <main className="main-container">
       <Header>
@@ -55,7 +86,7 @@ export default function Home() {
         <TeamSelector
           teams={teams}
           selectedTeam={selectedTeam}
-          onSelect={setSelectedTeam}
+          onSelect={handleTeamSelect}
         />
       </Header>
 
@@ -64,13 +95,13 @@ export default function Home() {
           city={selectedCity}
           matches={cityMatches}
           teams={teams}
-          timezone={selectedTimezone}
+          timezone={displayTimezone}
           onClose={() => setSelectedCity(null)}
         />
         <div className="map-container" role="application" aria-label="2026 世界杯场馆地图">
           <WorldCupMap
             selectedTeam={selectedTeam}
-            onCitySelect={setSelectedCity}
+            onCitySelect={handleCitySelect}
           />
         </div>
         <TeamScheduleSidebar
@@ -78,7 +109,7 @@ export default function Home() {
           matches={teamMatches}
           teams={teams}
           cities={cities}
-          timezone={selectedTimezone}
+          timezone={displayTimezone}
           onClose={() => setSelectedTeam(null)}
         />
       </div>
