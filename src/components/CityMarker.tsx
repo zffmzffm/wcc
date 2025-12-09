@@ -8,10 +8,12 @@ import { getCountryColor } from '@/utils/formatters';
 interface CityMarkerProps {
     city: City;
     onClick: () => void;
+    isDimmed?: boolean;
 }
 
-export default function CityMarker({ city, onClick }: CityMarkerProps) {
+export default function CityMarker({ city, onClick, isDimmed = false }: CityMarkerProps) {
     const color = getCountryColor(city.country);
+    const opacity = isDimmed ? 0.5 : 1;
 
     // Memoize icon creation to avoid recreating on every render
     const customIcon = useMemo(() => L.divIcon({
@@ -24,11 +26,12 @@ export default function CityMarker({ city, onClick }: CityMarkerProps) {
       border: 3px solid white;
       box-shadow: 0 2px 8px rgba(0,0,0,0.4);
       cursor: pointer;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.3s ease;
+      opacity: ${opacity};
     "></div>`,
         iconSize: [24, 24],
         iconAnchor: [12, 12],
-    }), [color]);
+    }), [color, opacity]);
 
     return (
         <Marker
@@ -43,4 +46,3 @@ export default function CityMarker({ city, onClick }: CityMarkerProps) {
         </Marker>
     );
 }
-

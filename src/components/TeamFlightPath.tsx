@@ -203,6 +203,33 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         />
                     </marker>
                 </defs>
+                {/* City name labels */}
+                {renderedMarkers.map((markerIndex) => {
+                    const matchInfo = teamMatches[markerIndex];
+                    if (!matchInfo) return null;
+                    const { city, coords } = matchInfo;
+                    const pixel = latLngToPixel(coords);
+
+                    return (
+                        <text
+                            key={`label-${animationKeyRef.current}-${markerIndex}`}
+                            x={pixel.x + 18}
+                            y={pixel.y + 6}
+                            textAnchor="start"
+                            className="city-label"
+                            style={{
+                                fill: '#2D5A3D',
+                                fontSize: '18px',
+                                fontWeight: 700,
+                                textShadow: '0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff',
+                                pointerEvents: 'none'
+                            }}
+                        >
+                            {city.name}
+                        </text>
+                    );
+                })}
+
                 {/* Render each flight path */}
                 {renderedSegments.map(({ segment, isNew }, idx) => {
                     const startPixel = latLngToPixel(segment.from);
@@ -277,7 +304,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         pathOptions={{
                             color: '#fff',
                             weight: 3,
-                            fillColor: isLatest ? '#D88A8A' : '#2D5A3D',
+                            fillColor: '#2D5A3D',
                             fillOpacity: 0.95
                         }}
                     >

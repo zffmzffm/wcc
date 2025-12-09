@@ -105,6 +105,13 @@ interface WorldCupMapProps {
 }
 
 export default function WorldCupMap({ selectedTeam, selectedCity, onCitySelect, isSidebarOpen = false, isMobile = false }: WorldCupMapProps) {
+    // Calculate which cities are relevant for the selected team
+    const teamCityIds = React.useMemo(() => {
+        if (!selectedTeam) return new Set<string>();
+        const teamMatches = matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam);
+        return new Set(teamMatches.map(m => m.cityId));
+    }, [selectedTeam]);
+
     return (
         <MapContainer
             center={[39.8283, -98.5795]} // North America center
@@ -130,6 +137,7 @@ export default function WorldCupMap({ selectedTeam, selectedCity, onCitySelect, 
                     key={city.id}
                     city={city}
                     onClick={() => onCitySelect(city)}
+                    isDimmed={selectedTeam !== null && !teamCityIds.has(city.id)}
                 />
             ))}
 
