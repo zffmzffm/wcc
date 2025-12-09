@@ -210,12 +210,69 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                     const { city, coords } = matchInfo;
                     const pixel = latLngToPixel(coords);
 
+                    // Calculate average direction of connected flight paths
+                    let avgDx = 0, avgDy = 0, pathCount = 0;
+
+                    // Check incoming path (from previous city)
+                    if (markerIndex > 0) {
+                        const prevMatch = teamMatches[markerIndex - 1];
+                        if (prevMatch) {
+                            const prevPixel = latLngToPixel(prevMatch.coords);
+                            avgDx += pixel.x - prevPixel.x;
+                            avgDy += pixel.y - prevPixel.y;
+                            pathCount++;
+                        }
+                    }
+
+                    // Check outgoing path (to next city)
+                    if (markerIndex < teamMatches.length - 1) {
+                        const nextMatch = teamMatches[markerIndex + 1];
+                        if (nextMatch) {
+                            const nextPixel = latLngToPixel(nextMatch.coords);
+                            avgDx += nextPixel.x - pixel.x;
+                            avgDy += nextPixel.y - pixel.y;
+                            pathCount++;
+                        }
+                    }
+
+                    // Calculate label position opposite to average path direction
+                    let labelX = pixel.x;
+                    let labelY = pixel.y;
+                    let textAnchor: 'start' | 'end' | 'middle' = 'start';
+
+                    if (pathCount > 0) {
+                        // Normalize direction
+                        const len = Math.sqrt(avgDx * avgDx + avgDy * avgDy);
+                        if (len > 0) {
+                            avgDx /= len;
+                            avgDy /= len;
+                        }
+
+                        // Place label in opposite direction, with offset
+                        const offset = 22;
+                        labelX = pixel.x - avgDx * offset;
+                        labelY = pixel.y - avgDy * offset + 5;
+
+                        // Adjust text anchor based on position relative to marker
+                        if (avgDx > 0.3) {
+                            textAnchor = 'end'; // Path goes right, label on left
+                        } else if (avgDx < -0.3) {
+                            textAnchor = 'start'; // Path goes left, label on right
+                        } else {
+                            textAnchor = 'middle'; // Path is mostly vertical
+                        }
+                    } else {
+                        // Default: right side
+                        labelX = pixel.x + 18;
+                        labelY = pixel.y + 6;
+                    }
+
                     return (
                         <text
                             key={`label-${animationKeyRef.current}-${markerIndex}`}
-                            x={pixel.x + 18}
-                            y={pixel.y + 6}
-                            textAnchor="start"
+                            x={labelX}
+                            y={labelY}
+                            textAnchor={textAnchor}
                             className="city-label"
                             style={{
                                 fill: '#2D5A3D',
