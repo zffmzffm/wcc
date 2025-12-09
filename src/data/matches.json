@@ -18,7 +18,16 @@
         "stage": "group"
     },
     {
-        "id": 3,
+        "id": 25,
+        "group": "A",
+        "team1": "PO_D",
+        "team2": "RSA",
+        "cityId": "atlanta",
+        "datetime": "2026-06-18T12:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 28,
         "group": "A",
         "team1": "MEX",
         "team2": "KOR",
@@ -27,25 +36,16 @@
         "stage": "group"
     },
     {
-        "id": 4,
+        "id": 53,
         "group": "A",
-        "team1": "RSA",
-        "team2": "PO_D",
-        "cityId": "atlanta",
-        "datetime": "2026-06-18T18:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 5,
-        "group": "A",
-        "team1": "MEX",
-        "team2": "PO_D",
+        "team1": "PO_D",
+        "team2": "MEX",
         "cityId": "mexico_city",
         "datetime": "2026-06-24T21:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 6,
+        "id": 54,
         "group": "A",
         "team1": "RSA",
         "team2": "KOR",
@@ -54,7 +54,7 @@
         "stage": "group"
     },
     {
-        "id": 7,
+        "id": 3,
         "group": "B",
         "team1": "CAN",
         "team2": "PO_A",
@@ -72,7 +72,7 @@
         "stage": "group"
     },
     {
-        "id": 9,
+        "id": 26,
         "group": "B",
         "team1": "SUI",
         "team2": "PO_A",
@@ -81,7 +81,7 @@
         "stage": "group"
     },
     {
-        "id": 10,
+        "id": 27,
         "group": "B",
         "team1": "CAN",
         "team2": "QAT",
@@ -90,7 +90,7 @@
         "stage": "group"
     },
     {
-        "id": 11,
+        "id": 51,
         "group": "B",
         "team1": "SUI",
         "team2": "CAN",
@@ -99,7 +99,7 @@
         "stage": "group"
     },
     {
-        "id": 12,
+        "id": 52,
         "group": "B",
         "team1": "PO_A",
         "team2": "QAT",
@@ -108,7 +108,7 @@
         "stage": "group"
     },
     {
-        "id": 13,
+        "id": 7,
         "group": "C",
         "team1": "BRA",
         "team2": "MAR",
@@ -117,7 +117,7 @@
         "stage": "group"
     },
     {
-        "id": 14,
+        "id": 5,
         "group": "C",
         "team1": "HAI",
         "team2": "SCO",
@@ -126,7 +126,7 @@
         "stage": "group"
     },
     {
-        "id": 15,
+        "id": 30,
         "group": "C",
         "team1": "SCO",
         "team2": "MAR",
@@ -135,7 +135,7 @@
         "stage": "group"
     },
     {
-        "id": 16,
+        "id": 29,
         "group": "C",
         "team1": "BRA",
         "team2": "HAI",
@@ -144,16 +144,16 @@
         "stage": "group"
     },
     {
-        "id": 17,
+        "id": 49,
         "group": "C",
-        "team1": "BRA",
-        "team2": "SCO",
+        "team1": "SCO",
+        "team2": "BRA",
         "cityId": "miami",
         "datetime": "2026-06-24T18:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 18,
+        "id": 50,
         "group": "C",
         "team1": "MAR",
         "team2": "HAI",
@@ -162,7 +162,7 @@
         "stage": "group"
     },
     {
-        "id": 19,
+        "id": 4,
         "group": "D",
         "team1": "USA",
         "team2": "PAR",
@@ -171,16 +171,16 @@
         "stage": "group"
     },
     {
-        "id": 20,
+        "id": 6,
         "group": "D",
         "team1": "AUS",
         "team2": "PO_C",
         "cityId": "vancouver",
-        "datetime": "2026-06-13T15:00:00-04:00",
+        "datetime": "2026-06-14T00:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 21,
+        "id": 32,
         "group": "D",
         "team1": "USA",
         "team2": "AUS",
@@ -189,25 +189,25 @@
         "stage": "group"
     },
     {
-        "id": 22,
+        "id": 31,
         "group": "D",
-        "team1": "PAR",
-        "team2": "PO_C",
-        "cityId": "los_angeles",
-        "datetime": "2026-06-19T18:00:00-04:00",
+        "team1": "PO_C",
+        "team2": "PAR",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-20T00:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 23,
+        "id": 59,
         "group": "D",
-        "team1": "USA",
-        "team2": "PO_C",
+        "team1": "PO_C",
+        "team2": "USA",
         "cityId": "los_angeles",
         "datetime": "2026-06-25T22:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 24,
+        "id": 60,
         "group": "D",
         "team1": "PAR",
         "team2": "AUS",
@@ -216,7 +216,7 @@
         "stage": "group"
     },
     {
-        "id": 25,
+        "id": 10,
         "group": "E",
         "team1": "GER",
         "team2": "CUW",
@@ -225,7 +225,7 @@
         "stage": "group"
     },
     {
-        "id": 26,
+        "id": 9,
         "group": "E",
         "team1": "CIV",
         "team2": "ECU",
@@ -234,7 +234,7 @@
         "stage": "group"
     },
     {
-        "id": 27,
+        "id": 33,
         "group": "E",
         "team1": "GER",
         "team2": "CIV",
@@ -243,7 +243,7 @@
         "stage": "group"
     },
     {
-        "id": 28,
+        "id": 34,
         "group": "E",
         "team1": "ECU",
         "team2": "CUW",
@@ -252,7 +252,7 @@
         "stage": "group"
     },
     {
-        "id": 29,
+        "id": 56,
         "group": "E",
         "team1": "ECU",
         "team2": "GER",
@@ -261,7 +261,7 @@
         "stage": "group"
     },
     {
-        "id": 30,
+        "id": 55,
         "group": "E",
         "team1": "CUW",
         "team2": "CIV",
@@ -270,61 +270,61 @@
         "stage": "group"
     },
     {
-        "id": 31,
+        "id": 11,
         "group": "F",
         "team1": "NED",
         "team2": "JPN",
         "cityId": "dallas",
-        "datetime": "2026-06-14T15:00:00-04:00",
+        "datetime": "2026-06-14T16:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 32,
+        "id": 12,
         "group": "F",
         "team1": "PO_B",
         "team2": "TUN",
         "cityId": "monterrey",
-        "datetime": "2026-06-14T18:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 33,
-        "group": "F",
-        "team1": "JPN",
-        "team2": "TUN",
-        "cityId": "monterrey",
-        "datetime": "2026-06-20T15:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 34,
-        "group": "F",
-        "team1": "NED",
-        "team2": "PO_B",
-        "cityId": "monterrey",
-        "datetime": "2026-06-20T18:00:00-04:00",
+        "datetime": "2026-06-14T22:00:00-04:00",
         "stage": "group"
     },
     {
         "id": 35,
         "group": "F",
         "team1": "NED",
-        "team2": "TUN",
-        "cityId": "kansas_city",
-        "datetime": "2026-06-25T18:00:00-04:00",
+        "team2": "PO_B",
+        "cityId": "houston",
+        "datetime": "2026-06-20T13:00:00-04:00",
         "stage": "group"
     },
     {
         "id": 36,
         "group": "F",
-        "team1": "JPN",
-        "team2": "PO_B",
-        "cityId": "dallas",
-        "datetime": "2026-06-25T18:00:00-04:00",
+        "team1": "TUN",
+        "team2": "JPN",
+        "cityId": "monterrey",
+        "datetime": "2026-06-21T00:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 37,
+        "id": 57,
+        "group": "F",
+        "team1": "JPN",
+        "team2": "PO_B",
+        "cityId": "dallas",
+        "datetime": "2026-06-25T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 58,
+        "group": "F",
+        "team1": "TUN",
+        "team2": "NED",
+        "cityId": "kansas_city",
+        "datetime": "2026-06-25T19:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 16,
         "group": "G",
         "team1": "BEL",
         "team2": "EGY",
@@ -333,12 +333,12 @@
         "stage": "group"
     },
     {
-        "id": 38,
+        "id": 15,
         "group": "G",
         "team1": "IRN",
         "team2": "NZL",
         "cityId": "los_angeles",
-        "datetime": "2026-06-15T18:00:00-04:00",
+        "datetime": "2026-06-15T21:00:00-04:00",
         "stage": "group"
     },
     {
@@ -356,11 +356,11 @@
         "team1": "NZL",
         "team2": "EGY",
         "cityId": "vancouver",
-        "datetime": "2026-06-21T18:00:00-04:00",
+        "datetime": "2026-06-21T21:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 41,
+        "id": 64,
         "group": "G",
         "team1": "NZL",
         "team2": "BEL",
@@ -369,7 +369,7 @@
         "stage": "group"
     },
     {
-        "id": 42,
+        "id": 63,
         "group": "G",
         "team1": "EGY",
         "team2": "IRN",
@@ -378,7 +378,7 @@
         "stage": "group"
     },
     {
-        "id": 43,
+        "id": 14,
         "group": "H",
         "team1": "ESP",
         "team2": "CPV",
@@ -387,7 +387,7 @@
         "stage": "group"
     },
     {
-        "id": 44,
+        "id": 13,
         "group": "H",
         "team1": "KSA",
         "team2": "URU",
@@ -396,7 +396,7 @@
         "stage": "group"
     },
     {
-        "id": 45,
+        "id": 38,
         "group": "H",
         "team1": "ESP",
         "team2": "KSA",
@@ -405,7 +405,7 @@
         "stage": "group"
     },
     {
-        "id": 46,
+        "id": 37,
         "group": "H",
         "team1": "URU",
         "team2": "CPV",
@@ -414,25 +414,25 @@
         "stage": "group"
     },
     {
-        "id": 47,
+        "id": 66,
         "group": "H",
-        "team1": "ESP",
-        "team2": "URU",
+        "team1": "URU",
+        "team2": "ESP",
         "cityId": "guadalajara",
         "datetime": "2026-06-26T19:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 48,
+        "id": 65,
         "group": "H",
-        "team1": "KSA",
-        "team2": "CPV",
+        "team1": "CPV",
+        "team2": "KSA",
         "cityId": "houston",
-        "datetime": "2026-06-26T19:00:00-04:00",
+        "datetime": "2026-06-26T20:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 49,
+        "id": 17,
         "group": "I",
         "team1": "FRA",
         "team2": "SEN",
@@ -441,7 +441,7 @@
         "stage": "group"
     },
     {
-        "id": 50,
+        "id": 18,
         "group": "I",
         "team1": "PO_F2",
         "team2": "NOR",
@@ -450,7 +450,7 @@
         "stage": "group"
     },
     {
-        "id": 51,
+        "id": 42,
         "group": "I",
         "team1": "FRA",
         "team2": "PO_F2",
@@ -459,7 +459,7 @@
         "stage": "group"
     },
     {
-        "id": 52,
+        "id": 41,
         "group": "I",
         "team1": "NOR",
         "team2": "SEN",
@@ -468,7 +468,7 @@
         "stage": "group"
     },
     {
-        "id": 53,
+        "id": 61,
         "group": "I",
         "team1": "NOR",
         "team2": "FRA",
@@ -477,7 +477,7 @@
         "stage": "group"
     },
     {
-        "id": 54,
+        "id": 62,
         "group": "I",
         "team1": "SEN",
         "team2": "PO_F2",
@@ -486,115 +486,115 @@
         "stage": "group"
     },
     {
-        "id": 55,
+        "id": 19,
         "group": "J",
         "team1": "ARG",
         "team2": "ALG",
         "cityId": "kansas_city",
-        "datetime": "2026-06-16T18:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 56,
-        "group": "J",
-        "team1": "AUT",
-        "team2": "JOR",
-        "cityId": "san_francisco",
-        "datetime": "2026-06-16T15:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 57,
-        "group": "J",
-        "team1": "ARG",
-        "team2": "AUT",
-        "cityId": "dallas",
-        "datetime": "2026-06-22T15:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 58,
-        "group": "J",
-        "team1": "ALG",
-        "team2": "JOR",
-        "cityId": "san_francisco",
-        "datetime": "2026-06-22T18:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 59,
-        "group": "J",
-        "team1": "JOR",
-        "team2": "ARG",
-        "cityId": "kansas_city",
-        "datetime": "2026-06-27T18:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 60,
-        "group": "J",
-        "team1": "ALG",
-        "team2": "AUT",
-        "cityId": "dallas",
-        "datetime": "2026-06-27T18:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 61,
-        "group": "K",
-        "team1": "POR",
-        "team2": "PO_F1",
-        "cityId": "houston",
         "datetime": "2026-06-16T21:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 62,
+        "id": 20,
+        "group": "J",
+        "team1": "AUT",
+        "team2": "JOR",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-17T00:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 43,
+        "group": "J",
+        "team1": "ARG",
+        "team2": "AUT",
+        "cityId": "dallas",
+        "datetime": "2026-06-22T13:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 44,
+        "group": "J",
+        "team1": "JOR",
+        "team2": "ALG",
+        "cityId": "san_francisco",
+        "datetime": "2026-06-22T23:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 69,
+        "group": "J",
+        "team1": "ALG",
+        "team2": "AUT",
+        "cityId": "kansas_city",
+        "datetime": "2026-06-27T22:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 70,
+        "group": "J",
+        "team1": "JOR",
+        "team2": "ARG",
+        "cityId": "dallas",
+        "datetime": "2026-06-27T22:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 23,
+        "group": "K",
+        "team1": "POR",
+        "team2": "PO_F1",
+        "cityId": "houston",
+        "datetime": "2026-06-17T13:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 24,
         "group": "K",
         "team1": "UZB",
         "team2": "COL",
         "cityId": "mexico_city",
-        "datetime": "2026-06-16T18:00:00-04:00",
+        "datetime": "2026-06-17T22:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 63,
+        "id": 47,
         "group": "K",
         "team1": "POR",
         "team2": "UZB",
         "cityId": "houston",
-        "datetime": "2026-06-22T21:00:00-04:00",
+        "datetime": "2026-06-23T13:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 64,
+        "id": 48,
+        "group": "K",
+        "team1": "COL",
+        "team2": "PO_F1",
+        "cityId": "guadalajara",
+        "datetime": "2026-06-23T22:00:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 71,
+        "group": "K",
+        "team1": "COL",
+        "team2": "POR",
+        "cityId": "miami",
+        "datetime": "2026-06-27T19:30:00-04:00",
+        "stage": "group"
+    },
+    {
+        "id": 72,
         "group": "K",
         "team1": "PO_F1",
-        "team2": "COL",
-        "cityId": "kansas_city",
-        "datetime": "2026-06-22T18:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 65,
-        "group": "K",
-        "team1": "POR",
-        "team2": "COL",
-        "cityId": "miami",
-        "datetime": "2026-06-27T21:00:00-04:00",
-        "stage": "group"
-    },
-    {
-        "id": 66,
-        "group": "K",
-        "team1": "UZB",
-        "team2": "PO_F1",
+        "team2": "UZB",
         "cityId": "atlanta",
-        "datetime": "2026-06-27T21:00:00-04:00",
+        "datetime": "2026-06-27T19:30:00-04:00",
         "stage": "group"
     },
     {
-        "id": 67,
+        "id": 22,
         "group": "L",
         "team1": "ENG",
         "team2": "CRO",
@@ -603,7 +603,7 @@
         "stage": "group"
     },
     {
-        "id": 68,
+        "id": 21,
         "group": "L",
         "team1": "GHA",
         "team2": "PAN",
@@ -612,7 +612,7 @@
         "stage": "group"
     },
     {
-        "id": 69,
+        "id": 45,
         "group": "L",
         "team1": "ENG",
         "team2": "GHA",
@@ -621,16 +621,16 @@
         "stage": "group"
     },
     {
-        "id": 70,
+        "id": 46,
         "group": "L",
         "team1": "PAN",
         "team2": "CRO",
         "cityId": "toronto",
-        "datetime": "2026-06-23T15:00:00-04:00",
+        "datetime": "2026-06-23T19:00:00-04:00",
         "stage": "group"
     },
     {
-        "id": 71,
+        "id": 67,
         "group": "L",
         "team1": "PAN",
         "team2": "ENG",
@@ -639,7 +639,7 @@
         "stage": "group"
     },
     {
-        "id": 72,
+        "id": 68,
         "group": "L",
         "team1": "CRO",
         "team2": "GHA",
