@@ -32,12 +32,10 @@ const MOBILE_SIDEBAR_BOUNDS: L.LatLngBoundsExpression = [
 // Component to adjust map view when a team is selected - fit to team's cities
 function TeamViewAdjuster({
     selectedTeam,
-    isMobile,
-    isSidebarOpen
+    isMobile
 }: {
     selectedTeam: string | null;
     isMobile: boolean;
-    isSidebarOpen: boolean;
 }) {
     const map = useMap();
     const prevTeam = useRef<string | null>(null);
@@ -69,22 +67,40 @@ function TeamViewAdjuster({
         const minLng = Math.min(...lngs);
         const maxLng = Math.max(...lngs);
 
-        // Use fixed padding values for consistent behavior
-        const latPadding = 3; // Fixed 3 degrees latitude padding
-        const lngPadding = 5; // Fixed 5 degrees longitude padding
+        // Calculate actual span of cities
+        const latSpan = maxLat - minLat;
+        const lngSpan = maxLng - minLng;
+
+        // Ensure minimum bounds span to prevent over-zooming on narrow ranges
+        // This fixes the issue where teams with 2 cities at similar latitudes
+        // (like Canada: Vancouver-Toronto) cause extreme zoom-out
+        const minLatSpan = 12; // Minimum 12 degrees latitude span
+        const minLngSpan = 15; // Minimum 15 degrees longitude span
+
+        // Calculate center of cities
+        const centerLat = (minLat + maxLat) / 2;
+        const centerLng = (minLng + maxLng) / 2;
+
+        // Apply minimum span if needed, centered on the cities
+        const effectiveLatSpan = Math.max(latSpan, minLatSpan);
+        const effectiveLngSpan = Math.max(lngSpan, minLngSpan);
+
+        // Add fixed padding on top of the effective span
+        const latPadding = 2;
+        const lngPadding = 3;
 
         const bounds: L.LatLngBoundsExpression = [
-            [minLat - latPadding, minLng - lngPadding],
-            [maxLat + latPadding, maxLng + lngPadding]
+            [centerLat - effectiveLatSpan / 2 - latPadding, centerLng - effectiveLngSpan / 2 - lngPadding],
+            [centerLat + effectiveLatSpan / 2 + latPadding, centerLng + effectiveLngSpan / 2 + lngPadding]
         ];
 
         // Small delay to ensure map is ready
         setTimeout(() => {
             map.invalidateSize();
             // Fit map to team's cities with pixel padding
-            // On mobile with sidebar, add extra bottom padding
-            const paddingOptions = isMobile && isSidebarOpen
-                ? { paddingTopLeft: [20, 20] as L.PointTuple, paddingBottomRight: [20, 150] as L.PointTuple }
+            // On mobile, add extra bottom padding since team sidebar appears at bottom
+            const paddingOptions = isMobile
+                ? { paddingTopLeft: [20, 20] as L.PointTuple, paddingBottomRight: [20, 200] as L.PointTuple }
                 : { padding: [40, 40] as L.PointTuple };
 
             map.fitBounds(bounds, {
@@ -98,7 +114,7 @@ function TeamViewAdjuster({
                 map.setZoom(3, { animate: true });
             }
         }, 100);
-    }, [selectedTeam, map, isMobile, isSidebarOpen]);
+    }, [selectedTeam, map, isMobile]);
 
     return null;
 }
@@ -208,7 +224,7 @@ export default function WorldCupMap({ selectedTeam, selectedCity, onCitySelect, 
             <MapViewAdjuster isSidebarOpen={isSidebarOpen} isMobile={isMobile} selectedCity={selectedCity} selectedTeam={selectedTeam} />
 
             {/* Team view adjuster - fits map to team's cities */}
-            <TeamViewAdjuster selectedTeam={selectedTeam} isMobile={isMobile} isSidebarOpen={isSidebarOpen} />
+            <TeamViewAdjuster selectedTeam={selectedTeam} isMobile={isMobile} />
 
             {/* City markers */}
             {cities.map(city => (
