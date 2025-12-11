@@ -69,9 +69,9 @@ function TeamViewAdjuster({
         const minLng = Math.min(...lngs);
         const maxLng = Math.max(...lngs);
 
-        // Add padding to the bounds (in degrees)
-        const latPadding = Math.max((maxLat - minLat) * 0.3, 2); // At least 2 degrees
-        const lngPadding = Math.max((maxLng - minLng) * 0.3, 3); // At least 3 degrees
+        // Use fixed padding values for consistent behavior
+        const latPadding = 3; // Fixed 3 degrees latitude padding
+        const lngPadding = 5; // Fixed 5 degrees longitude padding
 
         const bounds: L.LatLngBoundsExpression = [
             [minLat - latPadding, minLng - lngPadding],
@@ -81,17 +81,22 @@ function TeamViewAdjuster({
         // Small delay to ensure map is ready
         setTimeout(() => {
             map.invalidateSize();
-            // Fit map to team's cities with some padding
+            // Fit map to team's cities with pixel padding
             // On mobile with sidebar, add extra bottom padding
             const paddingOptions = isMobile && isSidebarOpen
                 ? { paddingTopLeft: [20, 20] as L.PointTuple, paddingBottomRight: [20, 150] as L.PointTuple }
-                : { padding: [30, 30] as L.PointTuple };
+                : { padding: [40, 40] as L.PointTuple };
 
             map.fitBounds(bounds, {
                 ...paddingOptions,
-                maxZoom: 6, // Don't zoom in too much
+                maxZoom: 5,  // Limit max zoom for consistency
                 animate: true
             });
+
+            // Ensure minimum zoom level after fitBounds
+            if (map.getZoom() < 3) {
+                map.setZoom(3, { animate: true });
+            }
         }, 100);
     }, [selectedTeam, map, isMobile, isSidebarOpen]);
 
