@@ -203,90 +203,6 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         />
                     </marker>
                 </defs>
-                {/* City name labels */}
-                {renderedMarkers.map((markerIndex) => {
-                    const matchInfo = teamMatches[markerIndex];
-                    if (!matchInfo) return null;
-                    const { city, coords } = matchInfo;
-                    const pixel = latLngToPixel(coords);
-
-                    // Calculate average direction of connected flight paths
-                    let avgDx = 0, avgDy = 0, pathCount = 0;
-
-                    // Check incoming path (from previous city)
-                    if (markerIndex > 0) {
-                        const prevMatch = teamMatches[markerIndex - 1];
-                        if (prevMatch) {
-                            const prevPixel = latLngToPixel(prevMatch.coords);
-                            avgDx += pixel.x - prevPixel.x;
-                            avgDy += pixel.y - prevPixel.y;
-                            pathCount++;
-                        }
-                    }
-
-                    // Check outgoing path (to next city)
-                    if (markerIndex < teamMatches.length - 1) {
-                        const nextMatch = teamMatches[markerIndex + 1];
-                        if (nextMatch) {
-                            const nextPixel = latLngToPixel(nextMatch.coords);
-                            avgDx += nextPixel.x - pixel.x;
-                            avgDy += nextPixel.y - pixel.y;
-                            pathCount++;
-                        }
-                    }
-
-                    // Calculate label position opposite to average path direction
-                    let labelX = pixel.x;
-                    let labelY = pixel.y;
-                    let textAnchor: 'start' | 'end' | 'middle' = 'start';
-
-                    if (pathCount > 0) {
-                        // Normalize direction
-                        const len = Math.sqrt(avgDx * avgDx + avgDy * avgDy);
-                        if (len > 0) {
-                            avgDx /= len;
-                            avgDy /= len;
-                        }
-
-                        // Place label in opposite direction, with offset
-                        const offset = 22;
-                        labelX = pixel.x - avgDx * offset;
-                        labelY = pixel.y - avgDy * offset + 5;
-
-                        // Adjust text anchor based on position relative to marker
-                        if (avgDx > 0.3) {
-                            textAnchor = 'end'; // Path goes right, label on left
-                        } else if (avgDx < -0.3) {
-                            textAnchor = 'start'; // Path goes left, label on right
-                        } else {
-                            textAnchor = 'middle'; // Path is mostly vertical
-                        }
-                    } else {
-                        // Default: right side
-                        labelX = pixel.x + 18;
-                        labelY = pixel.y + 6;
-                    }
-
-                    return (
-                        <text
-                            key={`label-${animationKeyRef.current}-${markerIndex}`}
-                            x={labelX}
-                            y={labelY}
-                            textAnchor={textAnchor}
-                            className="city-label"
-                            style={{
-                                fill: '#2D5A3D',
-                                fontSize: '18px',
-                                fontWeight: 700,
-                                textShadow: '0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff',
-                                pointerEvents: 'none'
-                            }}
-                        >
-                            {city.name}
-                        </text>
-                    );
-                })}
-
                 {/* Render each flight path */}
                 {renderedSegments.map(({ segment, isNew }, idx) => {
                     const startPixel = latLngToPixel(segment.from);
@@ -341,6 +257,148 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                         </g>
                     );
                 })}
+
+                {/* City name labels - deduplicate all cities (each city labeled only once) */}
+                {(() => {
+                    const seenCities = new Set<string>();
+                    return renderedMarkers.filter((markerIndex) => {
+                        const cityId = teamMatches[markerIndex]?.city?.id;
+                        if (!cityId || seenCities.has(cityId)) return false;
+                        seenCities.add(cityId);
+                        return true;
+                    });
+                })()
+                    .map((markerIndex) => {
+                        const matchInfo = teamMatches[markerIndex];
+                        if (!matchInfo) return null;
+                        const { city, coords } = matchInfo;
+                        const pixel = latLngToPixel(coords);
+
+                        // Collect all path directions from this city
+                        const pathDirections: { dx: number; dy: number }[] = [];
+
+                        // Check incoming path (from previous city)
+                        if (markerIndex > 0) {
+                            const prevMatch = teamMatches[markerIndex - 1];
+                            if (prevMatch) {
+                                const prevPixel = latLngToPixel(prevMatch.coords);
+                                // Direction FROM previous city TO this city
+                                pathDirections.push({
+                                    dx: pixel.x - prevPixel.x,
+                                    dy: pixel.y - prevPixel.y
+                                });
+                            }
+                        }
+
+                        // Check outgoing path (to next city)
+                        if (markerIndex < teamMatches.length - 1) {
+                            const nextMatch = teamMatches[markerIndex + 1];
+                            if (nextMatch) {
+                                const nextPixel = latLngToPixel(nextMatch.coords);
+                                // Direction FROM this city TO next city
+                                pathDirections.push({
+                                    dx: nextPixel.x - pixel.x,
+                                    dy: nextPixel.y - pixel.y
+                                });
+                            }
+                        }
+
+                        // Calculate label position - find angular gap between paths to avoid overlap
+                        let labelX = pixel.x;
+                        let labelY = pixel.y;
+                        let textAnchor: 'start' | 'end' | 'middle' = 'start';
+                        const labelOffset = 20; // Distance from marker center
+
+                        if (pathDirections.length > 0) {
+                            // Convert path directions to angles (in radians)
+                            const pathAngles: number[] = pathDirections.map(dir => {
+                                return Math.atan2(dir.dy, dir.dx);
+                            });
+
+                            // Also add angles for the curved arcs (paths curve "upward" relative to direction)
+                            // Add arc offset angles to avoid the curved portions
+                            const allBlockedAngles: number[] = [];
+                            pathAngles.forEach(angle => {
+                                // Block the direct path angle
+                                allBlockedAngles.push(angle);
+                                // Block area where arc curves (roughly 30-60 degrees perpendicular to path)
+                                // Arcs curve "left" of travel direction in screen coords
+                                allBlockedAngles.push(angle - Math.PI / 4);
+                                allBlockedAngles.push(angle - Math.PI / 3);
+                            });
+
+                            // Normalize all angles to [0, 2π)
+                            const normalizedAngles = allBlockedAngles.map(a => {
+                                let norm = a % (2 * Math.PI);
+                                if (norm < 0) norm += 2 * Math.PI;
+                                return norm;
+                            }).sort((a, b) => a - b);
+
+                            // Find the largest angular gap
+                            let maxGap = 0;
+                            let bestAngle = 0;
+
+                            for (let i = 0; i < normalizedAngles.length; i++) {
+                                const current = normalizedAngles[i];
+                                const next = normalizedAngles[(i + 1) % normalizedAngles.length];
+                                let gap = next - current;
+                                if (gap <= 0) gap += 2 * Math.PI; // Wrap around
+
+                                if (gap > maxGap) {
+                                    maxGap = gap;
+                                    // Place label in the middle of the gap
+                                    bestAngle = current + gap / 2;
+                                }
+                            }
+
+                            // If no clear gap found (all paths similar direction), go opposite
+                            if (maxGap < Math.PI / 3 && pathAngles.length > 0) {
+                                const avgAngle = pathAngles.reduce((a, b) => a + b, 0) / pathAngles.length;
+                                bestAngle = avgAngle + Math.PI; // Opposite direction
+                            }
+
+                            // Calculate label position
+                            const labelDx = Math.cos(bestAngle);
+                            const labelDy = Math.sin(bestAngle);
+
+                            labelX = pixel.x + labelDx * labelOffset;
+                            labelY = pixel.y + labelDy * labelOffset + 5;
+
+                            // Adjust text anchor based on label position
+                            if (labelDx < -0.3) {
+                                textAnchor = 'end'; // Label is to the left
+                            } else if (labelDx > 0.3) {
+                                textAnchor = 'start'; // Label is to the right
+                            } else {
+                                textAnchor = 'middle'; // Label is above or below
+                            }
+                        } else {
+                            // Default: place to the right
+                            labelX = pixel.x + labelOffset;
+                            labelY = pixel.y + 6;
+                        }
+
+                        return (
+                            <text
+                                key={`label-${animationKeyRef.current}-${markerIndex}`}
+                                x={labelX}
+                                y={labelY}
+                                textAnchor={textAnchor}
+                                className="city-label"
+                                style={{
+                                    fill: '#2D5A3D',
+                                    fontSize: '18px',
+                                    fontWeight: 700,
+                                    stroke: '#fff',
+                                    strokeWidth: '4px',
+                                    paintOrder: 'stroke fill',
+                                    pointerEvents: 'none'
+                                }}
+                            >
+                                {city.name}
+                            </text>
+                        );
+                    })}
             </svg>
 
             {/* Match markers */}

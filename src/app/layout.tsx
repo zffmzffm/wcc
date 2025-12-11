@@ -13,13 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WORLD CUP '26 TRACKER",
-  description: "World Cup '26 Tracker - Interactive map showing host cities, match schedules, and team flight paths for 2026 FIFA World Cup.",
-  keywords: ["World Cup 26 Tracker", "World Cup 2026", "FIFA World Cup 2026", "2026 World Cup Schedule", "World Cup Map", "Soccer", "Football"],
+  title: "SOCCER FAN GUIDE '26",
+  description: "Soccer Fan Guide '26 - Interactive map showing host cities, match schedules, and team flight paths for 2026 FIFA World Cup.",
+  keywords: ["Soccer Fan Guide", "World Cup 2026", "FIFA World Cup 2026", "2026 World Cup Schedule", "World Cup Map", "Soccer", "Football"],
   openGraph: {
-    title: "WORLD CUP '26 TRACKER",
-    description: "World Cup '26 Tracker - Interactive map for 2026 FIFA World Cup",
+    title: "SOCCER FAN GUIDE '26",
+    description: "Soccer Fan Guide '26 - Interactive map for 2026 FIFA World Cup",
     type: "website",
+  },
+  icons: {
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>",
   },
 };
 
@@ -30,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-      </head>
+      <head />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

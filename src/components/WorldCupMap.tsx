@@ -17,28 +17,98 @@ L.Icon.Default.mergeOptions({
     shadowUrl: '/marker-shadow.png',
 });
 
-// Default bounds for the map
+// Default bounds for the map - very relaxed for flexible viewing
 const DEFAULT_BOUNDS: L.LatLngBoundsExpression = [
-    [10, -140], // Southwest corner (relaxed)
-    [58, -56]   // Northeast corner (relaxed)
+    [-15, -160], // Southwest corner (very relaxed)
+    [65, -40]    // Northeast corner (relaxed)
 ];
 
-// Adjusted bounds when sidebar is open on mobile - shift south boundary north
-// so Mexican cities don't get hidden behind the bottom sidebar
+// Adjusted bounds when sidebar is open on mobile
 const MOBILE_SIDEBAR_BOUNDS: L.LatLngBoundsExpression = [
-    [18, -140], // Southwest corner - moved north from 10 to 18
-    [58, -56]   // Northeast corner (same)
+    [0, -160],  // Southwest corner - relaxed to equator
+    [65, -40]   // Northeast corner (same as default)
 ];
+
+// Component to adjust map view when a team is selected - fit to team's cities
+function TeamViewAdjuster({
+    selectedTeam,
+    isMobile,
+    isSidebarOpen
+}: {
+    selectedTeam: string | null;
+    isMobile: boolean;
+    isSidebarOpen: boolean;
+}) {
+    const map = useMap();
+    const prevTeam = useRef<string | null>(null);
+
+    useEffect(() => {
+        // Only adjust when team selection changes (not on every render)
+        if (selectedTeam === prevTeam.current) return;
+        prevTeam.current = selectedTeam;
+
+        if (!selectedTeam) {
+            // When team is deselected, reset to default view
+            map.setView([35, -100], isMobile ? 3 : 4, { animate: true });
+            return;
+        }
+
+        // Find all cities this team will visit
+        const teamMatches = matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam);
+        const teamCityIds = new Set(teamMatches.map(m => m.cityId));
+        const teamCities = cities.filter(c => teamCityIds.has(c.id));
+
+        if (teamCities.length === 0) return;
+
+        // Create bounds that encompass all team cities
+        const lats = teamCities.map(c => c.lat);
+        const lngs = teamCities.map(c => c.lng);
+
+        const minLat = Math.min(...lats);
+        const maxLat = Math.max(...lats);
+        const minLng = Math.min(...lngs);
+        const maxLng = Math.max(...lngs);
+
+        // Add padding to the bounds (in degrees)
+        const latPadding = Math.max((maxLat - minLat) * 0.3, 2); // At least 2 degrees
+        const lngPadding = Math.max((maxLng - minLng) * 0.3, 3); // At least 3 degrees
+
+        const bounds: L.LatLngBoundsExpression = [
+            [minLat - latPadding, minLng - lngPadding],
+            [maxLat + latPadding, maxLng + lngPadding]
+        ];
+
+        // Small delay to ensure map is ready
+        setTimeout(() => {
+            map.invalidateSize();
+            // Fit map to team's cities with some padding
+            // On mobile with sidebar, add extra bottom padding
+            const paddingOptions = isMobile && isSidebarOpen
+                ? { paddingTopLeft: [20, 20] as L.PointTuple, paddingBottomRight: [20, 150] as L.PointTuple }
+                : { padding: [30, 30] as L.PointTuple };
+
+            map.fitBounds(bounds, {
+                ...paddingOptions,
+                maxZoom: 6, // Don't zoom in too much
+                animate: true
+            });
+        }, 100);
+    }, [selectedTeam, map, isMobile, isSidebarOpen]);
+
+    return null;
+}
 
 // Component to dynamically adjust map view based on sidebar state and mobile
 function MapViewAdjuster({
     isSidebarOpen,
     isMobile,
-    selectedCity
+    selectedCity,
+    selectedTeam
 }: {
     isSidebarOpen: boolean;
     isMobile: boolean;
     selectedCity: City | null;
+    selectedTeam: string | null;
 }) {
     const map = useMap();
     const initialAdjustmentDone = useRef(false);
@@ -70,7 +140,8 @@ function MapViewAdjuster({
             // Use tighter bounds that account for sidebar covering bottom
             map.setMaxBounds(MOBILE_SIDEBAR_BOUNDS);
 
-            if (selectedCity) {
+            // Only pan to city if no team is selected (team selection handles its own view)
+            if (selectedCity && !selectedTeam) {
                 // When a city is selected, pan to ensure it's visible in the TOP portion
                 // of the map (above where the sidebar will be)
                 const cityLat = selectedCity.lat;
@@ -91,7 +162,7 @@ function MapViewAdjuster({
         }, 150);
 
         return () => clearTimeout(timeoutId);
-    }, [map, isSidebarOpen, isMobile, selectedCity]);
+    }, [map, isSidebarOpen, isMobile, selectedCity, selectedTeam]);
 
     return null;
 }
@@ -118,10 +189,10 @@ export default function WorldCupMap({ selectedTeam, selectedCity, onCitySelect, 
             zoom={4}
             style={{ height: '100%', width: '100%' }}
             zoomControl={true}
-            minZoom={3}
+            minZoom={2}
             maxZoom={10}
             maxBounds={DEFAULT_BOUNDS}
-            maxBoundsViscosity={1.0} // Restrict to bounds completely
+            maxBoundsViscosity={0.3} // Very elastic bounds
         >
             <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -129,7 +200,10 @@ export default function WorldCupMap({ selectedTeam, selectedCity, onCitySelect, 
             />
 
             {/* Dynamic view adjuster for mobile sidebar */}
-            <MapViewAdjuster isSidebarOpen={isSidebarOpen} isMobile={isMobile} selectedCity={selectedCity} />
+            <MapViewAdjuster isSidebarOpen={isSidebarOpen} isMobile={isMobile} selectedCity={selectedCity} selectedTeam={selectedTeam} />
+
+            {/* Team view adjuster - fits map to team's cities */}
+            <TeamViewAdjuster selectedTeam={selectedTeam} isMobile={isMobile} isSidebarOpen={isSidebarOpen} />
 
             {/* City markers */}
             {cities.map(city => (
