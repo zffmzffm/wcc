@@ -6,8 +6,11 @@ import TeamSelector from '@/components/TeamSelector';
 import TimezoneSelector from '@/components/TimezoneSelector';
 import CitySidebar from '@/components/CitySidebar';
 import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
+import Footer from '@/components/Footer';
+import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { City } from '@/types';
 import { teams, matches, cities } from '@/data';
+import { BREAKPOINTS, DEFAULT_TIMEZONE } from '@/constants';
 
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
@@ -20,9 +23,6 @@ const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
   )
 });
 
-// Mobile breakpoint (matches CSS)
-const MOBILE_BREAKPOINT = 600;
-
 export default function Home() {
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
@@ -31,7 +31,7 @@ export default function Home() {
 
   // Detect mobile on mount and resize
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    const checkMobile = () => setIsMobile(window.innerWidth <= BREAKPOINTS.mobile);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -69,7 +69,7 @@ export default function Home() {
     : [];
 
   // Timezone for display, use default if not selected
-  const displayTimezone = selectedTimezone || 'America/Toronto';
+  const displayTimezone = selectedTimezone || DEFAULT_TIMEZONE;
 
   return (
     <main className="main-container">
@@ -98,22 +98,27 @@ export default function Home() {
           onClose={() => setSelectedCity(null)}
         />
         <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
-          <WorldCupMap
-            selectedTeam={selectedTeam}
-            selectedCity={selectedCity}
-            onCitySelect={handleCitySelect}
-            isSidebarOpen={!!selectedCity || !!selectedTeam}
-            isMobile={isMobile}
-          />
+          <MapErrorBoundary>
+            <WorldCupMap
+              selectedTeam={selectedTeam}
+              selectedCity={selectedCity}
+              onCitySelect={handleCitySelect}
+              isSidebarOpen={!!selectedCity || !!selectedTeam}
+              isMobile={isMobile}
+            />
+          </MapErrorBoundary>
         </div>
-        <TeamScheduleSidebar
-          team={selectedTeamInfo || null}
-          matches={teamMatches}
-          teams={teams}
-          cities={cities}
-          timezone={displayTimezone}
-          onClose={() => setSelectedTeam(null)}
-        />
+        <div className="right-column">
+          <TeamScheduleSidebar
+            team={selectedTeamInfo || null}
+            matches={teamMatches}
+            teams={teams}
+            cities={cities}
+            timezone={displayTimezone}
+            onClose={() => setSelectedTeam(null)}
+          />
+          <Footer />
+        </div>
       </div>
     </main>
   );

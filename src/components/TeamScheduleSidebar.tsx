@@ -1,7 +1,7 @@
 'use client';
 import { useMemo } from 'react';
 import { Match, Team, City } from '@/types';
-import FlagIcon from './FlagIcon';
+import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
 
 interface TeamScheduleSidebarProps {
@@ -26,58 +26,47 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
         return new Map(cities.map(c => [c.id, c.name]));
     }, [cities]);
 
-    if (!team) {
-        return (
-            <aside className="sidebar sidebar-right" role="complementary" aria-label="Team Information">
-                <div className="sidebar-placeholder">
-                    <span className="sidebar-placeholder-icon">⚽</span>
-                    <p>Select a team above</p>
-                    <p>to view group stage schedule</p>
-                </div>
-            </aside>
-        );
-    }
-
     return (
-        <aside className="sidebar sidebar-right" role="complementary" aria-label={`${team.name} Schedule`}>
-            {/* Header */}
-            <div className="sidebar-header sidebar-header-compact">
-                <div className="sidebar-title">
-                    <FlagIcon code={team.code} size={28} />
-                    <h2>{team.name}</h2>
+        <SidebarLayout
+            position="right"
+            ariaLabel={team ? `${team.name} Schedule` : 'Team Information'}
+            iconCode={team?.code}
+            title={team?.name || ''}
+            showPlaceholder={!team}
+            placeholder={{
+                icon: '⚽',
+                line1: 'Select a team above',
+                line2: 'to view group stage schedule'
+            }}
+            badge={team && (
+                <span className="team-group-badge" aria-label={`Group ${team.group}`}>
+                    {team.group}
+                </span>
+            )}
+            onClose={onClose}
+        >
+            {team && (
+                <div className="sidebar-matches">
+                    {sortedMatches.length === 0 ? (
+                        <p className="no-matches">No match data available</p>
+                    ) : (
+                        <ul className="match-list" role="list">
+                            {sortedMatches.map((match, index) => (
+                                <MatchItem
+                                    key={match.id}
+                                    match={match}
+                                    teams={teams}
+                                    timezone={timezone}
+                                    highlightTeamCode={team.code}
+                                    variant="schedule"
+                                    matchIndex={index}
+                                    cityName={cityMap.get(match.cityId) || match.cityId}
+                                />
+                            ))}
+                        </ul>
+                    )}
                 </div>
-                <div className="sidebar-header-actions">
-                    <span className="team-group-badge" aria-label={`Group ${team.group}`}>
-                        {team.group}
-                    </span>
-                    <button className="sidebar-close" onClick={onClose} aria-label="Clear selection">
-                        ✕
-                    </button>
-                </div>
-            </div>
-
-            {/* Schedule */}
-            <div className="sidebar-matches">
-                {sortedMatches.length === 0 ? (
-                    <p className="no-matches">No match data available</p>
-                ) : (
-                    <ul className="match-list" role="list">
-                        {sortedMatches.map((match, index) => (
-                            <MatchItem
-                                key={match.id}
-                                match={match}
-                                teams={teams}
-                                timezone={timezone}
-                                highlightTeamCode={team.code}
-                                variant="schedule"
-                                matchIndex={index}
-                                cityName={cityMap.get(match.cityId) || match.cityId}
-                            />
-                        ))}
-                    </ul>
-                )}
-            </div>
-        </aside>
+            )}
+        </SidebarLayout>
     );
 }
-

@@ -202,3 +202,69 @@
     font-weight: 600;
     color: var(--secondary);
 }
+
+/* ============================================
+   Map Error Boundary Styles
+   ============================================ */
+.map-error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background: var(--accent-light);
+    border-radius: 24px;
+}
+
+.map-error-content {
+    text-align: center;
+    padding: 2rem;
+    max-width: 400px;
+}
+
+.map-error-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.map-error-content h2 {
+    margin: 0 0 0.5rem;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+}
+
+.map-error-content p {
+    margin: 0 0 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.map-error-details {
+    font-family: monospace;
+    font-size: 0.75rem !important;
+    color: var(--text-muted) !important;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    margin-top: 0.5rem !important;
+    word-break: break-word;
+}
+
+.map-error-retry {
+    margin-top: 1rem;
+    padding: 0.625rem 1.25rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.map-error-retry:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}

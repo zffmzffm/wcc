@@ -1,10 +1,10 @@
 'use client';
 import { useMemo, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { City, Match, Team } from '@/types';
 import { getCountryCode } from '@/utils/formatters';
-import FlagIcon from './FlagIcon';
+import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
-import Image from 'next/image';
 
 // Map city IDs to venue images (when available)
 const venueImages: Record<string, string> = {
@@ -52,70 +52,64 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
         );
     }, [matches]);
 
-    if (!city) {
-        return (
-            <aside className="sidebar" role="complementary" aria-label="City Information">
-                <div className="sidebar-placeholder">
-                    <span className="sidebar-placeholder-icon">🏟️</span>
-                    <p>Click a city on the map</p>
-                    <p>to view venue and match info</p>
-                </div>
-            </aside>
-        );
-    }
-
-    const countryCode = getCountryCode(city.country);
+    const countryCode = city ? getCountryCode(city.country) : '';
 
     return (
-        <aside ref={sidebarRef} className="sidebar" role="complementary" aria-label={`${city.name} City Information`}>
-            {/* Header */}
-            <div className="sidebar-header sidebar-header-compact">
-                <div className="sidebar-title">
-                    <FlagIcon code={countryCode} size={28} />
-                    <h2>{city.name}</h2>
-                </div>
-                <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
-                    ✕
-                </button>
-            </div>
-
-            {/* Venue Card - Info + Image merged */}
-            <div className="sidebar-venue-card">
-                <div className="sidebar-venue">
-                    <span className="venue-name">🏟️ {city.venue}</span>
-                    <span className="venue-capacity">{city.capacity.toLocaleString()} seats</span>
-                </div>
-                {venueImages[city.id] && (
-                    <div className="sidebar-venue-image">
-                        <Image
-                            src={venueImages[city.id]}
-                            alt={`${city.venue} Stadium`}
-                            width={600}
-                            height={360}
-                            style={{ width: '100%', height: 'auto' }}
-                            priority={false}
-                        />
+        <SidebarLayout
+            ref={sidebarRef}
+            position="left"
+            ariaLabel={city ? `${city.name} City Information` : 'City Information'}
+            iconCode={countryCode}
+            title={city?.name || ''}
+            showPlaceholder={!city}
+            placeholder={{
+                icon: '🏟️',
+                line1: 'Click a city on the map',
+                line2: 'to view venue and match info'
+            }}
+            onClose={onClose}
+        >
+            {city && (
+                <>
+                    {/* Venue Card - Info + Image merged */}
+                    <div className="sidebar-venue-card">
+                        <div className="sidebar-venue">
+                            <span className="venue-name">🏟️ {city.venue}</span>
+                            <span className="venue-capacity">{city.capacity.toLocaleString()} seats</span>
+                        </div>
+                        {venueImages[city.id] && (
+                            <div className="sidebar-venue-image">
+                                <Image
+                                    src={venueImages[city.id]}
+                                    alt={`${city.venue} Stadium`}
+                                    width={600}
+                                    height={360}
+                                    style={{ width: '100%', height: 'auto' }}
+                                    priority={false}
+                                />
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
-            {/* Matches List */}
-            <div className="sidebar-matches">
-                {sortedMatches.length === 0 ? (
-                    <p className="no-matches">No match data available</p>
-                ) : (
-                    <ul className="match-list" role="list">
-                        {sortedMatches.map(match => (
-                            <MatchItem
-                                key={match.id}
-                                match={match}
-                                teams={teams}
-                                timezone={timezone}
-                            />
-                        ))}
-                    </ul>
-                )}
-            </div>
-        </aside>
+
+                    {/* Matches List */}
+                    <div className="sidebar-matches">
+                        {sortedMatches.length === 0 ? (
+                            <p className="no-matches">No match data available</p>
+                        ) : (
+                            <ul className="match-list" role="list">
+                                {sortedMatches.map(match => (
+                                    <MatchItem
+                                        key={match.id}
+                                        match={match}
+                                        teams={teams}
+                                        timezone={timezone}
+                                    />
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                </>
+            )}
+        </SidebarLayout>
     );
 }
-

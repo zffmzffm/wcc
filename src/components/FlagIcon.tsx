@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, memo, useEffect } from 'react';
 
 interface FlagIconProps {
     code: string; // ISO 3166-1 alpha-2 country code (e.g., "US", "MX", "CA")
@@ -10,7 +10,7 @@ interface FlagIconProps {
 
 // Convert 3-letter or special codes to 2-letter ISO codes
 const codeToISO2: Record<string, string> = {
-    // North America
+    // North America (host countries - most common)
     'USA': 'us',
     'MEX': 'mx',
     'CAN': 'ca',
@@ -63,6 +63,12 @@ const codeToISO2: Record<string, string> = {
     'PO_F2': 'un',
 };
 
+// Cache for failed flags to avoid repeated load attempts
+const failedFlags = new Set<string>();
+
+// Preload common host country flags on module load
+const preloadedFlags: string[] = ['us', 'mx', 'ca'];
+
 export function getISO2Code(code: string): string {
     // Check if already a 2-letter code
     if (code.length === 2) {
@@ -72,16 +78,41 @@ export function getISO2Code(code: string): string {
     return codeToISO2[code] || code.toLowerCase().slice(0, 2);
 }
 
-export default function FlagIcon({ code, size = 20, className = '' }: FlagIconProps) {
+/**
+ * Hook to preload flag images for common countries
+ */
+export function usePreloadFlags() {
+    useEffect(() => {
+        preloadedFlags.forEach(code => {
+            const img = new window.Image();
+            img.src = `https://flagcdn.com/w40/${code}.png`;
+        });
+    }, []);
+}
+
+/**
+ * Memoized FlagIcon component to prevent unnecessary re-renders
+ * Uses flagcdn.com CDN for flag images with fallback to emoji
+ */
+const FlagIcon = memo(function FlagIcon({ code, size = 20, className = '' }: FlagIconProps) {
     const [hasError, setHasError] = useState(false);
     const iso2 = getISO2Code(code);
+
+    // Check cache for previously failed flags
+    const wasPreviouslyFailed = failedFlags.has(iso2);
 
     // Use flagcdn.com CDN to get flag images
     const flagUrl = `https://flagcdn.com/w40/${iso2}.png`;
     const height = Math.round(size * 0.75);
 
-    // Fallback to emoji if image fails to load
-    if (hasError) {
+    // Handle error and cache it
+    const handleError = () => {
+        failedFlags.add(iso2);
+        setHasError(true);
+    };
+
+    // Fallback to emoji if image fails to load or was previously failed
+    if (hasError || wasPreviouslyFailed) {
         return (
             <span
                 className={`flag-icon flag-fallback ${className}`}
@@ -116,7 +147,9 @@ export default function FlagIcon({ code, size = 20, className = '' }: FlagIconPr
             }}
             loading="lazy"
             unoptimized // CDN images don't need Next.js optimization
-            onError={() => setHasError(true)}
+            onError={handleError}
         />
     );
-}
+});
+
+export default FlagIcon;

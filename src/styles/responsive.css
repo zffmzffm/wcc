@@ -46,6 +46,29 @@
     .sidebar-right {
         order: 3;
     }
+
+    /* Right column on tablet - full width, stacked at bottom */
+    .right-column {
+        width: 100%;
+        height: auto;
+        order: 4;
+        /* Ensure it comes after left sidebar (order 2) and map */
+        gap: 8px;
+    }
+
+    .right-column .sidebar {
+        max-height: 30vh;
+        flex: none;
+        order: 1;
+        /* Sidebar first within right-column */
+    }
+
+    /* Footer on tablet */
+    .app-footer {
+        border-radius: 16px;
+        order: 2;
+        /* Footer last within right-column */
+    }
 }
 
 /* ============================================
@@ -267,6 +290,36 @@
 
     .sidebar-placeholder p:last-child {
         display: none;
+    }
+
+    /* Right column mobile - full width, at very bottom */
+    .right-column {
+        width: 100%;
+        height: auto;
+        gap: 6px;
+        order: 5;
+        /* Ensure it's at the very bottom */
+    }
+
+    .right-column .sidebar {
+        max-height: calc(60vh - 110px);
+        order: 1;
+    }
+
+    /* Footer mobile - compact style, at bottom */
+    .app-footer {
+        border-radius: 12px;
+        padding: 0.5rem 0.75rem;
+        text-align: center;
+        order: 2;
+    }
+
+    .footer-copyright {
+        font-size: 0.6rem;
+    }
+
+    .footer-disclaimer {
+        font-size: 0.5rem;
     }
 }
 

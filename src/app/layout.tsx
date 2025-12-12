@@ -31,9 +31,39 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Structured data for SEO
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: "Soccer Fan Guide '26",
+    description: 'Interactive map showing host cities, match schedules, and team flight paths for 2026 FIFA World Cup.',
+    applicationCategory: 'SportsApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    about: {
+      '@type': 'SportsEvent',
+      name: '2026 FIFA World Cup',
+      startDate: '2026-06-11',
+      endDate: '2026-07-19',
+      location: {
+        '@type': 'Place',
+        name: 'United States, Mexico, Canada',
+      },
+    },
+  };
+
   return (
     <html lang="en">
-      <head />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
