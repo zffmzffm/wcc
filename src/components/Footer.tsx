@@ -16,6 +16,10 @@ export default function Footer() {
                     endorsed by, sponsored by, or associated with FIFA, the 2026 FIFA World Cup™,
                     or any official tournament organizers.
                 </p>
+                <p className="footer-disclaimer">
+                    While we strive for accuracy, the information presented in this app may contain errors.
+                    Please verify independently.
+                </p>
             </div>
         </footer>
     );
