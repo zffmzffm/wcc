@@ -58,11 +58,20 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Soccer Fan Guide '26",
     url: 'https://soccerfanguide26.duoyj.ca',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: '2026 World Cup: The Travel Disparity - Compare Team Journeys & Explore Host Cities',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "SOCCER FAN GUIDE '26 | 2026 FIFA World Cup",
     description: "Interactive map & schedule for 2026 FIFA World Cup in USA, Mexico & Canada",
+    images: ['/og-image.jpg'],
   },
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>",
