@@ -41,3 +41,6 @@ export interface FlightSegment {
     isReturn: boolean;
     isSameCity: boolean;
 }
+
+// Knockout stage types for elimination rounds
+export type KnockoutStage = 'R32' | 'R16' | 'QF' | 'SF' | 'F';
