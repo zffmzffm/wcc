@@ -10,7 +10,7 @@ import { Match, City, Team } from '@/types';
  */
 export interface KnockoutVenue {
     matchId: string;
-    stage: 'R32' | 'R16' | 'QF' | 'SF' | 'F';
+    stage: 'R32' | 'R16' | 'QF' | 'SF' | 'F' | '3P';
     cityId: string;
     datetime: string;
 }
