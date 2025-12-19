@@ -8,11 +8,7 @@ import { Match, City, Team } from '@/types';
 import matchesData from '@/data/matches.json';
 import citiesData from '@/data/cities.json';
 import teamsData from '@/data/teams.json';
-// Note: knockoutVenues.json will be created in Phase 2
-// import knockoutVenuesData from '@/data/knockoutVenues.json';
-
-// Temporary empty data until Phase 2
-const knockoutVenuesData: Record<string, KnockoutVenue[]> = {};
+import knockoutVenuesData from '@/data/knockoutVenues.json';
 
 export class JsonMatchRepository implements IMatchRepository {
     getGroupMatches(): Match[] {
@@ -21,7 +17,7 @@ export class JsonMatchRepository implements IMatchRepository {
 
     getKnockoutVenues(): KnockoutVenue[] {
         // 扁平化所有阶段的场地数据
-        return Object.values(knockoutVenuesData).flat();
+        return Object.values(knockoutVenuesData).flat() as KnockoutVenue[];
     }
 
     getCities(): City[] {
