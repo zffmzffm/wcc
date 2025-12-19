@@ -5,6 +5,7 @@ import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useTeamMatches, useFlightSegments } from '@/hooks/useTeamMatches';
 import { useFlightAnimation } from './useFlightAnimation';
+import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG, PADDING_CONFIG } from '@/constants';
 import FlightSegment from './FlightSegment';
 import CityLabel from './CityLabel';
@@ -31,6 +32,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
     const svgRef = useRef<SVGSVGElement>(null);
     const map = useMap();
     const [, forceUpdate] = useState({});
+    const { visibility } = useLayerVisibility();
 
     // Use centralized hooks for data
     const teamMatches = useTeamMatches(teamCode, matches, cities);
@@ -105,72 +107,74 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
 
     return (
         <>
-            {/* SVG flight path overlay */}
-            <svg
-                ref={svgRef}
-                className="flight-path-svg"
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: mapSize.x,
-                    height: mapSize.y,
-                    pointerEvents: 'none',
-                    zIndex: SVG_CONFIG.zIndex
-                }}
-            >
-                {/* Define chevron marker */}
-                <defs>
-                    <marker
-                        id="chevron-marker"
-                        markerWidth="8"
-                        markerHeight="8"
-                        refX="4"
-                        refY="4"
-                        orient="auto"
-                        markerUnits="userSpaceOnUse"
-                    >
-                        <path
-                            d="M 1 1 L 6 4 L 1 7"
-                            fill="none"
-                            stroke={FLIGHT_PATH_CONFIG.pathColor}
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </marker>
-                </defs>
+            {/* SVG flight path overlay - only show if group stage is visible */}
+            {visibility.groupStage && (
+                <svg
+                    ref={svgRef}
+                    className="flight-path-svg"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: mapSize.x,
+                        height: mapSize.y,
+                        pointerEvents: 'none',
+                        zIndex: SVG_CONFIG.zIndex
+                    }}
+                >
+                    {/* Define chevron marker */}
+                    <defs>
+                        <marker
+                            id="chevron-marker"
+                            markerWidth="8"
+                            markerHeight="8"
+                            refX="4"
+                            refY="4"
+                            orient="auto"
+                            markerUnits="userSpaceOnUse"
+                        >
+                            <path
+                                d="M 1 1 L 6 4 L 1 7"
+                                fill="none"
+                                stroke={FLIGHT_PATH_CONFIG.pathColor}
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </marker>
+                    </defs>
 
-                {/* Render each flight path */}
-                {renderedSegments.map(({ segment, isNew }, idx) => (
-                    <FlightSegment
-                        key={`segment-${animationKey}-${idx}`}
-                        segment={segment}
-                        isNew={isNew}
-                        animationKey={animationKey}
-                        index={idx}
-                    />
-                ))}
-
-                {/* City name labels */}
-                {uniqueCityMarkers.map((markerIndex) => {
-                    const matchInfo = teamMatches[markerIndex];
-                    if (!matchInfo) return null;
-
-                    return (
-                        <CityLabel
-                            key={`label-${animationKey}-${markerIndex}`}
-                            matchInfo={matchInfo}
-                            markerIndex={markerIndex}
-                            teamMatches={teamMatches}
+                    {/* Render each flight path */}
+                    {renderedSegments.map(({ segment, isNew }, idx) => (
+                        <FlightSegment
+                            key={`segment-${animationKey}-${idx}`}
+                            segment={segment}
+                            isNew={isNew}
                             animationKey={animationKey}
+                            index={idx}
                         />
-                    );
-                })}
-            </svg>
+                    ))}
 
-            {/* Match markers */}
-            {renderedMarkers.map((markerIndex) => {
+                    {/* City name labels */}
+                    {uniqueCityMarkers.map((markerIndex) => {
+                        const matchInfo = teamMatches[markerIndex];
+                        if (!matchInfo) return null;
+
+                        return (
+                            <CityLabel
+                                key={`label-${animationKey}-${markerIndex}`}
+                                matchInfo={matchInfo}
+                                markerIndex={markerIndex}
+                                teamMatches={teamMatches}
+                                animationKey={animationKey}
+                            />
+                        );
+                    })}
+                </svg>
+            )}
+
+            {/* Match markers - only show if group stage is visible */}
+            {visibility.groupStage && renderedMarkers.map((markerIndex) => {
                 const matchInfo = teamMatches[markerIndex];
                 if (!matchInfo) return null;
 

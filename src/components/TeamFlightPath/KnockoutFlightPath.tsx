@@ -4,8 +4,9 @@ import { useMap } from 'react-leaflet';
 import { City, Team, MatchWithCoords } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useKnockoutPaths, KnockoutPath, getStageLabel } from '@/hooks/useKnockoutPaths';
+import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG } from '@/constants';
-import { generateArcPath, generateLoopPath } from '@/utils/pathGenerators';
+import { generateArcPath, generateLoopPath, generateChevronPath, generateLoopChevronPath } from '@/utils/pathGenerators';
 
 interface KnockoutFlightPathProps {
     groupId: string;
@@ -30,9 +31,18 @@ export default function KnockoutFlightPath({
 }: KnockoutFlightPathProps) {
     const map = useMap();
     const [, forceUpdate] = useState({});
+    const { visibility } = useLayerVisibility();
 
     // Get knockout paths for this group
     const knockoutPaths = useKnockoutPaths(groupId, knockoutVenues, cities);
+
+    // Filter paths based on visibility
+    const visiblePaths = knockoutPaths.filter(path => {
+        if (path.position === 1) return visibility.firstPlace;
+        if (path.position === 2) return visibility.secondPlace;
+        if (path.position === 3) return visibility.thirdPlace;
+        return true;
+    });
 
     // Coordinate conversion function
     const latLngToPixel = useCallback((coords: [number, number]): { x: number; y: number } => {
@@ -51,11 +61,18 @@ export default function KnockoutFlightPath({
         };
     }, [map]);
 
-    if (!groupId || knockoutPaths.length === 0) {
+    if (!groupId || visiblePaths.length === 0) {
         return null;
     }
 
     const mapSize = map.getSize();
+
+    // Colors for each position's chevron marker
+    const positionColors: { [key: number]: string } = {
+        1: '#10B981',  // 1st place - green
+        2: '#3B82F6',  // 2nd place - blue
+        3: '#F59E0B',  // 3rd place - orange
+    };
 
     return (
         <svg
@@ -70,8 +87,33 @@ export default function KnockoutFlightPath({
                 zIndex: SVG_CONFIG.zIndex  // Same level as group stage path
             }}
         >
-            {/* Render each knockout path */}
-            {knockoutPaths.map((path) => (
+            {/* Define chevron markers for each position */}
+            <defs>
+                {[1, 2, 3].map(pos => (
+                    <marker
+                        key={`chevron-marker-pos${pos}`}
+                        id={`chevron-marker-pos${pos}`}
+                        markerWidth="8"
+                        markerHeight="8"
+                        refX="4"
+                        refY="4"
+                        orient="auto"
+                        markerUnits="userSpaceOnUse"
+                    >
+                        <path
+                            d="M 1 1 L 6 4 L 1 7"
+                            fill="none"
+                            stroke={positionColors[pos]}
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </marker>
+                ))}
+            </defs>
+
+            {/* Render each visible knockout path */}
+            {visiblePaths.map((path) => (
                 <KnockoutPathLine
                     key={`knockout-path-${path.position}`}
                     path={path}
@@ -123,67 +165,71 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel }: Knockou
         segments.push({ from: startPixel, to: endPixel, isSameCity: distance < 5 });
     }
 
-    // Generate dashed path styles based on position
-    const dashArray = position === 3 ? '8,6' : '10,5';  // Slightly different dash patterns
-    const opacity = 0.7;
+    // Use chevron markers for this position
+    const markerId = `url(#chevron-marker-pos${position})`;
 
     return (
         <g className={`knockout-path knockout-path-${position}`}>
             {segments.map((segment, idx) => {
-                // Same city: draw small loop arc (like group stage)
+                // Same city: draw small loop arc with chevrons
                 if (segment.isSameCity) {
-                    const loopPath = generateLoopPath(segment.from, FLIGHT_PATH_CONFIG.loopRadius);
+                    const loopGlowPath = generateLoopPath(segment.from, FLIGHT_PATH_CONFIG.loopRadius);
+                    const loopChevronPath = generateLoopChevronPath(
+                        segment.from,
+                        FLIGHT_PATH_CONFIG.loopRadius,
+                        FLIGHT_PATH_CONFIG.loopChevronSpacing
+                    );
 
                     return (
                         <g key={`segment-${position}-${idx}`}>
                             {/* Glow effect */}
                             <path
-                                d={loopPath}
+                                d={loopGlowPath}
                                 fill="none"
                                 stroke={color}
-                                strokeWidth={6}
-                                strokeOpacity={0.2}
-                                strokeDasharray={dashArray}
+                                strokeWidth={8}
+                                strokeOpacity={0.15}
                                 strokeLinecap="round"
                             />
-                            {/* Main path */}
+                            {/* Chevron path */}
                             <path
-                                d={loopPath}
+                                d={loopChevronPath}
                                 fill="none"
-                                stroke={color}
-                                strokeWidth={2.5}
-                                strokeOpacity={opacity}
-                                strokeDasharray={dashArray}
-                                strokeLinecap="round"
+                                stroke="transparent"
+                                strokeWidth={3}
+                                markerMid={markerId}
                             />
                         </g>
                     );
                 }
 
-                // Normal segment: draw arc
-                const pathD = generateArcPath(segment.from, segment.to, FLIGHT_PATH_CONFIG.curvature * 0.8);
+                // Normal segment: draw arc with chevrons
+                const glowPathD = generateArcPath(segment.from, segment.to, FLIGHT_PATH_CONFIG.curvature * 0.8);
+                const chevronPathD = generateChevronPath(
+                    segment.from,
+                    segment.to,
+                    FLIGHT_PATH_CONFIG.curvature * 0.8,
+                    FLIGHT_PATH_CONFIG.chevronSpacing
+                );
 
                 return (
                     <g key={`segment-${position}-${idx}`}>
                         {/* Glow effect */}
                         <path
-                            d={pathD}
+                            d={glowPathD}
                             fill="none"
                             stroke={color}
-                            strokeWidth={6}
-                            strokeOpacity={0.2}
-                            strokeDasharray={dashArray}
+                            strokeWidth={8}
+                            strokeOpacity={0.15}
                             strokeLinecap="round"
                         />
-                        {/* Main path */}
+                        {/* Chevron path */}
                         <path
-                            d={pathD}
+                            d={chevronPathD}
                             fill="none"
-                            stroke={color}
-                            strokeWidth={2.5}
-                            strokeOpacity={opacity}
-                            strokeDasharray={dashArray}
-                            strokeLinecap="round"
+                            stroke="transparent"
+                            strokeWidth={3}
+                            markerMid={markerId}
                         />
                     </g>
                 );

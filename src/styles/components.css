@@ -265,50 +265,75 @@
 }
 
 /* ============================================
-   Path Legend Component Styles
+   Map Legend Control (Leaflet Native Control)
    ============================================ */
-.path-legend {
-    position: absolute;
-    bottom: 24px;
-    left: 24px;
-    z-index: 500;
-    background: var(--card-bg, white);
-    border-radius: 12px;
-    padding: 12px 16px;
+.map-legend-control {
+    background: var(--card-bg, white) !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    border: none !important;
     box-shadow:
-        4px 4px 12px rgba(45, 90, 61, 0.15),
-        -2px -2px 8px rgba(255, 255, 255, 0.9),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+        2px 2px 8px rgba(45, 90, 61, 0.12),
+        -1px -1px 4px rgba(255, 255, 255, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+    overflow: hidden;
+}
+
+.map-legend-content {
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
+    gap: 6px;
+}
+
+.map-legend-content .legend-item {
+    display: flex;
+    align-items: center;
     gap: 8px;
 }
 
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.map-legend-content .legend-item-clickable {
+    cursor: pointer;
+    padding: 2px 0;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
 }
 
-.legend-color {
-    width: 24px;
-    height: 4px;
-    border-radius: 2px;
+.map-legend-content .legend-item-clickable:hover {
+    background-color: rgba(45, 90, 61, 0.06);
+}
+
+.map-legend-content .legend-checkbox {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #2D5A3D;
+    cursor: pointer;
     flex-shrink: 0;
 }
 
-.legend-dashed {
-    background: repeating-linear-gradient(90deg,
-            currentColor 0px,
-            currentColor 6px,
-            transparent 6px,
-            transparent 10px) !important;
-    background-color: transparent !important;
+.map-legend-content .legend-line {
+    width: 20px;
+    height: 3px;
+    border-radius: 1.5px;
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
 }
 
-.legend-label {
-    font-size: 0.75rem;
+.map-legend-content .legend-icon {
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
+}
+
+.map-legend-content .legend-text {
+    font-size: 0.7rem;
     font-weight: 500;
     color: var(--text-secondary, #64748b);
     white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
+/* Old path-legend styles (deprecated, kept for backwards compatibility) */
+.path-legend {
+    display: none;
 }
