@@ -8,6 +8,7 @@ import CitySidebar from '@/components/CitySidebar';
 import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
 import Footer from '@/components/Footer';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
+import PathLegend from '@/components/PathLegend';
 import { City } from '@/types';
 import { teams, matches, cities } from '@/data';
 import { BREAKPOINTS, DEFAULT_TIMEZONE } from '@/constants';
@@ -107,6 +108,8 @@ export default function Home() {
               isMobile={isMobile}
             />
           </MapErrorBoundary>
+          {/* Show path legend when team is selected */}
+          {selectedTeam && <PathLegend />}
         </div>
         <div className="right-column">
           <TeamScheduleSidebar

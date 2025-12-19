@@ -8,7 +8,8 @@ import CityMarker from './CityMarker';
 import TeamFlightPath from './TeamFlightPath';
 import { useMapViewControl } from '@/hooks/useMapViewControl';
 import { City } from '@/types';
-import { cities, matches, teams } from '@/data';
+import { cities, matches, teams, knockoutVenues } from '@/data';
+import { matchRepository } from '@/repositories';
 import { MAP_CONFIG, MAP_BOUNDS } from '@/constants';
 
 // Fix Leaflet default icon path issue
@@ -107,6 +108,7 @@ export default function WorldCupMap({
                     matches={matches}
                     cities={cities}
                     teams={teams}
+                    knockoutVenues={matchRepository.getKnockoutVenues()}
                 />
             )}
         </MapContainer>

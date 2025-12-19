@@ -2,18 +2,21 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
 import { Match, Team, City } from '@/types';
+import { KnockoutVenue } from '@/repositories/types';
 import { useTeamMatches, useFlightSegments } from '@/hooks/useTeamMatches';
 import { useFlightAnimation } from './useFlightAnimation';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG, PADDING_CONFIG } from '@/constants';
 import FlightSegment from './FlightSegment';
 import CityLabel from './CityLabel';
 import MatchMarker from './MatchMarker';
+import KnockoutFlightPath from './KnockoutFlightPath';
 
 interface TeamFlightPathProps {
     teamCode: string;
     matches: Match[];
     cities: City[];
     teams: Team[];
+    knockoutVenues?: KnockoutVenue[];
 }
 
 /**
@@ -24,7 +27,7 @@ interface TeamFlightPathProps {
  * - City name labels with smart positioning
  * - Match location markers with popup details
  */
-export default function TeamFlightPath({ teamCode, matches, cities, teams }: TeamFlightPathProps) {
+export default function TeamFlightPath({ teamCode, matches, cities, teams, knockoutVenues = [] }: TeamFlightPathProps) {
     const svgRef = useRef<SVGSVGElement>(null);
     const map = useMap();
     const [, forceUpdate] = useState({});
@@ -35,6 +38,11 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
 
     // Get current team info
     const currentTeam = teams.find(t => t.code === teamCode);
+
+    // Get last group match coordinates for knockout path connection
+    const lastGroupMatchCoords = teamMatches.length > 0
+        ? teamMatches[teamMatches.length - 1].coords
+        : null;
 
     // Use animation hook
     const { renderedSegments, renderedMarkers, animationKey } = useFlightAnimation(
@@ -184,6 +192,16 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams }: Tea
                     />
                 );
             })}
+
+            {/* Knockout stage paths (hypothetical) */}
+            {knockoutVenues.length > 0 && currentTeam && (
+                <KnockoutFlightPath
+                    groupId={currentTeam.group}
+                    knockoutVenues={knockoutVenues}
+                    cities={cities}
+                    lastGroupMatchCoords={lastGroupMatchCoords}
+                />
+            )}
         </>
     );
 }

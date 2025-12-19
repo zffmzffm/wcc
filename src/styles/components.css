@@ -263,3 +263,52 @@
     min-height: 0;
     width: 100%;
 }
+
+/* ============================================
+   Path Legend Component Styles
+   ============================================ */
+.path-legend {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    z-index: 500;
+    background: var(--card-bg, white);
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow:
+        4px 4px 12px rgba(45, 90, 61, 0.15),
+        -2px -2px 8px rgba(255, 255, 255, 0.9),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-color {
+    width: 24px;
+    height: 4px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.legend-dashed {
+    background: repeating-linear-gradient(90deg,
+            currentColor 0px,
+            currentColor 6px,
+            transparent 6px,
+            transparent 10px) !important;
+    background-color: transparent !important;
+}
+
+.legend-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary, #64748b);
+    white-space: nowrap;
+}
