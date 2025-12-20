@@ -275,11 +275,11 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel }: Knockou
                                 stroke="white"
                                 strokeWidth={2}
                             />
-                            {/* City name label with match numbers */}
+                            {/* City name label with match numbers - positioned below marker to avoid overlap with group stage labels */}
                             {shouldShowLabel && cityName && (
                                 <text
                                     x={pixel.x + 12}
-                                    y={pixel.y + 4}
+                                    y={pixel.y + 25}
                                     textAnchor="start"
                                     fontSize="15"
                                     fontWeight={700}
