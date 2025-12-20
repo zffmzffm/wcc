@@ -327,10 +327,9 @@
     letter-spacing: 0.5px;
 }
 
-.knockout-title {
+.schedule-section-title.knockout-title {
     margin-top: 1.25rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 0.75rem;
 }
 
 /* Tab Container - Index Card Style */

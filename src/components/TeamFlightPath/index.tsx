@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
@@ -53,6 +53,9 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
         flightSegments
     );
 
+    // Get knockout path selection for bounds fitting
+    const { fitBoundsTrigger, selectedKnockoutPath } = useLayerVisibility();
+
     // Coordinate conversion function
     const latLngToPixel = useCallback((coords: [number, number]): { x: number; y: number } => {
         const point = map.latLngToContainerPoint(coords);
@@ -75,6 +78,62 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
             }
         }
     }, [teamCode, teamMatches, map]);
+
+    // Import useKnockoutPaths for bounds fitting
+    const knockoutPaths = useMemo(() => {
+        if (!currentTeam) return [];
+
+        // Get knockout path templates
+        const { knockoutPathTemplates, thirdPlacePathTemplates } = require('@/data/knockoutBracket');
+
+        // Get templates for this group
+        const mainTemplates = knockoutPathTemplates.filter((t: { groupId: string }) => t.groupId === currentTeam.group);
+        const thirdTemplate = thirdPlacePathTemplates.find((t: { groupId: string }) => t.groupId === currentTeam.group);
+        const allTemplates = thirdTemplate ? [...mainTemplates, thirdTemplate] : mainTemplates;
+
+        // Create venue map
+        const venueMap = new Map(knockoutVenues.map(v => [v.matchId, v]));
+        const cityMap = new Map(cities.map(c => [c.id, c]));
+
+        return allTemplates.map((template: { path: string[]; position: 1 | 2 | 3 }) => {
+            const coords: [number, number][] = template.path
+                .map((matchId: string) => {
+                    const venue = venueMap.get(matchId);
+                    if (!venue) return null;
+                    const city = cityMap.get(venue.cityId);
+                    if (!city) return null;
+                    return [city.lat, city.lng] as [number, number];
+                })
+                .filter((c: [number, number] | null): c is [number, number] => c !== null);
+            return { position: template.position, coords };
+        });
+    }, [currentTeam, knockoutVenues, cities]);
+
+    // Fit bounds when knockout tab is clicked
+    useEffect(() => {
+        if (fitBoundsTrigger === 0 || selectedKnockoutPath === null) return;
+
+        const selectedPath = knockoutPaths[selectedKnockoutPath];
+        if (!selectedPath) return;
+
+        // Collect all coordinates: group stage + selected knockout path
+        const allCoords: [number, number][] = [
+            ...teamMatches.map(m => m.coords),
+            ...selectedPath.coords
+        ];
+
+        if (allCoords.length > 0) {
+            try {
+                map.fitBounds(allCoords, {
+                    padding: PADDING_CONFIG.fitBounds,
+                    maxZoom: 5,
+                    animate: true
+                });
+            } catch (e) {
+                console.warn('Failed to fit knockout bounds:', e);
+            }
+        }
+    }, [fitBoundsTrigger, selectedKnockoutPath, knockoutPaths, teamMatches, map]);
 
     // Listen for map move/zoom, update SVG paths
     useEffect(() => {

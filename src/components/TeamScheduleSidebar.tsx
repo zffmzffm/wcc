@@ -1,9 +1,10 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useKnockoutPaths, getStageLabel } from '@/hooks/useKnockoutPaths';
 import { formatDateTimeWithTimezone } from '@/utils/formatters';
+import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
 
@@ -20,6 +21,37 @@ interface TeamScheduleSidebarProps {
 export default function TeamScheduleSidebar({ team, matches, teams, cities, timezone, knockoutVenues = [], onClose }: TeamScheduleSidebarProps) {
     // State for selected knockout path tab
     const [selectedPathIndex, setSelectedPathIndex] = useState(0);
+    const prevTeamCodeRef = useRef<string | null>(null);
+
+    // Get layer visibility controls
+    const { setVisibility, selectKnockoutPath, resetToFirstPath } = useLayerVisibility();
+
+    // Reset to Q-1st when team changes
+    useEffect(() => {
+        if (team && team.code !== prevTeamCodeRef.current) {
+            resetToFirstPath();
+            setSelectedPathIndex(0);
+            prevTeamCodeRef.current = team.code;
+        }
+        if (!team) {
+            prevTeamCodeRef.current = null;
+        }
+    }, [team, resetToFirstPath]);
+
+    // Handle tab click: set visibility, update selected index, and trigger map bounds fit
+    const handleTabClick = (index: number) => {
+        setSelectedPathIndex(index);
+        // Set initial visibility based on selected tab
+        // After this, user can still toggle via legend checkboxes
+        setVisibility({
+            groupStage: true, // Always show group stage
+            firstPlace: index === 0,
+            secondPlace: index === 1,
+            thirdPlace: index === 2,
+        });
+        // Trigger map to fit bounds for this path
+        selectKnockoutPath(index);
+    };
 
     // Memoize sorted matches to avoid re-sorting on every render
     const sortedMatches = useMemo(() => {
@@ -32,6 +64,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
     const cityMap = useMemo(() => {
         return new Map(cities.map(c => [c.id, c.name]));
     }, [cities]);
+
 
     // Get knockout paths for the team's group
     const knockoutPaths = useKnockoutPaths(team?.group || '', knockoutVenues, cities);
@@ -84,7 +117,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                     {/* Knockout Stage Section with Tabs */}
                     {knockoutPaths.length > 0 && (
                         <>
-                            <h3 className="schedule-section-title knockout-title">Knockout Stage (Hypothetical)</h3>
+                            <h3 className="schedule-section-title knockout-title">Knockout Stage</h3>
 
                             {/* Tab Buttons - Index Card Style */}
                             <div className="knockout-tabs" role="tablist">
@@ -96,7 +129,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                                             role="tab"
                                             aria-selected={selectedPathIndex === index}
                                             className={`knockout-tab ${selectedPathIndex === index ? 'active' : ''}`}
-                                            onClick={() => setSelectedPathIndex(index)}
+                                            onClick={() => handleTabClick(index)}
                                             style={{
                                                 '--tab-color': path.color,
                                             } as React.CSSProperties}

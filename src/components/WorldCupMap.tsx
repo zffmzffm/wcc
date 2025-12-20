@@ -7,7 +7,6 @@ import 'leaflet/dist/leaflet.css';
 import CityMarker from './CityMarker';
 import TeamFlightPath from './TeamFlightPath';
 import MapLegendControl from './MapLegendControl';
-import { LayerVisibilityProvider } from '@/contexts/LayerVisibilityContext';
 import { useMapViewControl } from '@/hooks/useMapViewControl';
 import { City } from '@/types';
 import { cities, matches, teams, knockoutVenues } from '@/data';
@@ -74,7 +73,7 @@ function MapContent({
     teamCityIds: Set<string>;
 }) {
     return (
-        <LayerVisibilityProvider>
+        <>
             {/* Consolidated map view controller */}
             <MapViewController
                 selectedTeam={selectedTeam}
@@ -106,7 +105,7 @@ function MapContent({
 
             {/* Path legend as Leaflet control */}
             {selectedTeam && <MapLegendControl />}
-        </LayerVisibilityProvider>
+        </>
     );
 }
 

@@ -13,11 +13,29 @@ interface CityLabelProps {
 
 /**
  * Renders a city name label with smart positioning to avoid overlapping with flight paths
+ * Shows match sequence numbers before city name (e.g., "12Vancouver" for matches 1 and 2)
  */
 export default function CityLabel({ matchInfo, markerIndex, teamMatches, animationKey }: CityLabelProps) {
     const map = useMap();
 
     const { city, coords } = matchInfo;
+
+    // Convert number to circled digit (➊➋➌➍➎➏➐➑)
+    const toCircledDigit = (n: number): string => {
+        const circledDigits = ['➊', '➋', '➌', '➍', '➎', '➏', '➐', '➑'];
+        return n >= 1 && n <= 8 ? circledDigits[n - 1] : String(n);
+    };
+
+    // Calculate match numbers for this city (1-indexed, using circled digits)
+    const matchNumbersPrefix = useMemo(() => {
+        const cityMatchNumbers: string[] = [];
+        teamMatches.forEach((m, idx) => {
+            if (m.city.id === city.id) {
+                cityMatchNumbers.push(toCircledDigit(idx + 1)); // 1-indexed
+            }
+        });
+        return cityMatchNumbers.join('');
+    }, [teamMatches, city.id]);
 
     // Convert lat/lng to pixel coordinates
     const latLngToPixel = useCallback((c: [number, number]): { x: number; y: number } => {
@@ -137,7 +155,7 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
             className="city-label"
             style={{
                 fill: CITY_LABEL_CONFIG.fillColor,
-                fontSize: CITY_LABEL_CONFIG.fontSize,
+                fontSize: '15px', // Unified city label size
                 fontWeight: CITY_LABEL_CONFIG.fontWeight,
                 stroke: CITY_LABEL_CONFIG.strokeColor,
                 strokeWidth: CITY_LABEL_CONFIG.strokeWidth,
@@ -145,7 +163,7 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
                 pointerEvents: 'none'
             }}
         >
-            {city.name}
+            {matchNumbersPrefix}{city.name}
         </text>
     );
 }
