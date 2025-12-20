@@ -9,7 +9,8 @@ import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
 import Footer from '@/components/Footer';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { City } from '@/types';
-import { teams, matches, cities } from '@/data';
+import { teams, matches, cities, knockoutVenues } from '@/data';
+import { JsonMatchRepository } from '@/repositories/JsonMatchRepository';
 import { BREAKPOINTS, DEFAULT_TIMEZONE } from '@/constants';
 
 
@@ -115,6 +116,7 @@ export default function Home() {
             teams={teams}
             cities={cities}
             timezone={displayTimezone}
+            knockoutVenues={new JsonMatchRepository().getKnockoutVenues()}
             onClose={() => setSelectedTeam(null)}
           />
           <Footer />

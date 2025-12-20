@@ -13,6 +13,7 @@ export interface KnockoutVenue {
     stage: 'R32' | 'R16' | 'QF' | 'SF' | 'F' | '3P';
     cityId: string;
     datetime: string;
+    matchup?: string;  // e.g., "1A vs 3CEFHI" - indicates home/away positions
 }
 
 /**

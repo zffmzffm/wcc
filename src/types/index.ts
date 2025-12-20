@@ -19,6 +19,7 @@ export interface Match {
     cityId: string;
     datetime: string;
     stage: string;
+    matchup?: string;  // For knockout matches, e.g., "1A vs 3CEFHI"
 }
 
 export interface Team {

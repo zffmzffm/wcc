@@ -89,6 +89,7 @@ export function useKnockoutPaths(
                         cityId: venue.cityId,
                         datetime: venue.datetime,
                         stage: venue.stage,
+                        matchup: venue.matchup,  // Include matchup for home/away determination
                     };
 
                     return {
