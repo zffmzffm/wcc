@@ -1,17 +1,19 @@
 'use client';
 import React, { useMemo } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import CityMarker from './CityMarker';
 import TeamFlightPath from './TeamFlightPath';
 import MapLegendControl from './MapLegendControl';
+import MatchDayLabels from './MatchDayLabels';
 import { useMapViewControl } from '@/hooks/useMapViewControl';
-import { City } from '@/types';
+import { City, Match, Team } from '@/types';
 import { cities, matches, teams, knockoutVenues } from '@/data';
 import { matchRepository } from '@/repositories';
-import { MAP_CONFIG, MAP_BOUNDS } from '@/constants';
+import { KnockoutVenue } from '@/repositories/types';
+import { MAP_CONFIG, MAP_BOUNDS, DEFAULT_TIMEZONE } from '@/constants';
 
 // Fix Leaflet default icon path issue
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: () => void })._getIconUrl;
@@ -27,11 +29,15 @@ L.Icon.Default.mergeOptions({
 function MapViewController({
     selectedTeam,
     selectedCity,
+    selectedDay,
+    dayCityIds,
     isSidebarOpen,
     isMobile
 }: {
     selectedTeam: string | null;
     selectedCity: City | null;
+    selectedDay: string | null;
+    dayCityIds: Set<string>;
     isSidebarOpen: boolean;
     isMobile: boolean;
 }) {
@@ -39,6 +45,8 @@ function MapViewController({
     useMapViewControl({
         selectedTeam,
         selectedCity,
+        selectedDay,
+        dayCityIds,
         isSidebarOpen,
         isMobile
     });
@@ -49,9 +57,13 @@ function MapViewController({
 interface WorldCupMapProps {
     selectedTeam: string | null;
     selectedCity: City | null;
+    selectedDay?: string | null;
+    dayMatches?: Match[];
+    dayKnockoutVenues?: KnockoutVenue[];
     onCitySelect: (city: City | null) => void;
     isSidebarOpen?: boolean;
     isMobile?: boolean;
+    timezone?: string;
 }
 
 /**
@@ -60,17 +72,27 @@ interface WorldCupMapProps {
 function MapContent({
     selectedTeam,
     selectedCity,
+    selectedDay,
+    dayMatches,
+    dayKnockoutVenues,
     onCitySelect,
     isSidebarOpen,
     isMobile,
-    teamCityIds
+    teamCityIds,
+    dayCityIds,
+    timezone
 }: {
     selectedTeam: string | null;
     selectedCity: City | null;
+    selectedDay: string | null;
+    dayMatches: Match[];
+    dayKnockoutVenues: KnockoutVenue[];
     onCitySelect: (city: City | null) => void;
     isSidebarOpen: boolean;
     isMobile: boolean;
     teamCityIds: Set<string>;
+    dayCityIds: Set<string>;
+    timezone: string;
 }) {
     return (
         <>
@@ -78,6 +100,8 @@ function MapContent({
             <MapViewController
                 selectedTeam={selectedTeam}
                 selectedCity={selectedCity}
+                selectedDay={selectedDay}
+                dayCityIds={dayCityIds}
                 isSidebarOpen={isSidebarOpen}
                 isMobile={isMobile}
             />
@@ -88,10 +112,24 @@ function MapContent({
                     key={city.id}
                     city={city}
                     onClick={() => onCitySelect(city)}
-                    isDimmed={selectedTeam !== null && !teamCityIds.has(city.id)}
+                    isDimmed={
+                        (selectedTeam !== null && !teamCityIds.has(city.id)) ||
+                        (selectedDay !== null && !dayCityIds.has(city.id))
+                    }
                     isSelected={selectedCity?.id === city.id}
                 />
             ))}
+
+            {/* Match day labels */}
+            {selectedDay && !selectedTeam && (
+                <MatchDayLabels
+                    matches={dayMatches}
+                    knockoutVenues={dayKnockoutVenues}
+                    cities={cities}
+                    teams={teams}
+                    timezone={timezone}
+                />
+            )}
 
             {/* Team flight path */}
             {selectedTeam && (
@@ -113,9 +151,13 @@ function MapContent({
 export default function WorldCupMap({
     selectedTeam,
     selectedCity,
+    selectedDay = null,
+    dayMatches = [],
+    dayKnockoutVenues = [],
     onCitySelect,
     isSidebarOpen = false,
-    isMobile = false
+    isMobile = false,
+    timezone = DEFAULT_TIMEZONE
 }: WorldCupMapProps) {
     // Calculate which cities are relevant for the selected team
     const teamCityIds = useMemo(() => {
@@ -123,6 +165,14 @@ export default function WorldCupMap({
         const teamMatches = matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam);
         return new Set(teamMatches.map(m => m.cityId));
     }, [selectedTeam]);
+
+    // Calculate which cities are relevant for the selected day
+    const dayCityIds = useMemo(() => {
+        if (!selectedDay) return new Set<string>();
+        const matchCities = dayMatches.map(m => m.cityId);
+        const knockoutCities = dayKnockoutVenues.map(v => v.cityId);
+        return new Set([...matchCities, ...knockoutCities]);
+    }, [selectedDay, dayMatches, dayKnockoutVenues]);
 
     return (
         <MapContainer
@@ -142,13 +192,16 @@ export default function WorldCupMap({
             <MapContent
                 selectedTeam={selectedTeam}
                 selectedCity={selectedCity}
+                selectedDay={selectedDay}
+                dayMatches={dayMatches}
+                dayKnockoutVenues={dayKnockoutVenues}
                 onCitySelect={onCitySelect}
                 isSidebarOpen={isSidebarOpen}
                 isMobile={isMobile}
                 teamCityIds={teamCityIds}
+                dayCityIds={dayCityIds}
+                timezone={timezone}
             />
         </MapContainer>
     );
 }
-
-

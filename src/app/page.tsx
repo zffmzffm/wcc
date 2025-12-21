@@ -197,9 +197,13 @@ export default function Home() {
               <WorldCupMap
                 selectedTeam={selectedTeam}
                 selectedCity={selectedCity}
+                selectedDay={selectedDay}
+                dayMatches={dayMatches}
+                dayKnockoutVenues={dayKnockoutVenues}
                 onCitySelect={handleCitySelect}
                 isSidebarOpen={!!selectedCity || !!selectedTeam || !!selectedDay}
                 isMobile={isMobile}
+                timezone={displayTimezone}
               />
             </MapErrorBoundary>
           </div>
