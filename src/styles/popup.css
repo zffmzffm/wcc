@@ -145,6 +145,10 @@
     letter-spacing: 0.5px;
 }
 
+.match-group.knockout-stage {
+    color: var(--secondary);
+}
+
 .match-header .match-datetime {
     display: flex;
     gap: 0.5rem;

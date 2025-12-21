@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
+import CitySelector from '@/components/CitySelector';
 import TimezoneSelector from '@/components/TimezoneSelector';
 import CitySidebar from '@/components/CitySidebar';
 import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
@@ -10,9 +11,13 @@ import Footer from '@/components/Footer';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { LayerVisibilityProvider } from '@/contexts/LayerVisibilityContext';
 import { City } from '@/types';
-import { teams, matches, cities, knockoutVenues } from '@/data';
+import { teams, matches, cities } from '@/data';
 import { JsonMatchRepository } from '@/repositories/JsonMatchRepository';
 import { BREAKPOINTS, DEFAULT_TIMEZONE } from '@/constants';
+
+// Get knockout venues singleton
+const matchRepository = new JsonMatchRepository();
+const knockoutVenues = matchRepository.getKnockoutVenues();
 
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
@@ -65,6 +70,11 @@ export default function Home() {
     ? matches.filter(m => m.cityId === selectedCity.id)
     : [];
 
+  // Get knockout matches for selected city
+  const cityKnockoutVenues = selectedCity
+    ? knockoutVenues.filter(v => v.cityId === selectedCity.id)
+    : [];
+
   // Get matches for selected team
   const teamMatches = selectedTeam
     ? matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam)
@@ -85,6 +95,11 @@ export default function Home() {
             selectedTimezone={selectedTimezone}
             onSelect={setSelectedTimezone}
           />
+          <CitySelector
+            cities={cities}
+            selectedCity={selectedCity}
+            onSelect={handleCitySelect}
+          />
           <TeamSelector
             teams={teams}
             selectedTeam={selectedTeam}
@@ -96,6 +111,7 @@ export default function Home() {
           <CitySidebar
             city={selectedCity}
             matches={cityMatches}
+            knockoutVenues={cityKnockoutVenues}
             teams={teams}
             timezone={displayTimezone}
             onClose={() => setSelectedCity(null)}

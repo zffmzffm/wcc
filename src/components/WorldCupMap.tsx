@@ -89,6 +89,7 @@ function MapContent({
                     city={city}
                     onClick={() => onCitySelect(city)}
                     isDimmed={selectedTeam !== null && !teamCityIds.has(city.id)}
+                    isSelected={selectedCity?.id === city.id}
                 />
             ))}
 

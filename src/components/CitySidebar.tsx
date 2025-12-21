@@ -2,9 +2,11 @@
 import { useMemo, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { City, Match, Team } from '@/types';
-import { getCountryCode } from '@/utils/formatters';
+import { KnockoutVenue } from '@/repositories/types';
+import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
+import FlagIcon from './FlagIcon';
 
 // Map city IDs to venue images (when available)
 const venueImages: Record<string, string> = {
@@ -26,15 +28,26 @@ const venueImages: Record<string, string> = {
     'vancouver': '/venues/vancouver.jpg',
 };
 
+// Stage display names
+const stageNames: Record<string, string> = {
+    'R32': 'Round of 32',
+    'R16': 'Round of 16',
+    'QF': 'Quarter-Final',
+    'SF': 'Semi-Final',
+    'F': 'Final',
+    '3P': 'Third Place'
+};
+
 interface CitySidebarProps {
     city: City | null;
     matches: Match[];
+    knockoutVenues?: KnockoutVenue[];
     teams: Team[];
     timezone: string;
     onClose: () => void;
 }
 
-export default function CitySidebar({ city, matches, teams, timezone, onClose }: CitySidebarProps) {
+export default function CitySidebar({ city, matches, knockoutVenues = [], teams, timezone, onClose }: CitySidebarProps) {
     // Ref to the sidebar container for scroll reset
     const sidebarRef = useRef<HTMLElement>(null);
 
@@ -45,12 +58,19 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
         }
     }, [city?.id]);
 
-    // Memoize sorted matches to avoid re-sorting on every render
+    // Memoize sorted group stage matches to avoid re-sorting on every render
     const sortedMatches = useMemo(() => {
         return [...matches].sort((a, b) =>
             new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
         );
     }, [matches]);
+
+    // Memoize sorted knockout matches
+    const sortedKnockoutVenues = useMemo(() => {
+        return [...knockoutVenues].sort((a, b) =>
+            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+        );
+    }, [knockoutVenues]);
 
     const countryCode = city ? getCountryCode(city.country) : '';
 
@@ -91,11 +111,9 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
                         )}
                     </div>
 
-                    {/* Matches List */}
-                    <div className="sidebar-matches">
-                        {sortedMatches.length === 0 ? (
-                            <p className="no-matches">No match data available</p>
-                        ) : (
+                    {/* Group Stage Matches */}
+                    {sortedMatches.length > 0 && (
+                        <div className="sidebar-matches">
                             <ul className="match-list" role="list">
                                 {sortedMatches.map(match => (
                                     <MatchItem
@@ -106,8 +124,50 @@ export default function CitySidebar({ city, matches, teams, timezone, onClose }:
                                     />
                                 ))}
                             </ul>
-                        )}
-                    </div>
+                        </div>
+                    )}
+
+                    {/* Knockout Stage Matches */}
+                    {sortedKnockoutVenues.length > 0 && (
+                        <div className="sidebar-matches">
+                            <ul className="match-list" role="list">
+                                {sortedKnockoutVenues.map(venue => {
+                                    const { date, time } = formatDateTimeWithTimezone(venue.datetime, timezone);
+                                    return (
+                                        <li key={venue.matchId} className="match-item" role="listitem">
+                                            <div className="match-header">
+                                                <span className="match-group knockout-stage">
+                                                    {stageNames[venue.stage] || venue.stage}
+                                                </span>
+                                                <span className="match-datetime">
+                                                    <span className="match-date">{date}</span>
+                                                    <span className="match-time">{time}</span>
+                                                </span>
+                                            </div>
+                                            <div className="match-teams">
+                                                <span className="team">
+                                                    <FlagIcon code="TBD" size={20} />
+                                                    <span className="team-name">TBD</span>
+                                                </span>
+                                                <span className="vs">VS</span>
+                                                <span className="team">
+                                                    <FlagIcon code="TBD" size={20} />
+                                                    <span className="team-name">TBD</span>
+                                                </span>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* No matches message */}
+                    {sortedMatches.length === 0 && sortedKnockoutVenues.length === 0 && (
+                        <div className="sidebar-matches">
+                            <p className="no-matches">No match data available</p>
+                        </div>
+                    )}
                 </>
             )}
         </SidebarLayout>

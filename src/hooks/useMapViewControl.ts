@@ -119,21 +119,18 @@ export function useMapViewControl({
         }, TEAM_VIEW_CONFIG.adjustDelay);
     }, [selectedTeam, map, isMobile]);
 
-    // Handle sidebar open/close and city selection
+    // Handle city selection - zoom to city when selected (desktop and mobile)
     useEffect(() => {
-        if (!isMobile || !isSidebarOpen) {
-            // On desktop or when sidebar is closed, use default bounds
-            map.setMaxBounds(MAP_BOUNDS.default);
-            return;
-        }
+        // Only zoom if city selected and team is not (team view takes precedence)
+        if (!selectedCity || selectedTeam) return;
 
-        // On mobile with sidebar open
         const timeoutId = setTimeout(() => {
             map.invalidateSize();
-            map.setMaxBounds(MAP_BOUNDS.mobileSidebar);
 
-            // Only pan to city if no team is selected
-            if (selectedCity && !selectedTeam) {
+            if (isMobile && isSidebarOpen) {
+                // Mobile with sidebar - adjust bounds and position city in upper portion
+                map.setMaxBounds(MAP_BOUNDS.mobileSidebar);
+
                 const cityLat = selectedCity.lat;
                 const cityLng = selectedCity.lng;
 
@@ -145,11 +142,26 @@ export function useMapViewControl({
                 const offsetLat = (mapHeight * 0.15) / Math.pow(2, targetZoom) * 0.5;
 
                 map.setView([cityLat + offsetLat, cityLng], targetZoom, { animate: true });
+            } else {
+                // Desktop - zoom to city center
+                map.setMaxBounds(MAP_BOUNDS.default);
+                map.setView(
+                    [selectedCity.lat, selectedCity.lng],
+                    SIDEBAR_VIEW_CONFIG.cityZoomLevel + 1,  // Slightly more zoom on desktop
+                    { animate: true }
+                );
             }
         }, SIDEBAR_VIEW_CONFIG.adjustDelay);
 
         return () => clearTimeout(timeoutId);
-    }, [map, isSidebarOpen, isMobile, selectedCity, selectedTeam]);
+    }, [map, selectedCity, selectedTeam, isSidebarOpen, isMobile]);
+
+    // Handle sidebar close - reset bounds
+    useEffect(() => {
+        if (!isSidebarOpen && isMobile) {
+            map.setMaxBounds(MAP_BOUNDS.default);
+        }
+    }, [map, isSidebarOpen, isMobile]);
 
     return null;
 }
