@@ -106,7 +106,8 @@
    ============================================ */
 .team-selector,
 .timezone-selector,
-.city-selector {
+.city-selector,
+.matchday-selector {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -114,7 +115,8 @@
 
 .team-select,
 .timezone-select,
-.city-select {
+.city-select,
+.matchday-select {
     padding: 0.625rem 1rem;
     font-size: 0.875rem;
     border: 1px solid var(--border-light);
@@ -134,14 +136,16 @@
 
 .team-select:hover,
 .timezone-select:hover,
-.city-select:hover {
+.city-select:hover,
+.matchday-select:hover {
     border-color: var(--primary-light);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .team-select:focus,
 .timezone-select:focus,
-.city-select:focus {
+.city-select:focus,
+.matchday-select:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
@@ -149,7 +153,8 @@
 
 .team-select option,
 .timezone-select option,
-.city-select option {
+.city-select option,
+.matchday-select option {
     background: var(--card-bg);
     color: var(--text-primary);
     padding: 8px;
@@ -157,7 +162,8 @@
 
 .team-select optgroup,
 .timezone-select optgroup,
-.city-select optgroup {
+.city-select optgroup,
+.matchday-select optgroup {
     background: var(--background);
     color: var(--primary);
     font-weight: 700;
@@ -165,7 +171,8 @@
 
 .team-select-wrapper,
 .timezone-select-wrapper,
-.city-select-wrapper {
+.city-select-wrapper,
+.matchday-select-wrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -187,7 +194,8 @@
 
 .team-select-wrapper .team-select,
 .timezone-select-wrapper .timezone-select,
-.city-select-wrapper .city-select {
+.city-select-wrapper .city-select,
+.matchday-select-wrapper .matchday-select {
     padding-left: 40px;
 }
 

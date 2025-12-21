@@ -64,7 +64,7 @@ const MatchItem = memo(function MatchItem({
             <div className="match-header">
                 <span className="match-group">Group {match.group}</span>
                 <span className="match-datetime">
-                    <span className="match-date">{date}</span>
+                    {cityName && <span className="match-venue">📍 {cityName}</span>}
                     <span className="match-time">{time}</span>
                 </span>
             </div>
