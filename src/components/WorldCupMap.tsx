@@ -9,8 +9,10 @@ import TeamFlightPath from './TeamFlightPath';
 import MapLegendControl from './MapLegendControl';
 import MatchDayLabels from './MatchDayLabels';
 import { useMapViewControl } from '@/hooks/useMapViewControl';
+import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { City, Match, Team } from '@/types';
 import { cities, matches, teams, knockoutVenues } from '@/data';
+import { knockoutPathTemplates, thirdPlacePathTemplates } from '@/data/knockoutBracket';
 import { matchRepository } from '@/repositories';
 import { KnockoutVenue } from '@/repositories/types';
 import { MAP_CONFIG, MAP_BOUNDS, DEFAULT_TIMEZONE } from '@/constants';
@@ -94,6 +96,63 @@ function MapContent({
     dayCityIds: Set<string>;
     timezone: string;
 }) {
+    // Get current team for knockout path calculation
+    const currentTeam = teams.find(t => t.code === selectedTeam);
+
+    // Get layer visibility
+    const { visibility } = useLayerVisibility();
+
+    // Calculate knockout path cities based on visible layers
+    const knockoutCityIds = useMemo(() => {
+        if (!selectedTeam || !currentTeam) return new Set<string>();
+
+        const groupId = currentTeam.group;
+        const allKnockoutVenues = matchRepository.getKnockoutVenues();
+        const venueMap = new Map(allKnockoutVenues.map(v => [v.matchId, v]));
+
+        const cityIds = new Set<string>();
+
+        // Get templates for this group
+        const mainTemplates = knockoutPathTemplates.filter(t => t.groupId === groupId);
+        const thirdTemplate = thirdPlacePathTemplates.find(t => t.groupId === groupId);
+
+        // Add cities for 1st place path if visible
+        if (visibility.firstPlace) {
+            const template = mainTemplates.find(t => t.position === 1);
+            template?.path.forEach(matchId => {
+                const venue = venueMap.get(matchId);
+                if (venue) cityIds.add(venue.cityId);
+            });
+        }
+
+        // Add cities for 2nd place path if visible
+        if (visibility.secondPlace) {
+            const template = mainTemplates.find(t => t.position === 2);
+            template?.path.forEach(matchId => {
+                const venue = venueMap.get(matchId);
+                if (venue) cityIds.add(venue.cityId);
+            });
+        }
+
+        // Add cities for 3rd place path if visible
+        if (visibility.thirdPlace && thirdTemplate) {
+            thirdTemplate.path.forEach(matchId => {
+                const venue = venueMap.get(matchId);
+                if (venue) cityIds.add(venue.cityId);
+            });
+        }
+
+        return cityIds;
+    }, [selectedTeam, currentTeam, visibility.firstPlace, visibility.secondPlace, visibility.thirdPlace]);
+
+    // Combine all highlighted city IDs
+    const allHighlightedCityIds = useMemo(() => {
+        const combined = new Set<string>();
+        teamCityIds.forEach(id => combined.add(id));
+        knockoutCityIds.forEach(id => combined.add(id));
+        return combined;
+    }, [teamCityIds, knockoutCityIds]);
+
     return (
         <>
             {/* Consolidated map view controller */}
@@ -113,7 +172,7 @@ function MapContent({
                     city={city}
                     onClick={() => onCitySelect(city)}
                     isDimmed={
-                        (selectedTeam !== null && !teamCityIds.has(city.id)) ||
+                        (selectedTeam !== null && !allHighlightedCityIds.has(city.id)) ||
                         (selectedDay !== null && !dayCityIds.has(city.id))
                     }
                     isSelected={selectedCity?.id === city.id}
@@ -186,7 +245,7 @@ export default function WorldCupMap({
             maxBoundsViscosity={MAP_BOUNDS.default ? MAP_CONFIG.boundsViscosity : 0}
         >
             <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
                 attribution='&copy; OpenStreetMap, &copy; CartoDB'
             />
             <MapContent

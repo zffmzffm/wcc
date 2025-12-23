@@ -8,7 +8,9 @@
     }
 
     .team-select,
-    .timezone-select {
+    .timezone-select,
+    .city-select,
+    .matchday-select {
         min-width: 140px;
         font-size: 0.8rem;
     }
@@ -107,7 +109,9 @@
     }
 
     .team-select,
-    .timezone-select {
+    .timezone-select,
+    .city-select,
+    .matchday-select {
         min-width: 120px;
         width: 120px;
         padding: 0.35rem 0.5rem;
@@ -117,7 +121,9 @@
     }
 
     .team-select-wrapper .team-select,
-    .timezone-select-wrapper .timezone-select {
+    .timezone-select-wrapper .timezone-select,
+    .city-select-wrapper .city-select,
+    .matchday-select-wrapper .matchday-select {
         padding-left: 28px;
     }
 
@@ -332,7 +338,9 @@
     }
 
     .team-select,
-    .timezone-select {
+    .timezone-select,
+    .city-select,
+    .matchday-select {
         min-width: 85px;
         width: 85px;
     }

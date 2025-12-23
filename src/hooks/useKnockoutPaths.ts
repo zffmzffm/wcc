@@ -19,11 +19,11 @@ export interface KnockoutPath {
     matches: MatchWithCoords[];
 }
 
-// 路径颜色方案
+// 路径颜色方案 - 高级配色
 const PATH_COLORS = {
-    1: '#10B981',  // 翠绿 - 第1名
-    2: '#3B82F6',  // 天蓝 - 第2名
-    3: '#F59E0B',  // 橙色 - 第3名
+    1: '#D4AF37',  // 金色 - 第1名 (冠军荣耀)
+    2: '#A0B8A0',  // 鼠尾草绿 - 第2名 (Sage)
+    3: '#D08080',  // 珊瑚粉 - 第3名 (Coral)
 } as const;
 
 // 路径标签（中文）

@@ -1,7 +1,7 @@
 'use client';
 import { CircleMarker, Popup } from 'react-leaflet';
 import { Match, Team, City } from '@/types';
-import { formatDateTimeShort } from '@/utils/formatters';
+import { formatDateTimeShort, getCountryColor } from '@/utils/formatters';
 import { FLIGHT_PATH_CONFIG } from '@/constants';
 import FlagIcon from '../FlagIcon';
 
@@ -42,6 +42,7 @@ export default function MatchMarker({
 }: MatchMarkerProps) {
     const opponent = getOpponent(match, teamCode, teams);
     const { date, time } = formatDateTimeShort(match.datetime);
+    const countryColor = getCountryColor(city.country);
 
     return (
         <CircleMarker
@@ -51,7 +52,7 @@ export default function MatchMarker({
             pathOptions={{
                 color: '#fff',
                 weight: FLIGHT_PATH_CONFIG.markerWeight,
-                fillColor: FLIGHT_PATH_CONFIG.pathColor,
+                fillColor: countryColor,
                 fillOpacity: 0.95
             }}
         >

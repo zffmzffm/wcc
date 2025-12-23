@@ -23,9 +23,9 @@ interface LegendItem {
 
 const LEGEND_ITEMS: LegendItem[] = [
     { key: 'groupStage', color: '#2D5A3D', label: 'Group Stage', isChevron: true },
-    { key: 'firstPlace', color: '#10B981', label: '1st Place Path', isChevron: true },
-    { key: 'secondPlace', color: '#3B82F6', label: '2nd Place Path', isChevron: true },
-    { key: 'thirdPlace', color: '#F59E0B', label: '3rd Place Path', isChevron: true },
+    { key: 'firstPlace', color: '#D4AF37', label: '1st Place Path', isChevron: true },
+    { key: 'secondPlace', color: '#A0B8A0', label: '2nd Place Path', isChevron: true },
+    { key: 'thirdPlace', color: '#D08080', label: '3rd Place Path', isChevron: true },
 ];
 
 /**

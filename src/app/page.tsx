@@ -11,6 +11,7 @@ import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
 import Footer from '@/components/Footer';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { LayerVisibilityProvider } from '@/contexts/LayerVisibilityContext';
+import { HoverMatchProvider } from '@/contexts/HoverMatchContext';
 import { City } from '@/types';
 import { teams, matches, cities } from '@/data';
 import { JsonMatchRepository } from '@/repositories/JsonMatchRepository';
@@ -97,16 +98,14 @@ export default function Home() {
     }
   }, [isMobile]);
 
-  // Day selection: clear city selection when selecting a day
+  // Day selection: clear city and team selection when selecting a day
   const handleDaySelect = useCallback((day: string | null) => {
     setSelectedDay(day);
     if (day) {
       setSelectedCity(null);  // Day and city are mutually exclusive
-      if (isMobile) {
-        setSelectedTeam(null);
-      }
+      setSelectedTeam(null);  // Day and team are mutually exclusive
     }
-  }, [isMobile]);
+  }, []);
 
   // Get selected team info
   const selectedTeamInfo = selectedTeam
@@ -153,74 +152,76 @@ export default function Home() {
 
   return (
     <LayerVisibilityProvider>
-      <main className="main-container">
-        {/* Skip navigation link for keyboard users */}
-        <a href="#main-map" className="skip-link">
-          Skip to map
-        </a>
-        <Header>
-          <TimezoneSelector
-            selectedTimezone={selectedTimezone}
-            onSelect={setSelectedTimezone}
-          />
-          <MatchDaySelector
-            matches={matches}
-            knockoutVenues={knockoutVenues}
-            selectedDay={selectedDay}
-            onSelect={handleDaySelect}
-          />
-          <CitySelector
-            cities={cities}
-            selectedCity={selectedCity}
-            onSelect={handleCitySelect}
-          />
-          <TeamSelector
-            teams={teams}
-            selectedTeam={selectedTeam}
-            onSelect={handleTeamSelect}
-          />
-        </Header>
+      <HoverMatchProvider>
+        <main className="main-container">
+          {/* Skip navigation link for keyboard users */}
+          <a href="#main-map" className="skip-link">
+            Skip to map
+          </a>
+          <Header>
+            <TimezoneSelector
+              selectedTimezone={selectedTimezone}
+              onSelect={setSelectedTimezone}
+            />
+            <MatchDaySelector
+              matches={matches}
+              knockoutVenues={knockoutVenues}
+              selectedDay={selectedDay}
+              onSelect={handleDaySelect}
+            />
+            <CitySelector
+              cities={cities}
+              selectedCity={selectedCity}
+              onSelect={handleCitySelect}
+            />
+            <TeamSelector
+              teams={teams}
+              selectedTeam={selectedTeam}
+              onSelect={handleTeamSelect}
+            />
+          </Header>
 
-        <div className="content-wrapper">
-          <CitySidebar
-            city={selectedCity}
-            matches={sidebarMatches}
-            knockoutVenues={sidebarKnockoutVenues}
-            teams={teams}
-            cities={cities}
-            timezone={displayTimezone}
-            selectedDay={selectedDay}
-            onClose={handleSidebarClose}
-          />
-          <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
-            <MapErrorBoundary>
-              <WorldCupMap
-                selectedTeam={selectedTeam}
-                selectedCity={selectedCity}
-                selectedDay={selectedDay}
-                dayMatches={dayMatches}
-                dayKnockoutVenues={dayKnockoutVenues}
-                onCitySelect={handleCitySelect}
-                isSidebarOpen={!!selectedCity || !!selectedTeam || !!selectedDay}
-                isMobile={isMobile}
-                timezone={displayTimezone}
-              />
-            </MapErrorBoundary>
-          </div>
-          <div className="right-column">
-            <TeamScheduleSidebar
-              team={selectedTeamInfo || null}
-              matches={teamMatches}
+          <div className="content-wrapper">
+            <CitySidebar
+              city={selectedCity}
+              matches={sidebarMatches}
+              knockoutVenues={sidebarKnockoutVenues}
               teams={teams}
               cities={cities}
               timezone={displayTimezone}
-              knockoutVenues={new JsonMatchRepository().getKnockoutVenues()}
-              onClose={() => setSelectedTeam(null)}
+              selectedDay={selectedDay}
+              onClose={handleSidebarClose}
             />
-            <Footer />
+            <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
+              <MapErrorBoundary>
+                <WorldCupMap
+                  selectedTeam={selectedTeam}
+                  selectedCity={selectedCity}
+                  selectedDay={selectedDay}
+                  dayMatches={dayMatches}
+                  dayKnockoutVenues={dayKnockoutVenues}
+                  onCitySelect={handleCitySelect}
+                  isSidebarOpen={!!selectedCity || !!selectedTeam || !!selectedDay}
+                  isMobile={isMobile}
+                  timezone={displayTimezone}
+                />
+              </MapErrorBoundary>
+            </div>
+            <div className="right-column">
+              <TeamScheduleSidebar
+                team={selectedTeamInfo || null}
+                matches={teamMatches}
+                teams={teams}
+                cities={cities}
+                timezone={displayTimezone}
+                knockoutVenues={new JsonMatchRepository().getKnockoutVenues()}
+                onClose={() => setSelectedTeam(null)}
+              />
+              <Footer />
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </HoverMatchProvider>
     </LayerVisibilityProvider>
   );
 }

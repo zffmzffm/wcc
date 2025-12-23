@@ -2,6 +2,7 @@
 import { memo } from 'react';
 import { Match, Team } from '@/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
+import { useHoverMatch } from '@/contexts/HoverMatchContext';
 import FlagIcon from './FlagIcon';
 
 interface MatchItemProps {
@@ -33,9 +34,21 @@ const MatchItem = memo(function MatchItem({
     const isTeam1Highlighted = highlightTeamCode === match.team1;
     const isTeam2Highlighted = highlightTeamCode === match.team2;
 
+    // Hover state from context
+    const { hoveredMatchId, setHoveredMatchId } = useHoverMatch();
+    const isHovered = hoveredMatchId === match.id;
+
+    const handleMouseEnter = () => setHoveredMatchId(match.id);
+    const handleMouseLeave = () => setHoveredMatchId(null);
+
     if (variant === 'schedule') {
         return (
-            <li className="match-item schedule-item" role="listitem">
+            <li
+                className={`match-item schedule-item ${isHovered ? 'match-item-hovered' : ''}`}
+                role="listitem"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
                 <div className="match-info-row">
                     <span className="match-number">Match {(matchIndex ?? 0) + 1}</span>
                     <span className="match-datetime-inline">
@@ -60,7 +73,12 @@ const MatchItem = memo(function MatchItem({
     }
 
     return (
-        <li className="match-item" role="listitem">
+        <li
+            className={`match-item ${isHovered ? 'match-item-hovered' : ''}`}
+            role="listitem"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
             <div className="match-header">
                 <span className="match-group">Group {match.group}</span>
                 <span className="match-datetime">

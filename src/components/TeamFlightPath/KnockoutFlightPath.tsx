@@ -80,11 +80,11 @@ export default function KnockoutFlightPath({
 
     const mapSize = map.getSize();
 
-    // Colors for each position's chevron marker
+    // Colors for each position's chevron marker - 高级配色
     const positionColors: { [key: number]: string } = {
-        1: '#10B981',  // 1st place - green
-        2: '#3B82F6',  // 2nd place - blue
-        3: '#F59E0B',  // 3rd place - orange
+        1: '#D4AF37',  // 1st place - gold (金色)
+        2: '#A0B8A0',  // 2nd place - sage (鼠尾草绿)
+        3: '#D08080',  // 3rd place - coral (珊瑚粉)
     };
 
     return (
@@ -265,16 +265,6 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel }: Knockou
 
                     return (
                         <g key={`marker-${position}-${idx}`}>
-                            {/* Small circle marker */}
-                            <circle
-                                cx={pixel.x}
-                                cy={pixel.y}
-                                r={6}
-                                fill={color}
-                                fillOpacity={0.8}
-                                stroke="white"
-                                strokeWidth={2}
-                            />
                             {/* City name label with match numbers - positioned below marker to avoid overlap with group stage labels */}
                             {shouldShowLabel && cityName && (
                                 <text

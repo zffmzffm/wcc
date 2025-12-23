@@ -145,8 +145,8 @@ export default function CitySidebar({
             badge={sidebarProps.badge}
             placeholder={{
                 icon: '🏟️',
-                line1: 'Click a city on the map',
-                line2: 'to view venue and match info'
+                line1: 'Select a city or match day',
+                line2: 'to view the schedule'
             }}
             onClose={onClose}
         >

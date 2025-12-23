@@ -18,9 +18,9 @@ interface LegendItem {
 
 const LEGEND_ITEMS: LegendItem[] = [
     { color: '#2D5A3D', label: 'Group Stage' },
-    { color: '#10B981', label: '1st Place Path', isDashed: true },
-    { color: '#3B82F6', label: '2nd Place Path', isDashed: true },
-    { color: '#F59E0B', label: '3rd Place Path', isDashed: true },
+    { color: '#D4AF37', label: '1st Place Path', isDashed: true },
+    { color: '#A0B8A0', label: '2nd Place Path', isDashed: true },
+    { color: '#D08080', label: '3rd Place Path', isDashed: true },
 ];
 
 export default function PathLegend() {

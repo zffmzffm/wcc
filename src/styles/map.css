@@ -42,6 +42,31 @@
     border-top-color: var(--sidebar-bg) !important;
 }
 
+/* Match day label hover styles */
+.match-label-row {
+    margin: -3px -10px !important;
+    padding: 6px 14px !important;
+}
+
+.match-label-row:first-child {
+    margin-top: -5px !important;
+    padding-top: 8px !important;
+}
+
+.match-label-row:last-child {
+    margin-bottom: -6px !important;
+    padding-bottom: 9px !important;
+}
+
+.match-label-row:hover {
+    background: #D0DFCD !important;
+}
+
+/* Ensure match day labels appear above city markers */
+.match-day-label {
+    z-index: 1000 !important;
+}
+
 /* ============================================
    Flight Path Animation Styles
    ============================================ */
