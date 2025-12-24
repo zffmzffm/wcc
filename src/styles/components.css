@@ -8,18 +8,17 @@
     right: 12px;
     z-index: 1000;
     height: 64px;
-    background: var(--sidebar-bg-light);
+    background: #2D5A3D;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 1.5rem;
     /* Squircle effect */
     border-radius: 24px;
-    /* Soft shadow - inner and outer shadows for 3D effect */
+    /* Soft shadow for dark background */
     box-shadow:
-        8px 8px 16px rgba(45, 90, 61, 0.12),
-        -8px -8px 16px rgba(255, 255, 255, 0.9),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+        0 4px 16px rgba(0, 0, 0, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
     border: none;
 }
 
@@ -42,13 +41,13 @@
     margin: 0;
     font-size: 1.1rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: white;
     letter-spacing: -0.3px;
 }
 
 .header-subtitle {
     font-size: 0.65rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.8);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
@@ -105,14 +104,18 @@
    Select/Dropdown Common Styles
    ============================================ */
 .team-selector,
-.timezone-selector {
+.timezone-selector,
+.city-selector,
+.matchday-selector {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
 .team-select,
-.timezone-select {
+.timezone-select,
+.city-select,
+.matchday-select {
     padding: 0.625rem 1rem;
     font-size: 0.875rem;
     border: 1px solid var(--border-light);
@@ -131,34 +134,44 @@
 }
 
 .team-select:hover,
-.timezone-select:hover {
+.timezone-select:hover,
+.city-select:hover,
+.matchday-select:hover {
     border-color: var(--primary-light);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .team-select:focus,
-.timezone-select:focus {
+.timezone-select:focus,
+.city-select:focus,
+.matchday-select:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .team-select option,
-.timezone-select option {
+.timezone-select option,
+.city-select option,
+.matchday-select option {
     background: var(--card-bg);
     color: var(--text-primary);
     padding: 8px;
 }
 
 .team-select optgroup,
-.timezone-select optgroup {
+.timezone-select optgroup,
+.city-select optgroup,
+.matchday-select optgroup {
     background: var(--background);
     color: var(--primary);
     font-weight: 700;
 }
 
 .team-select-wrapper,
-.timezone-select-wrapper {
+.timezone-select-wrapper,
+.city-select-wrapper,
+.matchday-select-wrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -179,7 +192,9 @@
 }
 
 .team-select-wrapper .team-select,
-.timezone-select-wrapper .timezone-select {
+.timezone-select-wrapper .timezone-select,
+.city-select-wrapper .city-select,
+.matchday-select-wrapper .matchday-select {
     padding-left: 40px;
 }
 
@@ -262,4 +277,78 @@
     flex: 1;
     min-height: 0;
     width: 100%;
+}
+
+/* ============================================
+   Map Legend Control (Leaflet Native Control)
+   ============================================ */
+.map-legend-control {
+    background: var(--card-bg, white) !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow:
+        2px 2px 8px rgba(45, 90, 61, 0.12),
+        -1px -1px 4px rgba(255, 255, 255, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+    overflow: hidden;
+}
+
+.map-legend-content {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.map-legend-content .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.map-legend-content .legend-item-clickable {
+    cursor: pointer;
+    padding: 2px 0;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+}
+
+.map-legend-content .legend-item-clickable:hover {
+    background-color: rgba(45, 90, 61, 0.06);
+}
+
+.map-legend-content .legend-checkbox {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #2D5A3D;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.map-legend-content .legend-line {
+    width: 20px;
+    height: 3px;
+    border-radius: 1.5px;
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
+}
+
+.map-legend-content .legend-icon {
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
+}
+
+.map-legend-content .legend-text {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-secondary, #64748b);
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
+/* Old path-legend styles (deprecated, kept for backwards compatibility) */
+.path-legend {
+    display: none;
 }

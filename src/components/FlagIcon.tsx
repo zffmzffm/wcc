@@ -61,6 +61,8 @@ const codeToISO2: Record<string, string> = {
     'PO_D': 'eu',
     'PO_F1': 'un',
     'PO_F2': 'un',
+    // TBD placeholder for knockout matches
+    'TBD': 'xx', // Will fallback to emoji
 };
 
 // Cache for failed flags to avoid repeated load attempts

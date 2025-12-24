@@ -27,33 +27,9 @@ export default function FlightSegmentComponent({ segment, isNew, animationKey, i
     const startPixel = latLngToPixel(segment.from);
     const endPixel = latLngToPixel(segment.to);
 
-    // Same city: draw small loop
+    // Same city: skip rendering (numbered labels now indicate consecutive matches)
     if (segment.isSameCity) {
-        const loopGlowPath = generateLoopPath(startPixel, FLIGHT_PATH_CONFIG.loopRadius);
-        const loopChevronPath = generateLoopChevronPath(
-            startPixel,
-            FLIGHT_PATH_CONFIG.loopRadius,
-            FLIGHT_PATH_CONFIG.loopChevronSpacing
-        );
-
-        return (
-            <g
-                key={`segment-${animationKey}-${index}`}
-                className={isNew ? 'segment-fade-in' : ''}
-            >
-                {/* Loop path base (glow effect) */}
-                <path
-                    d={loopGlowPath}
-                    className="flight-path-glow"
-                />
-                {/* Loop main path - arrows only */}
-                <path
-                    d={loopChevronPath}
-                    className="flight-path-chevron"
-                    markerMid="url(#chevron-marker)"
-                />
-            </g>
-        );
+        return null;
     }
 
     // Normal flight path

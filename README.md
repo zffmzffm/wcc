@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Soccer Fan Guide '26 ⚽🏆
+
+An interactive web application for the 2026 FIFA World Cup, providing fans with an easy-to-use map, match schedules, and team tracking features.
+
+🌐 **Live Demo**: [soccerfanguide26.duoyj.ca](https://soccerfanguide26.duoyj.ca)
+
+## Features
+
+- **Interactive World Map**: Explore all 16 host cities across USA, Mexico, and Canada with clickable markers
+- **Team Selector**: Choose any of the 48 participating teams to view their group stage journey
+- **Team Flight Paths**: Visualize travel routes between match venues with distance calculations
+- **Match Schedules**: View all group stage matches by city or by team
+- **Timezone Converter**: Convert match times to your local timezone
+- **Knockout Stage Brackets**: Explore hypothetical knockout stage paths for each group position
+- **Responsive Design**: Fully optimized for both desktop and mobile devices
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org) 16
+- **Language**: TypeScript
+- **Map Library**: [Leaflet](https://leafletjs.com/) + [React Leaflet](https://react-leaflet.js.org/)
+- **Styling**: Tailwind CSS
+- **Testing**: Vitest + React Testing Library
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd wc
+
+# Install dependencies
+npm install
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+### Testing
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Run tests
+npm run test
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Run tests with coverage
+npm run test:coverage
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Linting
 
-## Deploy on Vercel
+```bash
+npm run lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/              # Next.js App Router pages
+├── components/       # React components
+│   ├── WorldCupMap.tsx
+│   ├── TeamSelector.tsx
+│   ├── CitySidebar.tsx
+│   ├── TeamScheduleSidebar.tsx
+│   ├── TimezoneSelector.tsx
+│   ├── TeamFlightPath/
+│   └── ...
+├── data/             # Static data files
+│   ├── cities.json   # Host city information
+│   ├── teams.json    # Participating teams
+│   ├── matches.json  # Match schedules
+│   └── knockoutBracket.ts
+├── hooks/            # Custom React hooks
+├── repositories/     # Data access layer
+├── styles/           # CSS stylesheets
+├── types/            # TypeScript type definitions
+└── utils/            # Utility functions
+```
+
+## License
+
+This project is private and not licensed for public distribution.
+
+## Acknowledgments
+
+- Match data and schedules are based on the official 2026 FIFA World Cup information
+- Flag icons and team data sourced from public FIFA resources

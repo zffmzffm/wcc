@@ -6,7 +6,12 @@ import { City, Match, Team } from '@/types';
 import citiesData from './cities.json';
 import matchesData from './matches.json';
 import teamsData from './teams.json';
+import knockoutVenuesData from './knockoutVenues.json';
 
 export const cities: City[] = citiesData as City[];
 export const matches: Match[] = matchesData as Match[];
 export const teams: Team[] = teamsData as Team[];
+export const knockoutVenues = knockoutVenuesData;
+
+// Re-export knockout bracket utilities
+export * from './knockoutBracket';

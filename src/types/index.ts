@@ -19,6 +19,7 @@ export interface Match {
     cityId: string;
     datetime: string;
     stage: string;
+    matchup?: string;  // For knockout matches, e.g., "1A vs 3CEFHI"
 }
 
 export interface Team {
@@ -41,3 +42,7 @@ export interface FlightSegment {
     isReturn: boolean;
     isSameCity: boolean;
 }
+
+// Knockout stage types for elimination rounds
+// 3P = Third Place Match (季军赛)
+export type KnockoutStage = 'R32' | 'R16' | 'QF' | 'SF' | 'F' | '3P';

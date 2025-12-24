@@ -1,15 +1,21 @@
 'use client';
 import React, { useMemo } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import CityMarker from './CityMarker';
 import TeamFlightPath from './TeamFlightPath';
+import MapLegendControl from './MapLegendControl';
+import MatchDayLabels from './MatchDayLabels';
 import { useMapViewControl } from '@/hooks/useMapViewControl';
-import { City } from '@/types';
-import { cities, matches, teams } from '@/data';
-import { MAP_CONFIG, MAP_BOUNDS } from '@/constants';
+import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
+import { City, Match, Team } from '@/types';
+import { cities, matches, teams, knockoutVenues } from '@/data';
+import { knockoutPathTemplates, thirdPlacePathTemplates } from '@/data/knockoutBracket';
+import { matchRepository } from '@/repositories';
+import { KnockoutVenue } from '@/repositories/types';
+import { MAP_CONFIG, MAP_BOUNDS, DEFAULT_TIMEZONE } from '@/constants';
 
 // Fix Leaflet default icon path issue
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: () => void })._getIconUrl;
@@ -25,11 +31,15 @@ L.Icon.Default.mergeOptions({
 function MapViewController({
     selectedTeam,
     selectedCity,
+    selectedDay,
+    dayCityIds,
     isSidebarOpen,
     isMobile
 }: {
     selectedTeam: string | null;
     selectedCity: City | null;
+    selectedDay: string | null;
+    dayCityIds: Set<string>;
     isSidebarOpen: boolean;
     isMobile: boolean;
 }) {
@@ -37,6 +47,8 @@ function MapViewController({
     useMapViewControl({
         selectedTeam,
         selectedCity,
+        selectedDay,
+        dayCityIds,
         isSidebarOpen,
         isMobile
     });
@@ -47,45 +59,110 @@ function MapViewController({
 interface WorldCupMapProps {
     selectedTeam: string | null;
     selectedCity: City | null;
+    selectedDay?: string | null;
+    dayMatches?: Match[];
+    dayKnockoutVenues?: KnockoutVenue[];
     onCitySelect: (city: City | null) => void;
     isSidebarOpen?: boolean;
     isMobile?: boolean;
+    timezone?: string;
+    canGoBack?: boolean;
+    onBack?: () => void;
 }
 
-export default function WorldCupMap({
+/**
+ * Inner map content component wrapped with LayerVisibilityProvider
+ */
+function MapContent({
     selectedTeam,
     selectedCity,
+    selectedDay,
+    dayMatches,
+    dayKnockoutVenues,
     onCitySelect,
-    isSidebarOpen = false,
-    isMobile = false
-}: WorldCupMapProps) {
-    // Calculate which cities are relevant for the selected team
-    const teamCityIds = useMemo(() => {
-        if (!selectedTeam) return new Set<string>();
-        const teamMatches = matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam);
-        return new Set(teamMatches.map(m => m.cityId));
-    }, [selectedTeam]);
+    isSidebarOpen,
+    isMobile,
+    teamCityIds,
+    dayCityIds,
+    timezone
+}: {
+    selectedTeam: string | null;
+    selectedCity: City | null;
+    selectedDay: string | null;
+    dayMatches: Match[];
+    dayKnockoutVenues: KnockoutVenue[];
+    onCitySelect: (city: City | null) => void;
+    isSidebarOpen: boolean;
+    isMobile: boolean;
+    teamCityIds: Set<string>;
+    dayCityIds: Set<string>;
+    timezone: string;
+}) {
+    // Get current team for knockout path calculation
+    const currentTeam = teams.find(t => t.code === selectedTeam);
+
+    // Get layer visibility
+    const { visibility } = useLayerVisibility();
+
+    // Calculate knockout path cities based on visible layers
+    const knockoutCityIds = useMemo(() => {
+        if (!selectedTeam || !currentTeam) return new Set<string>();
+
+        const groupId = currentTeam.group;
+        const allKnockoutVenues = matchRepository.getKnockoutVenues();
+        const venueMap = new Map(allKnockoutVenues.map(v => [v.matchId, v]));
+
+        const cityIds = new Set<string>();
+
+        // Get templates for this group
+        const mainTemplates = knockoutPathTemplates.filter(t => t.groupId === groupId);
+        const thirdTemplate = thirdPlacePathTemplates.find(t => t.groupId === groupId);
+
+        // Add cities for 1st place path if visible
+        if (visibility.firstPlace) {
+            const template = mainTemplates.find(t => t.position === 1);
+            template?.path.forEach(matchId => {
+                const venue = venueMap.get(matchId);
+                if (venue) cityIds.add(venue.cityId);
+            });
+        }
+
+        // Add cities for 2nd place path if visible
+        if (visibility.secondPlace) {
+            const template = mainTemplates.find(t => t.position === 2);
+            template?.path.forEach(matchId => {
+                const venue = venueMap.get(matchId);
+                if (venue) cityIds.add(venue.cityId);
+            });
+        }
+
+        // Add cities for 3rd place path if visible
+        if (visibility.thirdPlace && thirdTemplate) {
+            thirdTemplate.path.forEach(matchId => {
+                const venue = venueMap.get(matchId);
+                if (venue) cityIds.add(venue.cityId);
+            });
+        }
+
+        return cityIds;
+    }, [selectedTeam, currentTeam, visibility.firstPlace, visibility.secondPlace, visibility.thirdPlace]);
+
+    // Combine all highlighted city IDs
+    const allHighlightedCityIds = useMemo(() => {
+        const combined = new Set<string>();
+        teamCityIds.forEach(id => combined.add(id));
+        knockoutCityIds.forEach(id => combined.add(id));
+        return combined;
+    }, [teamCityIds, knockoutCityIds]);
 
     return (
-        <MapContainer
-            center={MAP_CONFIG.defaultCenter}
-            zoom={MAP_CONFIG.defaultZoom}
-            style={{ height: '100%', width: '100%' }}
-            zoomControl={true}
-            minZoom={MAP_CONFIG.minZoom}
-            maxZoom={MAP_CONFIG.maxZoom}
-            maxBounds={MAP_BOUNDS.default}
-            maxBoundsViscosity={MAP_BOUNDS.default ? MAP_CONFIG.boundsViscosity : 0}
-        >
-            <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                attribution='&copy; OpenStreetMap, &copy; CartoDB'
-            />
-
+        <>
             {/* Consolidated map view controller */}
             <MapViewController
                 selectedTeam={selectedTeam}
                 selectedCity={selectedCity}
+                selectedDay={selectedDay}
+                dayCityIds={dayCityIds}
                 isSidebarOpen={isSidebarOpen}
                 isMobile={isMobile}
             />
@@ -96,9 +173,24 @@ export default function WorldCupMap({
                     key={city.id}
                     city={city}
                     onClick={() => onCitySelect(city)}
-                    isDimmed={selectedTeam !== null && !teamCityIds.has(city.id)}
+                    isDimmed={
+                        (selectedTeam !== null && !allHighlightedCityIds.has(city.id)) ||
+                        (selectedDay !== null && !dayCityIds.has(city.id))
+                    }
+                    isSelected={selectedCity?.id === city.id}
                 />
             ))}
+
+            {/* Match day labels */}
+            {selectedDay && !selectedTeam && (
+                <MatchDayLabels
+                    matches={dayMatches}
+                    knockoutVenues={dayKnockoutVenues}
+                    cities={cities}
+                    teams={teams}
+                    timezone={timezone}
+                />
+            )}
 
             {/* Team flight path */}
             {selectedTeam && (
@@ -107,8 +199,85 @@ export default function WorldCupMap({
                     matches={matches}
                     cities={cities}
                     teams={teams}
+                    knockoutVenues={matchRepository.getKnockoutVenues()}
                 />
             )}
-        </MapContainer>
+
+            {/* Path legend as Leaflet control */}
+            {selectedTeam && <MapLegendControl />}
+        </>
+    );
+}
+
+export default function WorldCupMap({
+    selectedTeam,
+    selectedCity,
+    selectedDay = null,
+    dayMatches = [],
+    dayKnockoutVenues = [],
+    onCitySelect,
+    isSidebarOpen = false,
+    isMobile = false,
+    timezone = DEFAULT_TIMEZONE,
+    canGoBack = false,
+    onBack
+}: WorldCupMapProps) {
+    // Calculate which cities are relevant for the selected team
+    const teamCityIds = useMemo(() => {
+        if (!selectedTeam) return new Set<string>();
+        const teamMatches = matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam);
+        return new Set(teamMatches.map(m => m.cityId));
+    }, [selectedTeam]);
+
+    // Calculate which cities are relevant for the selected day
+    const dayCityIds = useMemo(() => {
+        if (!selectedDay) return new Set<string>();
+        const matchCities = dayMatches.map(m => m.cityId);
+        const knockoutCities = dayKnockoutVenues.map(v => v.cityId);
+        return new Set([...matchCities, ...knockoutCities]);
+    }, [selectedDay, dayMatches, dayKnockoutVenues]);
+
+    return (
+        <>
+            <MapContainer
+                center={MAP_CONFIG.defaultCenter}
+                zoom={MAP_CONFIG.defaultZoom}
+                style={{ height: '100%', width: '100%' }}
+                zoomControl={true}
+                minZoom={MAP_CONFIG.minZoom}
+                maxZoom={MAP_CONFIG.maxZoom}
+                maxBounds={MAP_BOUNDS.default}
+                maxBoundsViscosity={MAP_BOUNDS.default ? MAP_CONFIG.boundsViscosity : 0}
+            >
+                <TileLayer
+                    url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; OpenStreetMap, &copy; CartoDB'
+                />
+                <MapContent
+                    selectedTeam={selectedTeam}
+                    selectedCity={selectedCity}
+                    selectedDay={selectedDay}
+                    dayMatches={dayMatches}
+                    dayKnockoutVenues={dayKnockoutVenues}
+                    onCitySelect={onCitySelect}
+                    isSidebarOpen={isSidebarOpen}
+                    isMobile={isMobile}
+                    teamCityIds={teamCityIds}
+                    dayCityIds={dayCityIds}
+                    timezone={timezone}
+                />
+            </MapContainer>
+            {/* Back button overlay */}
+            {canGoBack && onBack && (
+                <button
+                    className="map-back-button"
+                    onClick={onBack}
+                    aria-label="Go back to previous selection"
+                    title="返回上一步"
+                >
+                    ↩
+                </button>
+            )}
+        </>
     );
 }

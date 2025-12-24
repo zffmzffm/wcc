@@ -229,7 +229,8 @@
         -4px -4px 8px rgba(255, 255, 255, 0.9);
 }
 
-.sidebar-matches .match-item:hover {
+.sidebar-matches .match-item:hover,
+.sidebar-matches .match-item.match-item-hovered {
     background: var(--accent-light);
     transform: translateY(-2px);
     box-shadow:
@@ -310,4 +311,148 @@
 .sidebar-matches .highlight-team .team-name {
     color: var(--secondary);
     font-weight: 700;
+}
+
+/* Clickable team names - allow selecting team by clicking */
+.team-clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    padding: 2px 6px;
+    margin: -2px -6px;
+}
+
+.team-clickable:hover {
+    background: rgba(45, 90, 61, 0.12);
+}
+
+.team-clickable:hover .team-name {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* Clickable venue/city names - allow selecting city by clicking */
+.venue-clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    padding: 1px 4px;
+    margin: -1px -4px;
+}
+
+.venue-clickable:hover {
+    background: rgba(45, 90, 61, 0.12);
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ============================================
+   Knockout Stage Styles
+   ============================================ */
+
+/* Section title for group/knockout stages */
+.schedule-section-title {
+    margin: 0.5rem 0 0.75rem;
+    padding: 0.25rem 4px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.schedule-section-title.knockout-title {
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
+}
+
+/* Tab Container - Index Card Style */
+.knockout-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+    padding: 0;
+    background: transparent;
+    position: relative;
+}
+
+/* Tab Button - Index Card Tab */
+.knockout-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    background: var(--accent-light);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    margin-right: -1px;
+    z-index: 1;
+}
+
+.knockout-tab:last-child {
+    margin-right: 0;
+}
+
+.knockout-tab:hover:not(.active) {
+    background: var(--sidebar-bg-light);
+}
+
+.knockout-tab.active {
+    background: var(--sidebar-bg);
+    border-color: rgba(0, 0, 0, 0.12);
+    z-index: 2;
+}
+
+/* Active tab connects to content below */
+.knockout-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--sidebar-bg);
+}
+
+.knockout-tab-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+}
+
+.knockout-tab.active .knockout-tab-label {
+    color: var(--text-primary);
+}
+
+/* Tab Content Panel - Connects with active tab */
+.knockout-path-content {
+    background: var(--sidebar-bg);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 0 0 10px 10px;
+    padding: 0.5rem 0;
+    margin-top: -1px;
+    animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Knockout match list inherits match-list styles */
+.knockout-match-list {
+    gap: 0.5rem;
 }

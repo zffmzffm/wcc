@@ -5,12 +5,60 @@
     .header {
         padding: 0.5rem 0.75rem;
         height: auto;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .header-brand {
+        width: 100%;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .header-logo {
+        display: none;
+    }
+
+    .header-title h1 {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    /* Header nav - 2x2 grid for dropdowns on tablet */
+    .header-nav {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    /* Outer selector containers - center within grid cells */
+    .team-selector,
+    .timezone-selector,
+    .city-selector,
+    .matchday-selector {
+        display: flex;
+        justify-content: center;
+        width: 100%;
     }
 
     .team-select,
-    .timezone-select {
-        min-width: 140px;
-        font-size: 0.8rem;
+    .timezone-select,
+    .city-select,
+    .matchday-select {
+        min-width: unset;
+        width: 100%;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    .team-select-wrapper,
+    .timezone-select-wrapper,
+    .city-select-wrapper,
+    .matchday-select-wrapper {
+        width: 100%;
     }
 
     .header-team-info {
@@ -18,8 +66,8 @@
     }
 
     .content-wrapper {
-        margin-top: 80px;
-        height: calc(100vh - 80px);
+        margin-top: 140px;
+        height: calc(100vh - 140px);
         flex-direction: column;
         overflow: hidden;
         padding: 8px;
@@ -76,48 +124,81 @@
    ============================================ */
 @media (max-width: 600px) {
 
-    /* Header compact */
+    /* Header mobile layout - stacked structure */
     .header {
         top: 6px;
         left: 6px;
         right: 6px;
-        padding: 0.35rem 0.6rem;
-        gap: 0.35rem;
+        padding: 0.5rem 0.6rem;
+        gap: 0.4rem;
         border-radius: 14px;
+        flex-direction: column;
+        height: auto;
+        align-items: center;
     }
 
+    /* Header brand - center the title, hide trophy */
     .header-brand {
-        gap: 0.4rem;
+        width: 100%;
+        justify-content: center;
+        gap: 0;
     }
 
     .header-logo {
-        font-size: 1.1rem;
+        display: none;
     }
 
     .header-title h1 {
-        font-size: 0.85rem;
+        font-size: 1.2rem;
+        text-align: center;
     }
 
     .header-subtitle {
         display: none;
     }
 
+    /* Header nav - 2x2 grid for dropdowns */
     .header-nav {
-        gap: 0.4rem;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem;
+    }
+
+    /* Outer selector containers - center within grid cells */
+    .team-selector,
+    .timezone-selector,
+    .city-selector,
+    .matchday-selector {
+        display: flex;
+        justify-content: center;
+        width: 100%;
     }
 
     .team-select,
-    .timezone-select {
-        min-width: 120px;
-        width: 120px;
+    .timezone-select,
+    .city-select,
+    .matchday-select {
+        min-width: unset;
+        width: 100%;
         padding: 0.35rem 0.5rem;
         font-size: 0.7rem;
         padding-right: 24px;
         background-position: right 4px center;
+        text-align: center;
+    }
+
+    .team-select-wrapper,
+    .timezone-select-wrapper,
+    .city-select-wrapper,
+    .matchday-select-wrapper {
+        width: 100%;
     }
 
     .team-select-wrapper .team-select,
-    .timezone-select-wrapper .timezone-select {
+    .timezone-select-wrapper .timezone-select,
+    .city-select-wrapper .city-select,
+    .matchday-select-wrapper .matchday-select {
         padding-left: 28px;
     }
 
@@ -128,30 +209,103 @@
     }
 
     .content-wrapper {
-        margin-top: 56px;
-        height: calc(100vh - 56px);
+        margin-top: 145px;
+        height: auto;
+        min-height: calc(100vh - 145px);
         flex-direction: column;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding: 8px;
         gap: 8px;
     }
 
-    /* Map priority - ensure at least 40% space */
+    /* Map - fixed height on mobile */
     .map-container {
-        min-height: 40vh;
-        height: auto;
-        flex: 1;
+        min-height: 35vh;
+        height: 35vh;
+        flex-shrink: 0;
         order: 1;
         border-radius: 16px;
     }
 
-    /* Sidebar compact */
+    /* Map legend compact */
+    .map-legend-control {
+        border-radius: 6px !important;
+    }
+
+    .map-legend-content {
+        padding: 6px 8px;
+        gap: 3px;
+    }
+
+    .map-legend-content .legend-item {
+        gap: 4px;
+    }
+
+    .map-legend-content .legend-checkbox {
+        width: 12px;
+        height: 12px;
+    }
+
+    .map-legend-content .legend-line {
+        width: 14px;
+        height: 2px;
+    }
+
+    .map-legend-content .legend-icon {
+        font-size: 0.6rem;
+    }
+
+    .map-legend-content .legend-text {
+        font-size: 0.55rem;
+    }
+
+    /* Match day labels compact */
+    .leaflet-tooltip {
+        padding: 4px 8px !important;
+        font-size: 0.65rem !important;
+    }
+
+    .match-label-row {
+        margin: -2px -6px !important;
+        padding: 3px 8px !important;
+    }
+
+    .match-label-row:first-child {
+        margin-top: -3px !important;
+        padding-top: 5px !important;
+    }
+
+    .match-label-row:last-child {
+        margin-bottom: -4px !important;
+        padding-bottom: 6px !important;
+    }
+
+    .match-day-city-name {
+        font-size: 0.75rem !important;
+    }
+
+    .match-day-time {
+        font-size: 0.6rem !important;
+        padding: 2px 4px !important;
+    }
+
+    .match-day-teams {
+        font-size: 0.6rem !important;
+        gap: 3px !important;
+    }
+
+    .match-day-vs {
+        font-size: 0.5rem !important;
+        padding: 1px 3px !important;
+    }
+
+    /* Sidebar - natural height, no max-height limit */
     .sidebar {
         width: 100%;
         height: auto;
-        max-height: calc(60vh - 110px);
         order: 2;
-        flex-shrink: 1;
+        flex-shrink: 0;
         border-radius: 16px;
     }
 
@@ -270,25 +424,8 @@
         padding: 0.3rem 0.6rem;
     }
 
-    /* Placeholder single line compact */
+    /* Hide placeholder panels on mobile */
     .sidebar-placeholder {
-        padding: 0.5rem 0.75rem;
-        flex-direction: row;
-        gap: 0.5rem;
-        justify-content: center;
-    }
-
-    .sidebar-placeholder-icon {
-        font-size: 1.25rem;
-        margin-bottom: 0;
-    }
-
-    .sidebar-placeholder p {
-        font-size: 0.75rem;
-        margin: 0;
-    }
-
-    .sidebar-placeholder p:last-child {
         display: none;
     }
 
@@ -302,7 +439,6 @@
     }
 
     .right-column .sidebar {
-        max-height: calc(60vh - 110px);
         order: 1;
     }
 
@@ -328,13 +464,7 @@
    ============================================ */
 @media (max-width: 480px) {
     .header-title h1 {
-        font-size: 0.75rem;
-    }
-
-    .team-select,
-    .timezone-select {
-        min-width: 85px;
-        width: 85px;
+        font-size: 1rem;
     }
 }
 

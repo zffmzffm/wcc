@@ -1,0 +1,238 @@
+{
+    "R32": [
+        {
+            "matchId": "R32_73",
+            "stage": "R32",
+            "cityId": "los_angeles",
+            "datetime": "2026-06-28T15:00:00-04:00",
+            "matchup": "2A vs 2B"
+        },
+        {
+            "matchId": "R32_76",
+            "stage": "R32",
+            "cityId": "houston",
+            "datetime": "2026-06-29T13:00:00-04:00",
+            "matchup": "1C vs 2F"
+        },
+        {
+            "matchId": "R32_74",
+            "stage": "R32",
+            "cityId": "boston",
+            "datetime": "2026-06-29T16:30:00-04:00",
+            "matchup": "1E vs 3ABCDF"
+        },
+        {
+            "matchId": "R32_75",
+            "stage": "R32",
+            "cityId": "monterrey",
+            "datetime": "2026-06-29T21:00:00-04:00",
+            "matchup": "1F vs 2C"
+        },
+        {
+            "matchId": "R32_78",
+            "stage": "R32",
+            "cityId": "dallas",
+            "datetime": "2026-06-30T13:00:00-04:00",
+            "matchup": "2E vs 2I"
+        },
+        {
+            "matchId": "R32_77",
+            "stage": "R32",
+            "cityId": "new_york",
+            "datetime": "2026-06-30T17:00:00-04:00",
+            "matchup": "1I vs 3CDFGH"
+        },
+        {
+            "matchId": "R32_79",
+            "stage": "R32",
+            "cityId": "mexico_city",
+            "datetime": "2026-06-30T21:00:00-04:00",
+            "matchup": "1A vs 3CEFHI"
+        },
+        {
+            "matchId": "R32_80",
+            "stage": "R32",
+            "cityId": "atlanta",
+            "datetime": "2026-07-01T12:00:00-04:00",
+            "matchup": "1L vs 3EHIJK"
+        },
+        {
+            "matchId": "R32_82",
+            "stage": "R32",
+            "cityId": "seattle",
+            "datetime": "2026-07-01T16:00:00-04:00",
+            "matchup": "1G vs 3AEHIJ"
+        },
+        {
+            "matchId": "R32_81",
+            "stage": "R32",
+            "cityId": "san_francisco",
+            "datetime": "2026-07-01T20:00:00-04:00",
+            "matchup": "1D vs 3BEFIJ"
+        },
+        {
+            "matchId": "R32_84",
+            "stage": "R32",
+            "cityId": "los_angeles",
+            "datetime": "2026-07-02T15:00:00-04:00",
+            "matchup": "1H vs 2J"
+        },
+        {
+            "matchId": "R32_83",
+            "stage": "R32",
+            "cityId": "toronto",
+            "datetime": "2026-07-02T19:00:00-04:00",
+            "matchup": "2K vs 2L"
+        },
+        {
+            "matchId": "R32_85",
+            "stage": "R32",
+            "cityId": "vancouver",
+            "datetime": "2026-07-02T23:00:00-04:00",
+            "matchup": "1B vs 3EFGIJ"
+        },
+        {
+            "matchId": "R32_88",
+            "stage": "R32",
+            "cityId": "dallas",
+            "datetime": "2026-07-03T14:00:00-04:00",
+            "matchup": "2D vs 2G"
+        },
+        {
+            "matchId": "R32_86",
+            "stage": "R32",
+            "cityId": "miami",
+            "datetime": "2026-07-03T18:00:00-04:00",
+            "matchup": "1J vs 2H"
+        },
+        {
+            "matchId": "R32_87",
+            "stage": "R32",
+            "cityId": "kansas_city",
+            "datetime": "2026-07-03T21:30:00-04:00",
+            "matchup": "1K vs 3DEIJL"
+        }
+    ],
+    "R16": [
+        {
+            "matchId": "R16_90",
+            "stage": "R16",
+            "cityId": "houston",
+            "datetime": "2026-07-04T13:00:00-04:00",
+            "matchup": "W73 vs W75"
+        },
+        {
+            "matchId": "R16_89",
+            "stage": "R16",
+            "cityId": "philadelphia",
+            "datetime": "2026-07-04T17:00:00-04:00",
+            "matchup": "W74 vs W77"
+        },
+        {
+            "matchId": "R16_91",
+            "stage": "R16",
+            "cityId": "new_york",
+            "datetime": "2026-07-05T16:00:00-04:00",
+            "matchup": "W76 vs W78"
+        },
+        {
+            "matchId": "R16_92",
+            "stage": "R16",
+            "cityId": "mexico_city",
+            "datetime": "2026-07-05T20:00:00-04:00",
+            "matchup": "W79 vs W80"
+        },
+        {
+            "matchId": "R16_93",
+            "stage": "R16",
+            "cityId": "dallas",
+            "datetime": "2026-07-06T15:00:00-04:00",
+            "matchup": "W83 vs W84"
+        },
+        {
+            "matchId": "R16_94",
+            "stage": "R16",
+            "cityId": "seattle",
+            "datetime": "2026-07-06T20:00:00-04:00",
+            "matchup": "W81 vs W82"
+        },
+        {
+            "matchId": "R16_95",
+            "stage": "R16",
+            "cityId": "atlanta",
+            "datetime": "2026-07-07T12:00:00-04:00",
+            "matchup": "W86 vs W88"
+        },
+        {
+            "matchId": "R16_96",
+            "stage": "R16",
+            "cityId": "vancouver",
+            "datetime": "2026-07-07T16:00:00-04:00",
+            "matchup": "W85 vs W87"
+        }
+    ],
+    "QF": [
+        {
+            "matchId": "QF_97",
+            "stage": "QF",
+            "cityId": "boston",
+            "datetime": "2026-07-09T16:00:00-04:00",
+            "matchup": "W89 vs W90"
+        },
+        {
+            "matchId": "QF_98",
+            "stage": "QF",
+            "cityId": "los_angeles",
+            "datetime": "2026-07-10T15:00:00-04:00",
+            "matchup": "W93 vs W94"
+        },
+        {
+            "matchId": "QF_99",
+            "stage": "QF",
+            "cityId": "miami",
+            "datetime": "2026-07-11T17:00:00-04:00",
+            "matchup": "W91 vs W92"
+        },
+        {
+            "matchId": "QF_100",
+            "stage": "QF",
+            "cityId": "kansas_city",
+            "datetime": "2026-07-11T21:00:00-04:00",
+            "matchup": "W95 vs W96"
+        }
+    ],
+    "SF": [
+        {
+            "matchId": "SF_101",
+            "stage": "SF",
+            "cityId": "dallas",
+            "datetime": "2026-07-14T15:00:00-04:00",
+            "matchup": "W97 vs W98"
+        },
+        {
+            "matchId": "SF_102",
+            "stage": "SF",
+            "cityId": "atlanta",
+            "datetime": "2026-07-15T15:00:00-04:00",
+            "matchup": "W99 vs W100"
+        }
+    ],
+    "F": [
+        {
+            "matchId": "F_104",
+            "stage": "F",
+            "cityId": "new_york",
+            "datetime": "2026-07-19T15:00:00-04:00",
+            "matchup": "W101 vs W102"
+        }
+    ],
+    "3P": [
+        {
+            "matchId": "3P_103",
+            "stage": "3P",
+            "cityId": "miami",
+            "datetime": "2026-07-18T17:00:00-04:00",
+            "matchup": "L101 vs L102"
+        }
+    ]
+}

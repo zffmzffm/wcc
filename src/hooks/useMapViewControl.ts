@@ -13,6 +13,8 @@ import { cities, matches } from '@/data';
 interface UseMapViewControlProps {
     selectedTeam: string | null;
     selectedCity: City | null;
+    selectedDay: string | null;
+    dayCityIds: Set<string>;
     isSidebarOpen: boolean;
     isMobile: boolean;
 }
@@ -24,11 +26,14 @@ interface UseMapViewControlProps {
 export function useMapViewControl({
     selectedTeam,
     selectedCity,
+    selectedDay,
+    dayCityIds,
     isSidebarOpen,
     isMobile
 }: UseMapViewControlProps) {
     const map = useMap();
     const prevTeam = useRef<string | null>(null);
+    const prevDay = useRef<string | null>(null);
     const initialAdjustmentDone = useRef(false);
 
     // Initial view adjustment for mobile
@@ -79,21 +84,30 @@ export function useMapViewControl({
         const latSpan = maxLat - minLat;
         const lngSpan = maxLng - minLng;
 
-        // Ensure minimum bounds span to prevent over-zooming
         const centerLat = (minLat + maxLat) / 2;
         const centerLng = (minLng + maxLng) / 2;
 
-        const effectiveLatSpan = Math.max(latSpan, TEAM_VIEW_CONFIG.minLatSpan);
-        const effectiveLngSpan = Math.max(lngSpan, TEAM_VIEW_CONFIG.minLngSpan);
+        // On mobile: use actual city span to tightly fit group stage cities
+        // On desktop: use minimum spans for consistent view
+        const effectiveLatSpan = isMobile
+            ? latSpan  // No minimum on mobile - fit exactly to cities
+            : Math.max(latSpan, TEAM_VIEW_CONFIG.minLatSpan);
+        const effectiveLngSpan = isMobile
+            ? lngSpan
+            : Math.max(lngSpan, TEAM_VIEW_CONFIG.minLngSpan);
+
+        // Minimal geo padding on mobile, normal on desktop
+        const latPadding = isMobile ? 0.5 : TEAM_VIEW_CONFIG.latPadding;
+        const lngPadding = isMobile ? 0.5 : TEAM_VIEW_CONFIG.lngPadding;
 
         const bounds: [[number, number], [number, number]] = [
             [
-                centerLat - effectiveLatSpan / 2 - TEAM_VIEW_CONFIG.latPadding,
-                centerLng - effectiveLngSpan / 2 - TEAM_VIEW_CONFIG.lngPadding
+                centerLat - effectiveLatSpan / 2 - latPadding,
+                centerLng - effectiveLngSpan / 2 - lngPadding
             ],
             [
-                centerLat + effectiveLatSpan / 2 + TEAM_VIEW_CONFIG.latPadding,
-                centerLng + effectiveLngSpan / 2 + TEAM_VIEW_CONFIG.lngPadding
+                centerLat + effectiveLatSpan / 2 + latPadding,
+                centerLng + effectiveLngSpan / 2 + lngPadding
             ]
         ];
 
@@ -102,13 +116,17 @@ export function useMapViewControl({
             map.invalidateSize();
 
             // Fit map to team's cities with pixel padding
+            // Mobile needs less padding to zoom in closer to group stage cities
             const paddingOptions = isMobile
-                ? { paddingTopLeft: [20, 20] as [number, number], paddingBottomRight: [20, 200] as [number, number] }
+                ? { paddingTopLeft: [10, 50] as [number, number], paddingBottomRight: [10, 30] as [number, number] }
                 : { padding: [40, 40] as [number, number] };
+
+            // Allow higher maxZoom on mobile for tighter view
+            const maxZoom = isMobile ? 7 : TEAM_VIEW_CONFIG.maxZoom;
 
             map.fitBounds(bounds, {
                 ...paddingOptions,
-                maxZoom: TEAM_VIEW_CONFIG.maxZoom,
+                maxZoom,
                 animate: true
             });
 
@@ -119,21 +137,104 @@ export function useMapViewControl({
         }, TEAM_VIEW_CONFIG.adjustDelay);
     }, [selectedTeam, map, isMobile]);
 
-    // Handle sidebar open/close and city selection
+    // Handle match day selection - fit to day's cities
     useEffect(() => {
-        if (!isMobile || !isSidebarOpen) {
-            // On desktop or when sidebar is closed, use default bounds
-            map.setMaxBounds(MAP_BOUNDS.default);
+        // Only adjust when day selection changes
+        if (selectedDay === prevDay.current) return;
+        prevDay.current = selectedDay;
+
+        // Don't adjust if team is selected (team view takes precedence)
+        if (selectedTeam) return;
+
+        if (!selectedDay || dayCityIds.size === 0) {
+            // When day is deselected, reset to default view
+            if (!selectedCity) {
+                map.setView(
+                    MAP_CONFIG.defaultCenter,
+                    isMobile ? MAP_CONFIG.mobileZoom : MAP_CONFIG.defaultZoom,
+                    { animate: true }
+                );
+            }
             return;
         }
 
-        // On mobile with sidebar open
+        // Find all cities with matches on this day
+        const dayCities = cities.filter(c => dayCityIds.has(c.id));
+
+        if (dayCities.length === 0) return;
+
+        // Create bounds that encompass all day's cities
+        const lats = dayCities.map(c => c.lat);
+        const lngs = dayCities.map(c => c.lng);
+
+        const minLat = Math.min(...lats);
+        const maxLat = Math.max(...lats);
+        const minLng = Math.min(...lngs);
+        const maxLng = Math.max(...lngs);
+
+        // Calculate actual span of cities
+        const latSpan = maxLat - minLat;
+        const lngSpan = maxLng - minLng;
+
+        // On mobile: use actual city span for tight fit
+        // On desktop: use minimum spans for consistent view
+        const centerLat = (minLat + maxLat) / 2;
+        const centerLng = (minLng + maxLng) / 2;
+
+        const effectiveLatSpan = isMobile
+            ? latSpan
+            : Math.max(latSpan, TEAM_VIEW_CONFIG.minLatSpan);
+        const effectiveLngSpan = isMobile
+            ? lngSpan
+            : Math.max(lngSpan, TEAM_VIEW_CONFIG.minLngSpan);
+
+        // Minimal padding on mobile, normal on desktop
+        const latPadding = isMobile ? 0.5 : 1;
+        const lngPadding = isMobile ? 0.5 : 2;
+
+        const bounds: [[number, number], [number, number]] = [
+            [
+                centerLat - effectiveLatSpan / 2 - latPadding,
+                centerLng - effectiveLngSpan / 2 - lngPadding
+            ],
+            [
+                centerLat + effectiveLatSpan / 2 + latPadding,
+                centerLng + effectiveLngSpan / 2 + lngPadding
+            ]
+        ];
+
+        // Small delay to ensure map is ready
+        setTimeout(() => {
+            map.invalidateSize();
+
+            // Minimal pixel padding on mobile for tighter zoom
+            const paddingOptions = isMobile
+                ? { paddingTopLeft: [10, 50] as [number, number], paddingBottomRight: [10, 30] as [number, number] }
+                : { padding: [80, 80] as [number, number] };
+
+            // Allow higher maxZoom on mobile
+            const maxZoom = isMobile ? 7 : 8;
+
+            map.fitBounds(bounds, {
+                ...paddingOptions,
+                maxZoom,
+                animate: true
+            });
+        }, TEAM_VIEW_CONFIG.adjustDelay);
+    }, [selectedDay, selectedTeam, selectedCity, dayCityIds, map, isMobile]);
+
+    // Handle city selection - zoom to city when selected (desktop and mobile)
+    useEffect(() => {
+        // Only zoom if city selected and team/day is not (team view takes precedence)
+        if (!selectedCity || selectedTeam || selectedDay) return;
+
         const timeoutId = setTimeout(() => {
             map.invalidateSize();
-            map.setMaxBounds(MAP_BOUNDS.mobileSidebar);
 
-            // Only pan to city if no team is selected
-            if (selectedCity && !selectedTeam) {
+            if (isMobile && isSidebarOpen) {
+                // Mobile with sidebar - adjust bounds and position city in upper portion
+                map.setMaxBounds(MAP_BOUNDS.mobileSidebar);
+
                 const cityLat = selectedCity.lat;
                 const cityLng = selectedCity.lng;
 
@@ -145,11 +246,26 @@ export function useMapViewControl({
                 const offsetLat = (mapHeight * 0.15) / Math.pow(2, targetZoom) * 0.5;
 
                 map.setView([cityLat + offsetLat, cityLng], targetZoom, { animate: true });
+            } else {
+                // Desktop - zoom to city center
+                map.setMaxBounds(MAP_BOUNDS.default);
+                map.setView(
+                    [selectedCity.lat, selectedCity.lng],
+                    SIDEBAR_VIEW_CONFIG.cityZoomLevel + 1,  // Slightly more zoom on desktop
+                    { animate: true }
+                );
             }
         }, SIDEBAR_VIEW_CONFIG.adjustDelay);
 
         return () => clearTimeout(timeoutId);
-    }, [map, isSidebarOpen, isMobile, selectedCity, selectedTeam]);
+    }, [map, selectedCity, selectedTeam, isSidebarOpen, isMobile]);
+
+    // Handle sidebar close - reset bounds
+    useEffect(() => {
+        if (!isSidebarOpen && isMobile) {
+            map.setMaxBounds(MAP_BOUNDS.default);
+        }
+    }, [map, isSidebarOpen, isMobile]);
 
     return null;
 }

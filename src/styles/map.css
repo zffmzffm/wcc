@@ -2,6 +2,7 @@
    Map Container Styles
    ============================================ */
 .map-container {
+    position: relative;
     flex: 1;
     height: 100%;
     min-width: 0;
@@ -40,6 +41,31 @@
 
 .leaflet-tooltip::before {
     border-top-color: var(--sidebar-bg) !important;
+}
+
+/* Match day label hover styles */
+.match-label-row {
+    margin: -3px -10px !important;
+    padding: 6px 14px !important;
+}
+
+.match-label-row:first-child {
+    margin-top: -5px !important;
+    padding-top: 8px !important;
+}
+
+.match-label-row:last-child {
+    margin-bottom: -6px !important;
+    padding-bottom: 9px !important;
+}
+
+.match-label-row:hover {
+    background: #D0DFCD !important;
+}
+
+/* Ensure match day labels appear above city markers */
+.match-day-label {
+    z-index: 1000 !important;
 }
 
 /* ============================================
@@ -267,4 +293,37 @@
 .map-error-retry:hover {
     background: var(--primary-dark);
     transform: translateY(-1px);
+}
+
+/* ============================================
+   Back Button Overlay Styles
+   ============================================ */
+.map-back-button {
+    position: absolute;
+    top: 78px;
+    /* Aligned below zoom controls */
+    left: 10px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 30px;
+    padding: 0;
+    background: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 30px;
+    color: #333;
+    transition: background-color 0.15s ease;
+}
+
+.map-back-button:hover {
+    background: #f4f4f4;
+}
+
+.map-back-button:active {
+    background: #e4e4e4;
 }
