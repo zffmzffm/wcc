@@ -210,18 +210,20 @@
 
     .content-wrapper {
         margin-top: 145px;
-        height: calc(100vh - 145px);
+        height: auto;
+        min-height: calc(100vh - 145px);
         flex-direction: column;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding: 8px;
         gap: 8px;
     }
 
-    /* Map priority - ensure at least 40% space */
+    /* Map - fixed height on mobile */
     .map-container {
-        min-height: 40vh;
-        height: auto;
-        flex: 1;
+        min-height: 35vh;
+        height: 35vh;
+        flex-shrink: 0;
         order: 1;
         border-radius: 16px;
     }
@@ -298,13 +300,12 @@
         padding: 1px 3px !important;
     }
 
-    /* Sidebar compact */
+    /* Sidebar - natural height, no max-height limit */
     .sidebar {
         width: 100%;
         height: auto;
-        max-height: calc(60vh - 110px);
         order: 2;
-        flex-shrink: 1;
+        flex-shrink: 0;
         border-radius: 16px;
     }
 
@@ -438,7 +439,6 @@
     }
 
     .right-column .sidebar {
-        max-height: calc(60vh - 110px);
         order: 1;
     }
 
