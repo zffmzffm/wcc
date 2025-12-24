@@ -124,14 +124,14 @@
    ============================================ */
 @media (max-width: 600px) {
 
-    /* Header mobile layout - stacked structure */
+    /* Header mobile layout - ultra compact */
     .header {
-        top: 6px;
-        left: 6px;
-        right: 6px;
-        padding: 0.5rem 0.6rem;
-        gap: 0.4rem;
-        border-radius: 14px;
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        padding: 0.3rem 0.5rem;
+        gap: 0.25rem;
+        border-radius: 12px;
         flex-direction: column;
         height: auto;
         align-items: center;
@@ -149,8 +149,9 @@
     }
 
     .header-title h1 {
-        font-size: 1.2rem;
+        font-size: 0.85rem;
         text-align: center;
+        line-height: 1.2;
     }
 
     .header-subtitle {
@@ -162,7 +163,7 @@
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.35rem;
+        gap: 0.2rem;
     }
 
     /* Outer selector containers - center within grid cells */
@@ -181,10 +182,11 @@
     .matchday-select {
         min-width: unset;
         width: 100%;
-        padding: 0.35rem 0.5rem;
-        font-size: 0.7rem;
-        padding-right: 24px;
-        background-position: right 4px center;
+        padding: 0.25rem 0.4rem;
+        font-size: 0.65rem;
+        padding-right: 20px;
+        background-position: right 3px center;
+        background-size: 10px;
         text-align: center;
     }
 
@@ -204,19 +206,19 @@
 
     .select-flag,
     .select-icon {
-        left: 6px;
-        font-size: 0.8rem;
+        left: 5px;
+        font-size: 0.7rem;
     }
 
     .content-wrapper {
-        margin-top: 145px;
+        margin-top: 100px;
         height: auto;
-        min-height: calc(100vh - 145px);
+        min-height: calc(100vh - 100px);
         flex-direction: column;
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 8px;
-        gap: 8px;
+        padding: 6px;
+        gap: 6px;
     }
 
     /* Map - fixed height on mobile */
