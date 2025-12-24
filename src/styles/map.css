@@ -2,6 +2,7 @@
    Map Container Styles
    ============================================ */
 .map-container {
+    position: relative;
     flex: 1;
     height: 100%;
     min-width: 0;
@@ -292,4 +293,37 @@
 .map-error-retry:hover {
     background: var(--primary-dark);
     transform: translateY(-1px);
+}
+
+/* ============================================
+   Back Button Overlay Styles
+   ============================================ */
+.map-back-button {
+    position: absolute;
+    top: 78px;
+    /* Aligned below zoom controls */
+    left: 10px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 30px;
+    padding: 0;
+    background: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 30px;
+    color: #333;
+    transition: background-color 0.15s ease;
+}
+
+.map-back-button:hover {
+    background: #f4f4f4;
+}
+
+.map-back-button:active {
+    background: #e4e4e4;
 }

@@ -38,6 +38,9 @@ export default function MatchDayLabels({
     const map = useMap();
     const { setHoveredMatchId } = useHoverMatch();
 
+    // Detect mobile for compact styles
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
+
     // Handle hover events on match rows in the labels
     const handleMouseOver = useCallback((e: MouseEvent) => {
         const target = e.target as HTMLElement;
@@ -107,7 +110,42 @@ export default function MatchDayLabels({
                 );
 
                 // Create custom icon with match info
+                // Use compact styles on mobile
                 const matchCount = sortedMatches.length + sortedKnockout.length;
+                const styles = {
+                    container: {
+                        borderRadius: isMobile ? '8px' : '12px',
+                        minWidth: isMobile ? '110px' : '160px',
+                    },
+                    header: {
+                        padding: isMobile ? '4px 6px 3px' : '6px 10px 5px',
+                        gap: isMobile ? '4px' : '6px',
+                    },
+                    headerIcon: isMobile ? '11px' : '16px',
+                    headerText: isMobile ? '10px' : '14px',
+                    content: {
+                        padding: isMobile ? '3px 6px 4px' : '5px 10px 6px',
+                    },
+                    row: {
+                        fontSize: isMobile ? '9px' : '11px',
+                        gap: isMobile ? '4px' : '8px',
+                        padding: isMobile ? '2px 3px' : '3px 4px',
+                        marginBottom: isMobile ? '2px' : '3px',
+                    },
+                    time: {
+                        fontSize: isMobile ? '8px' : '11px',
+                        minWidth: isMobile ? '32px' : '42px',
+                        padding: isMobile ? '1px 4px' : '2px 6px',
+                    },
+                    teams: {
+                        gap: isMobile ? '3px' : '6px',
+                    },
+                    vs: {
+                        fontSize: isMobile ? '7px' : '9px',
+                        padding: isMobile ? '0px 2px' : '1px 4px',
+                    },
+                };
+
                 const labelIcon = L.divIcon({
                     className: 'match-day-label',
                     html: `
@@ -116,37 +154,37 @@ export default function MatchDayLabels({
                             background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,247,245,0.9) 100%);
                             backdrop-filter: blur(12px);
                             -webkit-backdrop-filter: blur(12px);
-                            border-radius: 12px;
+                            border-radius: ${styles.container.borderRadius};
                             padding: 0;
                             box-shadow: 
                                 0 8px 32px rgba(45,90,61,0.15),
                                 0 2px 8px rgba(0,0,0,0.08),
                                 inset 0 1px 0 rgba(255,255,255,0.8);
                             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                            min-width: 160px;
+                            min-width: ${styles.container.minWidth};
                             overflow: hidden;
                             border: 1px solid rgba(45,90,61,0.12);
                         ">
                             <!-- Header with city name -->
                             <div style="
-                                padding: 6px 10px 5px;
+                                padding: ${styles.header.padding};
                                 display: flex;
                                 align-items: center;
-                                gap: 6px;
+                                gap: ${styles.header.gap};
                                 background: #E8EDE8;
                                 border-bottom: 1px solid rgba(45,90,61,0.12);
                             ">
-                                <span style="font-size: 16px;">📍</span>
+                                <span style="font-size: ${styles.headerIcon};">📍</span>
                                 <div style="
                                     font-weight: 700;
-                                    font-size: 14px;
+                                    font-size: ${styles.headerText};
                                     color: #2D3A2D;
                                     letter-spacing: -0.3px;
                                 ">${city.name}</div>
                             </div>
                             
                             <!-- Match list -->
-                            <div style="padding: 5px 10px 6px;">
+                            <div style="padding: ${styles.content.padding};">
                                 ${sortedMatches.slice(0, 3).map(m => {
                         const team1 = getTeamDisplay(m.team1, teams);
                         const team2 = getTeamDisplay(m.team2, teams);
@@ -156,13 +194,13 @@ export default function MatchDayLabels({
                                         data-match-id="${m.id}"
                                         class="match-label-row"
                                         style="
-                                            font-size: 11px;
+                                            font-size: ${styles.row.fontSize};
                                             color: #2D3A2D;
-                                            margin-bottom: 3px;
+                                            margin-bottom: ${styles.row.marginBottom};
                                             display: flex;
                                             align-items: center;
-                                            gap: 8px;
-                                            padding: 3px 4px;
+                                            gap: ${styles.row.gap};
+                                            padding: ${styles.row.padding};
                                             border-radius: 4px;
                                             cursor: pointer;
                                             transition: background 0.15s ease;
@@ -171,9 +209,9 @@ export default function MatchDayLabels({
                                         <span style="
                                             color: #3D7A53;
                                             font-weight: 700;
-                                            font-size: 11px;
-                                            min-width: 42px;
-                                            padding: 2px 6px;
+                                            font-size: ${styles.time.fontSize};
+                                            min-width: ${styles.time.minWidth};
+                                            padding: ${styles.time.padding};
                                             background: rgba(45,90,61,0.08);
                                             border-radius: 4px;
                                             text-align: center;
@@ -183,14 +221,14 @@ export default function MatchDayLabels({
                                             color: #5A6B5A;
                                             display: flex;
                                             align-items: center;
-                                            gap: 6px;
+                                            gap: ${styles.teams.gap};
                                         ">
                                             <span style="color: #2D3A2D;">${team1.code}</span>
                                             <span style="
-                                                font-size: 9px;
+                                                font-size: ${styles.vs.fontSize};
                                                 color: #8A9B8A;
                                                 font-weight: 700;
-                                                padding: 1px 4px;
+                                                padding: ${styles.vs.padding};
                                                 background: rgba(45,90,61,0.06);
                                                 border-radius: 3px;
                                             ">VS</span>
@@ -203,28 +241,28 @@ export default function MatchDayLabels({
                         const { time } = formatDateTimeWithTimezone(v.datetime, timezone);
                         return `
                                     <div style="
-                                        font-size: 11px;
+                                        font-size: ${styles.row.fontSize};
                                         color: #2D3A2D;
-                                        margin-bottom: 3px;
+                                        margin-bottom: ${styles.row.marginBottom};
                                         display: flex;
                                         align-items: center;
-                                        gap: 8px;
+                                        gap: ${styles.row.gap};
                                     ">
                                         <span style="
                                             color: #3D7A53;
                                             font-weight: 700;
-                                            font-size: 11px;
-                                            min-width: 42px;
-                                            padding: 2px 6px;
+                                            font-size: ${styles.time.fontSize};
+                                            min-width: ${styles.time.minWidth};
+                                            padding: ${styles.time.padding};
                                             background: rgba(45,90,61,0.08);
                                             border-radius: 4px;
                                             text-align: center;
                                         ">${time}</span>
                                         <span style="
                                             font-weight: 700;
-                                            font-size: 11px;
+                                            font-size: ${styles.time.fontSize};
                                             color: white;
-                                            padding: 2px 8px;
+                                            padding: ${styles.time.padding};
                                             background: linear-gradient(135deg, #2D5A3D 0%, #3D7A53 100%);
                                             border-radius: 4px;
                                             letter-spacing: 0.3px;
@@ -234,19 +272,19 @@ export default function MatchDayLabels({
                     }).join('')}
                                 ${matchCount > 3 ? `
                                     <div style="
-                                        font-size: 9px;
+                                        font-size: ${styles.vs.fontSize};
                                         color: #8A9B8A;
                                         font-weight: 500;
                                         margin-top: 2px;
-                                        padding-top: 4px;
+                                        padding-top: ${isMobile ? '2px' : '4px'};
                                         border-top: 1px dashed rgba(45,90,61,0.1);
                                     ">+${matchCount - 3} more</div>
                                 ` : ''}
                             </div>
                         </div>
                     `,
-                    iconSize: [180, 100],
-                    iconAnchor: [-20, 50],  // Offset to the right of the city marker
+                    iconSize: isMobile ? [120, 70] : [180, 100],
+                    iconAnchor: isMobile ? [-10, 35] : [-20, 50],  // Offset to the right of the city marker
                 });
 
                 return (

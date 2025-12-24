@@ -68,6 +68,8 @@ interface CitySidebarProps {
     timezone: string;
     selectedDay?: string | null;  // ISO date string for match day mode
     onClose: () => void;
+    onTeamSelect?: (teamCode: string) => void;
+    onCitySelect?: (cityId: string) => void;
 }
 
 export default function CitySidebar({
@@ -78,7 +80,9 @@ export default function CitySidebar({
     cities = [],
     timezone,
     selectedDay,
-    onClose
+    onClose,
+    onTeamSelect,
+    onCitySelect
 }: CitySidebarProps) {
     // Ref to the sidebar container for scroll reset
     const sidebarRef = useRef<HTMLElement>(null);
@@ -183,6 +187,7 @@ export default function CitySidebar({
                                         match={match}
                                         teams={teams}
                                         timezone={timezone}
+                                        onTeamSelect={onTeamSelect}
                                     />
                                 ))}
                             </ul>
@@ -247,6 +252,9 @@ export default function CitySidebar({
                                         teams={teams}
                                         timezone={timezone}
                                         cityName={getCityName(match.cityId)}
+                                        cityId={match.cityId}
+                                        onTeamSelect={onTeamSelect}
+                                        onCitySelect={onCitySelect}
                                     />
                                 ))}
                             </ul>

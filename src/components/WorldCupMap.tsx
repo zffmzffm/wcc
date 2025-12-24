@@ -66,6 +66,8 @@ interface WorldCupMapProps {
     isSidebarOpen?: boolean;
     isMobile?: boolean;
     timezone?: string;
+    canGoBack?: boolean;
+    onBack?: () => void;
 }
 
 /**
@@ -216,7 +218,9 @@ export default function WorldCupMap({
     onCitySelect,
     isSidebarOpen = false,
     isMobile = false,
-    timezone = DEFAULT_TIMEZONE
+    timezone = DEFAULT_TIMEZONE,
+    canGoBack = false,
+    onBack
 }: WorldCupMapProps) {
     // Calculate which cities are relevant for the selected team
     const teamCityIds = useMemo(() => {
@@ -234,33 +238,46 @@ export default function WorldCupMap({
     }, [selectedDay, dayMatches, dayKnockoutVenues]);
 
     return (
-        <MapContainer
-            center={MAP_CONFIG.defaultCenter}
-            zoom={MAP_CONFIG.defaultZoom}
-            style={{ height: '100%', width: '100%' }}
-            zoomControl={true}
-            minZoom={MAP_CONFIG.minZoom}
-            maxZoom={MAP_CONFIG.maxZoom}
-            maxBounds={MAP_BOUNDS.default}
-            maxBoundsViscosity={MAP_BOUNDS.default ? MAP_CONFIG.boundsViscosity : 0}
-        >
-            <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
-                attribution='&copy; OpenStreetMap, &copy; CartoDB'
-            />
-            <MapContent
-                selectedTeam={selectedTeam}
-                selectedCity={selectedCity}
-                selectedDay={selectedDay}
-                dayMatches={dayMatches}
-                dayKnockoutVenues={dayKnockoutVenues}
-                onCitySelect={onCitySelect}
-                isSidebarOpen={isSidebarOpen}
-                isMobile={isMobile}
-                teamCityIds={teamCityIds}
-                dayCityIds={dayCityIds}
-                timezone={timezone}
-            />
-        </MapContainer>
+        <>
+            <MapContainer
+                center={MAP_CONFIG.defaultCenter}
+                zoom={MAP_CONFIG.defaultZoom}
+                style={{ height: '100%', width: '100%' }}
+                zoomControl={true}
+                minZoom={MAP_CONFIG.minZoom}
+                maxZoom={MAP_CONFIG.maxZoom}
+                maxBounds={MAP_BOUNDS.default}
+                maxBoundsViscosity={MAP_BOUNDS.default ? MAP_CONFIG.boundsViscosity : 0}
+            >
+                <TileLayer
+                    url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; OpenStreetMap, &copy; CartoDB'
+                />
+                <MapContent
+                    selectedTeam={selectedTeam}
+                    selectedCity={selectedCity}
+                    selectedDay={selectedDay}
+                    dayMatches={dayMatches}
+                    dayKnockoutVenues={dayKnockoutVenues}
+                    onCitySelect={onCitySelect}
+                    isSidebarOpen={isSidebarOpen}
+                    isMobile={isMobile}
+                    teamCityIds={teamCityIds}
+                    dayCityIds={dayCityIds}
+                    timezone={timezone}
+                />
+            </MapContainer>
+            {/* Back button overlay */}
+            {canGoBack && onBack && (
+                <button
+                    className="map-back-button"
+                    onClick={onBack}
+                    aria-label="Go back to previous selection"
+                    title="返回上一步"
+                >
+                    ↩
+                </button>
+            )}
+        </>
     );
 }

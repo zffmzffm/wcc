@@ -84,21 +84,30 @@ export function useMapViewControl({
         const latSpan = maxLat - minLat;
         const lngSpan = maxLng - minLng;
 
-        // Ensure minimum bounds span to prevent over-zooming
         const centerLat = (minLat + maxLat) / 2;
         const centerLng = (minLng + maxLng) / 2;
 
-        const effectiveLatSpan = Math.max(latSpan, TEAM_VIEW_CONFIG.minLatSpan);
-        const effectiveLngSpan = Math.max(lngSpan, TEAM_VIEW_CONFIG.minLngSpan);
+        // On mobile: use actual city span to tightly fit group stage cities
+        // On desktop: use minimum spans for consistent view
+        const effectiveLatSpan = isMobile
+            ? latSpan  // No minimum on mobile - fit exactly to cities
+            : Math.max(latSpan, TEAM_VIEW_CONFIG.minLatSpan);
+        const effectiveLngSpan = isMobile
+            ? lngSpan
+            : Math.max(lngSpan, TEAM_VIEW_CONFIG.minLngSpan);
+
+        // Minimal geo padding on mobile, normal on desktop
+        const latPadding = isMobile ? 0.5 : TEAM_VIEW_CONFIG.latPadding;
+        const lngPadding = isMobile ? 0.5 : TEAM_VIEW_CONFIG.lngPadding;
 
         const bounds: [[number, number], [number, number]] = [
             [
-                centerLat - effectiveLatSpan / 2 - TEAM_VIEW_CONFIG.latPadding,
-                centerLng - effectiveLngSpan / 2 - TEAM_VIEW_CONFIG.lngPadding
+                centerLat - effectiveLatSpan / 2 - latPadding,
+                centerLng - effectiveLngSpan / 2 - lngPadding
             ],
             [
-                centerLat + effectiveLatSpan / 2 + TEAM_VIEW_CONFIG.latPadding,
-                centerLng + effectiveLngSpan / 2 + TEAM_VIEW_CONFIG.lngPadding
+                centerLat + effectiveLatSpan / 2 + latPadding,
+                centerLng + effectiveLngSpan / 2 + lngPadding
             ]
         ];
 
@@ -107,13 +116,17 @@ export function useMapViewControl({
             map.invalidateSize();
 
             // Fit map to team's cities with pixel padding
+            // Mobile needs less padding to zoom in closer to group stage cities
             const paddingOptions = isMobile
-                ? { paddingTopLeft: [20, 20] as [number, number], paddingBottomRight: [20, 200] as [number, number] }
+                ? { paddingTopLeft: [10, 50] as [number, number], paddingBottomRight: [10, 30] as [number, number] }
                 : { padding: [40, 40] as [number, number] };
+
+            // Allow higher maxZoom on mobile for tighter view
+            const maxZoom = isMobile ? 7 : TEAM_VIEW_CONFIG.maxZoom;
 
             map.fitBounds(bounds, {
                 ...paddingOptions,
-                maxZoom: TEAM_VIEW_CONFIG.maxZoom,
+                maxZoom,
                 animate: true
             });
 
@@ -163,21 +176,30 @@ export function useMapViewControl({
         const latSpan = maxLat - minLat;
         const lngSpan = maxLng - minLng;
 
-        // Ensure minimum bounds span to prevent over-zooming
+        // On mobile: use actual city span for tight fit
+        // On desktop: use minimum spans for consistent view
         const centerLat = (minLat + maxLat) / 2;
         const centerLng = (minLng + maxLng) / 2;
 
-        const effectiveLatSpan = Math.max(latSpan, TEAM_VIEW_CONFIG.minLatSpan);
-        const effectiveLngSpan = Math.max(lngSpan, TEAM_VIEW_CONFIG.minLngSpan);
+        const effectiveLatSpan = isMobile
+            ? latSpan
+            : Math.max(latSpan, TEAM_VIEW_CONFIG.minLatSpan);
+        const effectiveLngSpan = isMobile
+            ? lngSpan
+            : Math.max(lngSpan, TEAM_VIEW_CONFIG.minLngSpan);
+
+        // Minimal padding on mobile, normal on desktop
+        const latPadding = isMobile ? 0.5 : 1;
+        const lngPadding = isMobile ? 0.5 : 2;
 
         const bounds: [[number, number], [number, number]] = [
             [
-                centerLat - effectiveLatSpan / 2 - 1,  // Reduced padding for tighter fit
-                centerLng - effectiveLngSpan / 2 - 2
+                centerLat - effectiveLatSpan / 2 - latPadding,
+                centerLng - effectiveLngSpan / 2 - lngPadding
             ],
             [
-                centerLat + effectiveLatSpan / 2 + 1,
-                centerLng + effectiveLngSpan / 2 + 2
+                centerLat + effectiveLatSpan / 2 + latPadding,
+                centerLng + effectiveLngSpan / 2 + lngPadding
             ]
         ];
 
@@ -185,13 +207,17 @@ export function useMapViewControl({
         setTimeout(() => {
             map.invalidateSize();
 
-            // Use symmetric padding to center cities in the map view
-            // The sidebar overlays the map but we want cities centered in the visible area
-            const padding = isMobile ? 40 : 80;
+            // Minimal pixel padding on mobile for tighter zoom
+            const paddingOptions = isMobile
+                ? { paddingTopLeft: [10, 50] as [number, number], paddingBottomRight: [10, 30] as [number, number] }
+                : { padding: [80, 80] as [number, number] };
+
+            // Allow higher maxZoom on mobile
+            const maxZoom = isMobile ? 7 : 8;
 
             map.fitBounds(bounds, {
-                padding: [padding, padding] as [number, number],
-                maxZoom: 8,  // Allow closer zoom for day view
+                ...paddingOptions,
+                maxZoom,
                 animate: true
             });
         }, TEAM_VIEW_CONFIG.adjustDelay);

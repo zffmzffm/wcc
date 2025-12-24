@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
@@ -70,6 +70,11 @@ export default function Home() {
   const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Navigation history for back button functionality
+  type SelectionState = { team: string | null; city: City | null; day: string | null };
+  const [history, setHistory] = useState<SelectionState[]>([]);
+  const isNavigatingBack = useRef(false);
+
   // Detect mobile on mount and resize
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= BREAKPOINTS.mobile);
@@ -78,8 +83,18 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Helper to push current state to history (only if something is selected)
+  const pushToHistory = useCallback(() => {
+    if (isNavigatingBack.current) return; // Don't push when navigating back
+    const hasSelection = selectedTeam || selectedCity || selectedDay;
+    if (hasSelection) {
+      setHistory(prev => [...prev, { team: selectedTeam, city: selectedCity, day: selectedDay }]);
+    }
+  }, [selectedTeam, selectedCity, selectedDay]);
+
   // Mobile-aware city selection: close team sidebar and clear day when selecting city
   const handleCitySelect = useCallback((city: City | null) => {
+    pushToHistory();
     setSelectedCity(city);
     if (city) {
       setSelectedDay(null);  // City and day are mutually exclusive
@@ -87,25 +102,43 @@ export default function Home() {
         setSelectedTeam(null);
       }
     }
-  }, [isMobile]);
+  }, [isMobile, pushToHistory]);
 
   // Mobile-aware team selection: close city sidebar when selecting team
   const handleTeamSelect = useCallback((teamCode: string | null) => {
+    pushToHistory();
     setSelectedTeam(teamCode);
     if (isMobile && teamCode) {
       setSelectedCity(null);
       setSelectedDay(null);
     }
-  }, [isMobile]);
+  }, [isMobile, pushToHistory]);
 
   // Day selection: clear city and team selection when selecting a day
   const handleDaySelect = useCallback((day: string | null) => {
+    pushToHistory();
     setSelectedDay(day);
     if (day) {
       setSelectedCity(null);  // Day and city are mutually exclusive
       setSelectedTeam(null);  // Day and team are mutually exclusive
     }
-  }, []);
+  }, [pushToHistory]);
+
+  // Back navigation handler
+  const handleBack = useCallback(() => {
+    if (history.length === 0) return;
+    isNavigatingBack.current = true;
+    const prevState = history[history.length - 1];
+    setHistory(prev => prev.slice(0, -1));
+    setSelectedTeam(prevState.team);
+    setSelectedCity(prevState.city);
+    setSelectedDay(prevState.day);
+    // Reset the flag after state updates
+    setTimeout(() => { isNavigatingBack.current = false; }, 0);
+  }, [history]);
+
+  // Check if back navigation is available
+  const canGoBack = history.length > 0;
 
   // Get selected team info
   const selectedTeamInfo = selectedTeam
@@ -150,6 +183,14 @@ export default function Home() {
     setSelectedDay(null);
   }, []);
 
+  // City selection by ID (for clicking city names in sidebar)
+  const handleCitySelectById = useCallback((cityId: string) => {
+    const city = cities.find(c => c.id === cityId);
+    if (city) {
+      handleCitySelect(city);
+    }
+  }, [handleCitySelect]);
+
   return (
     <LayerVisibilityProvider>
       <HoverMatchProvider>
@@ -191,6 +232,8 @@ export default function Home() {
               timezone={displayTimezone}
               selectedDay={selectedDay}
               onClose={handleSidebarClose}
+              onTeamSelect={handleTeamSelect}
+              onCitySelect={handleCitySelectById}
             />
             <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
               <MapErrorBoundary>
@@ -204,6 +247,8 @@ export default function Home() {
                   isSidebarOpen={!!selectedCity || !!selectedTeam || !!selectedDay}
                   isMobile={isMobile}
                   timezone={displayTimezone}
+                  canGoBack={canGoBack}
+                  onBack={handleBack}
                 />
               </MapErrorBoundary>
             </div>
