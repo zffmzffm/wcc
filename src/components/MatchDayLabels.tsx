@@ -225,7 +225,7 @@ export default function MatchDayLabels({
                                             font-size: 11px;
                                             color: white;
                                             padding: 2px 8px;
-                                            background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);
+                                            background: linear-gradient(135deg, #2D5A3D 0%, #3D7A53 100%);
                                             border-radius: 4px;
                                             letter-spacing: 0.3px;
                                         ">${stageNames[v.stage] || v.stage}</span>
