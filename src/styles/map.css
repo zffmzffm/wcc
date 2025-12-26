@@ -16,6 +16,11 @@
         inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
+/* Attribution styling - prevent border-radius from cutting off text */
+.map-container .leaflet-control-attribution {
+    padding-right: 20px;
+}
+
 /* ============================================
    Custom Marker Styles
    ============================================ */

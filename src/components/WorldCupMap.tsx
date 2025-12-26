@@ -251,7 +251,7 @@ export default function WorldCupMap({
             >
                 <TileLayer
                     url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
-                    attribution='&copy; OpenStreetMap, &copy; CartoDB'
+                    attribution='&copy; OpenStreetMap, &copy; CartoDB | Presented by <a href="https://duoyj.ca" target="_blank">duoyj.ca</a>'
                 />
                 <MapContent
                     selectedTeam={selectedTeam}
