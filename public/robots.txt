@@ -5,4 +5,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://soccerfanguide26.com/sitemap.xml
+Sitemap: https://soccerfanguide26.duoyj.ca/sitemap.xml

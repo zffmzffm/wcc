@@ -1,8 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Static export for Cloudflare Pages
+  output: 'export',
+
   // Image optimization configuration
   images: {
+    // Static export requires unoptimized images
+    unoptimized: true,
     // Allow external images from flag CDN
     remotePatterns: [
       {
@@ -19,48 +24,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['leaflet', 'react-leaflet'],
   },
 
-  // Security headers
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()'
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https://flagcdn.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org",
-              "connect-src 'self'",
-              "frame-ancestors 'self'"
-            ].join('; ')
-          }
-        ]
-      }
-    ];
-  },
+  // Note: Security headers moved to public/_headers for Cloudflare Pages
 };
 
 export default nextConfig;
