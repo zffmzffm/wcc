@@ -62,22 +62,8 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
         return { x: point.x, y: point.y };
     }, [map]);
 
-    // Adjust map view when team changes
-    useEffect(() => {
-        if (teamMatches.length === 0) return;
-
-        const bounds = teamMatches.map(m => m.coords);
-        if (bounds.length > 0) {
-            try {
-                map.fitBounds(bounds, {
-                    padding: PADDING_CONFIG.fitBounds,
-                    maxZoom: 5
-                });
-            } catch (e) {
-                console.warn('Failed to fit bounds:', e);
-            }
-        }
-    }, [teamCode, teamMatches, map]);
+    // Note: Map view adjustment for team selection is handled by useMapViewControl hook
+    // Do not add fitBounds here to avoid conflicts
 
     // Import useKnockoutPaths for bounds fitting
     const knockoutPaths = useMemo(() => {

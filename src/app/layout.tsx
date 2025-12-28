@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SOCCER FAN GUIDE '26 | 2026 FIFA World Cup Interactive Map & Schedule",
+  title: "Visualize 2026 Soccer - One Map for All Matches & Cities | Cup26Map",
   description: "Your ultimate guide to 2026 FIFA World Cup in USA, Mexico & Canada. Interactive map with host cities, stadiums, match schedules, team flight paths, and timezone converter. Plan your World Cup journey now!",
   keywords: [
     // Core Keywords
@@ -37,19 +37,19 @@ export const metadata: Metadata = {
     "Football",
     "FIFA",
   ],
-  metadataBase: new URL('https://soccerfanguide26.duoyj.ca'),
+  metadataBase: new URL('https://cup26map.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: "SOCCER FAN GUIDE '26 | 2026 FIFA World Cup Interactive Map & Schedule",
-    description: "Your ultimate guide to 2026 FIFA World Cup in USA, Mexico & Canada. Interactive map with host cities, stadiums, match schedules, team flight paths, and timezone converter.",
+    title: "Visualize 2026 Soccer - One Map for All Matches & Cities | Cup26Map",
+    description: "Your ultimate guide to 2026 Soccer in USA, Mexico & Canada. Interactive map with host cities, stadiums, match schedules, team flight paths, and timezone converter.",
     type: "website",
-    siteName: "Soccer Fan Guide '26",
-    url: 'https://soccerfanguide26.duoyj.ca',
+    siteName: "Cup26Map",
+    url: 'https://cup26map.com',
     images: [
       {
-        url: 'https://soccerfanguide26.duoyj.ca/og-image.jpg',
+        url: 'https://cup26map.com/og-image.jpg',
         width: 1200,
         height: 630,
         alt: '2026 World Cup: The Travel Disparity - Compare Team Journeys & Explore Host Cities',
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SOCCER FAN GUIDE '26 | 2026 FIFA World Cup",
-    description: "Interactive map & schedule for 2026 FIFA World Cup in USA, Mexico & Canada",
-    images: ['https://soccerfanguide26.duoyj.ca/og-image.jpg'],
+    title: "Visualize 2026 Soccer - One Map for All Matches & Cities",
+    description: "Interactive map & schedule for 2026 Soccer in USA, Mexico & Canada",
+    images: ['https://cup26map.com/og-image.jpg'],
   },
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>",

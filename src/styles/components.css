@@ -45,6 +45,19 @@
     letter-spacing: -0.3px;
 }
 
+.header-tagline {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.3px;
+    font-weight: 500;
+}
+
+.header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .header-subtitle {
     font-size: 0.65rem;
     color: rgba(255, 255, 255, 0.8);

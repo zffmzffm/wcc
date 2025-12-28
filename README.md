@@ -1,8 +1,8 @@
-# Soccer Fan Guide '26 ⚽🏆
+# Cup26Map 🗺️⚽
 
-An interactive web application for the 2026 FIFA World Cup, providing fans with an easy-to-use map, match schedules, and team tracking features.
+Visualize 2026 Soccer - One Map for All Matches & Cities. An interactive web application for the 2026 FIFA World Cup in USA, Mexico, and Canada.
 
-🌐 **Live Demo**: [soccerfanguide26.duoyj.ca](https://soccerfanguide26.duoyj.ca)
+🌐 **Live Demo**: [cup26map.com](https://cup26map.com)
 
 ## Features
 

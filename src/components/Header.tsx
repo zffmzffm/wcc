@@ -11,7 +11,8 @@ export default function Header({ children }: HeaderProps) {
             <div className="header-brand">
                 <span className="header-logo" aria-hidden="true">🏆</span>
                 <div className="header-title">
-                    <h1>SOCCER FAN GUIDE &apos;26</h1>
+                    <h1>CUP26MAP</h1>
+                    <span className="header-tagline">16 Cities • 48 Teams • 39 Days • One Map</span>
                 </div>
             </div>
 
