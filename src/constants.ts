@@ -38,11 +38,11 @@ export const MAP_BOUNDS = {
 } as const;
 
 export const TEAM_VIEW_CONFIG = {
-    minLatSpan: 12,    // Minimum 12 degrees latitude span
-    minLngSpan: 15,    // Minimum 15 degrees longitude span
-    latPadding: 2,     // Latitude padding
-    lngPadding: 3,     // Longitude padding
-    maxZoom: 5,        // Limit max zoom for consistency
+    minLatSpan: 5,     // Minimum 5 degrees latitude span (reduced from 12 for tighter zoom)
+    minLngSpan: 7,     // Minimum 7 degrees longitude span (reduced from 15 for tighter zoom)
+    latPadding: 1.5,   // Latitude padding (reduced from 2)
+    lngPadding: 2,     // Longitude padding (reduced from 3)
+    maxZoom: 6,        // Limit max zoom for consistency (increased from 5)
     minZoomLevel: 3,   // Minimum zoom level after fitBounds
     adjustDelay: 100,  // Delay before adjusting view (ms)
 } as const;
