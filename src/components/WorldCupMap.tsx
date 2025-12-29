@@ -251,7 +251,7 @@ export default function WorldCupMap({
             >
                 <TileLayer
                     url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
-                    attribution='&copy; OpenStreetMap, &copy; CartoDB | Presented by <a href="https://cup26map.com" target="_blank">Cup26Map</a>'
+                    attribution='&copy; OpenStreetMap, &copy; CartoDB'
                 />
                 <MapContent
                     selectedTeam={selectedTeam}

@@ -194,8 +194,23 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
                             index={idx}
                         />
                     ))}
+                </svg>
+            )}
 
-                    {/* City name labels */}
+            {/* City name labels - separate SVG with higher z-index to appear above knockout paths */}
+            {visibility.groupStage && (
+                <svg
+                    className="city-labels-svg"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: mapSize.x,
+                        height: mapSize.y,
+                        pointerEvents: 'none',
+                        zIndex: SVG_CONFIG.labelZIndex  // Above knockout paths
+                    }}
+                >
                     {uniqueCityMarkers.map((markerIndex) => {
                         const matchInfo = teamMatches[markerIndex];
                         if (!matchInfo) return null;

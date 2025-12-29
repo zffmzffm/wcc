@@ -14,7 +14,7 @@ interface CityMarkerProps {
 
 export default function CityMarker({ city, onClick, isDimmed = false, isSelected = false }: CityMarkerProps) {
     const color = getCountryColor(city.country);
-    const opacity = isDimmed ? 0.5 : 1;
+    const opacity = isDimmed ? 0.25 : 1;
 
     // Flash animation state - triggers when isSelected becomes true
     const [isFlashing, setIsFlashing] = useState(false);
