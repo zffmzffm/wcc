@@ -1,8 +1,23 @@
-# Soccer Fan Guide '26 - robots.txt
+# Cup26Map.com - robots.txt
 # https://www.robotstxt.org/robotstxt.html
 
 User-agent: *
 Allow: /
 
+# Block internal Next.js files
+Disallow: /_next/static/chunks/
+Disallow: /_next/static/development/
+Disallow: /_next/static/webpack/
+
+# Block data files from direct indexing
+Disallow: /*.json$
+
+# Allow important static assets
+Allow: /og-image.jpg
+Allow: /sitemap.xml
+
 # Sitemap location
-Sitemap: https://soccerfanguide26.duoyj.ca/sitemap.xml
+Sitemap: https://cup26map.com/sitemap.xml
+
+# Crawl-delay for polite crawling (optional, not all bots respect this)
+# Crawl-delay: 1
