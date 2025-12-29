@@ -4,6 +4,7 @@ import { useMap } from 'react-leaflet';
 import { City, Team, MatchWithCoords } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useKnockoutPaths, KnockoutPath, getStageLabel } from '@/hooks/useKnockoutPaths';
+import { useMapRefresh } from '@/hooks/useMapRefresh';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG } from '@/constants';
 import { generateArcPath, generateLoopPath, generateChevronPath, generateLoopChevronPath } from '@/utils/pathGenerators';
@@ -13,6 +14,7 @@ interface KnockoutFlightPathProps {
     knockoutVenues: KnockoutVenue[];
     cities: City[];
     lastGroupMatchCoords: [number, number] | null;
+    groupStageCityIds?: Set<string>; // Cities already labeled by group stage
 }
 
 /**
@@ -27,12 +29,15 @@ export default function KnockoutFlightPath({
     groupId,
     knockoutVenues,
     cities,
-    lastGroupMatchCoords
+    lastGroupMatchCoords,
+    groupStageCityIds = new Set()
 }: KnockoutFlightPathProps) {
     const map = useMap();
-    const [, forceUpdate] = useState({});
     const [isVisible, setIsVisible] = useState(false);
     const { visibility } = useLayerVisibility();
+
+    // Force re-render on map move/zoom for SVG path updates
+    useMapRefresh();
 
     // Get knockout paths for this group
     const knockoutPaths = useKnockoutPaths(groupId, knockoutVenues, cities);
@@ -63,17 +68,6 @@ export default function KnockoutFlightPath({
         return () => clearTimeout(timer);
     }, [groupId]);
 
-    // Listen for map move/zoom to update SVG paths
-    useEffect(() => {
-        const handleMoveEnd = () => forceUpdate({});
-        map.on('move', handleMoveEnd);
-        map.on('zoom', handleMoveEnd);
-        return () => {
-            map.off('move', handleMoveEnd);
-            map.off('zoom', handleMoveEnd);
-        };
-    }, [map]);
-
     if (!groupId || visiblePaths.length === 0 || !isVisible) {
         return null;
     }
@@ -88,53 +82,84 @@ export default function KnockoutFlightPath({
     };
 
     return (
-        <svg
-            className="knockout-path-svg"
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: mapSize.x,
-                height: mapSize.y,
-                pointerEvents: 'none',
-                zIndex: SVG_CONFIG.zIndex  // Same level as group stage path
-            }}
-        >
-            {/* Define chevron markers for each position */}
-            <defs>
-                {[1, 2, 3].map(pos => (
-                    <marker
-                        key={`chevron-marker-pos${pos}`}
-                        id={`chevron-marker-pos${pos}`}
-                        markerWidth="8"
-                        markerHeight="8"
-                        refX="4"
-                        refY="4"
-                        orient="auto"
-                        markerUnits="userSpaceOnUse"
-                    >
-                        <path
-                            d="M 1 1 L 6 4 L 1 7"
-                            fill="none"
-                            stroke={positionColors[pos]}
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </marker>
-                ))}
-            </defs>
+        <>
+            {/* Paths layer - above group stage but below labels */}
+            <svg
+                className="knockout-path-svg"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: mapSize.x,
+                    height: mapSize.y,
+                    pointerEvents: 'none',
+                    zIndex: SVG_CONFIG.knockoutPathZIndex  // Above group stage paths
+                }}
+            >
+                {/* Define chevron markers for each position */}
+                <defs>
+                    {[1, 2, 3].map(pos => (
+                        <marker
+                            key={`chevron-marker-pos${pos}`}
+                            id={`chevron-marker-pos${pos}`}
+                            markerWidth="8"
+                            markerHeight="8"
+                            refX="4"
+                            refY="4"
+                            orient="auto"
+                            markerUnits="userSpaceOnUse"
+                        >
+                            <path
+                                d="M 1 1 L 6 4 L 1 7"
+                                fill="none"
+                                stroke={positionColors[pos]}
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </marker>
+                    ))}
+                </defs>
 
-            {/* Render each visible knockout path */}
-            {visiblePaths.map((path) => (
-                <KnockoutPathLine
-                    key={`knockout-path-${path.position}`}
-                    path={path}
-                    lastGroupMatchCoords={lastGroupMatchCoords}
-                    latLngToPixel={latLngToPixel}
-                />
-            ))}
-        </svg>
+                {/* Render each visible knockout path - PATHS ONLY */}
+                {visiblePaths.map((path) => (
+                    <KnockoutPathLine
+                        key={`knockout-path-${path.position}`}
+                        path={path}
+                        lastGroupMatchCoords={lastGroupMatchCoords}
+                        latLngToPixel={latLngToPixel}
+                        groupStageCityIds={groupStageCityIds}
+                        renderMode="paths"
+                    />
+                ))}
+            </svg>
+
+            {/* Labels layer - higher z-index to stay above paths */}
+            <svg
+                className="knockout-label-svg"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: mapSize.x,
+                    height: mapSize.y,
+                    pointerEvents: 'none',
+                    zIndex: SVG_CONFIG.labelZIndex  // Higher z-index for labels
+                }}
+            >
+                {/* Render each visible knockout path - LABELS ONLY */}
+                {visiblePaths.map((path) => (
+                    <KnockoutPathLine
+                        key={`knockout-labels-${path.position}`}
+                        path={path}
+                        lastGroupMatchCoords={lastGroupMatchCoords}
+                        latLngToPixel={latLngToPixel}
+                        groupStageCityIds={groupStageCityIds}
+                        renderMode="labels"
+                    />
+                ))}
+            </svg>
+        </>
     );
 }
 
@@ -142,12 +167,14 @@ interface KnockoutPathLineProps {
     path: KnockoutPath;
     lastGroupMatchCoords: [number, number] | null;
     latLngToPixel: (coords: [number, number]) => { x: number; y: number };
+    groupStageCityIds: Set<string>;
+    renderMode: 'paths' | 'labels';
 }
 
 /**
  * Renders a single knockout path as a dashed line
  */
-function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel }: KnockoutPathLineProps) {
+function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStageCityIds, renderMode }: KnockoutPathLineProps) {
     const { matches, color, position } = path;
 
     if (matches.length === 0) return null;
@@ -183,7 +210,8 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel }: Knockou
 
     return (
         <g className={`knockout-path knockout-path-${position}`}>
-            {segments.map((segment, idx) => {
+            {/* Path segments - only render in paths mode */}
+            {renderMode === 'paths' && segments.map((segment, idx) => {
                 // Same city: skip rendering (numbered labels now indicate consecutive matches)
                 if (segment.isSameCity) {
                     return null;
@@ -221,8 +249,8 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel }: Knockou
                 );
             })}
 
-            {/* Knockout stage markers with city labels */}
-            {(() => {
+            {/* Knockout stage markers with city labels - only render in labels mode */}
+            {renderMode === 'labels' && (() => {
                 // Convert number to circled digit (➊➋➌➍➎➏➐➑)
                 const toCircledDigit = (n: number): string => {
                     const circledDigits = ['➊', '➋', '➌', '➍', '➎', '➏', '➐', '➑'];
@@ -265,11 +293,11 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel }: Knockou
 
                     return (
                         <g key={`marker-${position}-${idx}`}>
-                            {/* City name label with match numbers - positioned below marker to avoid overlap with group stage labels */}
+                            {/* City name label with match numbers - positioned below marker, offset more if group stage already labeled */}
                             {shouldShowLabel && cityName && (
                                 <text
                                     x={pixel.x + 12}
-                                    y={pixel.y + 25}
+                                    y={pixel.y + (groupStageCityIds.has(cityId!) ? 45 : 25)}
                                     textAnchor="start"
                                     fontSize="15"
                                     fontWeight={700}

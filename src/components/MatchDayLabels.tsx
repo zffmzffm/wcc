@@ -1,11 +1,12 @@
 'use client';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useEffect, useCallback, useState } from 'react';
 import { Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { Match, City, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
+import { STAGE_NAMES } from '@/constants';
 
 interface MatchDayLabelsProps {
     matches: Match[];
@@ -15,15 +16,7 @@ interface MatchDayLabelsProps {
     timezone: string;
 }
 
-// Stage display names
-const stageNames: Record<string, string> = {
-    'R32': 'R32',
-    'R16': 'R16',
-    'QF': 'QF',
-    'SF': 'SF',
-    'F': 'Final',
-    '3P': '3P'
-};
+
 
 /**
  * Component that renders match information labels on the map for a selected day
@@ -38,8 +31,14 @@ export default function MatchDayLabels({
     const map = useMap();
     const { setHoveredMatchId } = useHoverMatch();
 
-    // Detect mobile for compact styles
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
+    // Detect mobile for compact styles - use state to avoid SSR hydration issues
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 600);
+        checkMobile(); // Initial check
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Handle hover events on match rows in the labels
     const handleMouseOver = useCallback((e: MouseEvent) => {
@@ -266,7 +265,7 @@ export default function MatchDayLabels({
                                             background: linear-gradient(135deg, #2D5A3D 0%, #3D7A53 100%);
                                             border-radius: 4px;
                                             letter-spacing: 0.3px;
-                                        ">${stageNames[v.stage] || v.stage}</span>
+                                        ">${STAGE_NAMES.short[v.stage as keyof typeof STAGE_NAMES.short] || v.stage}</span>
                                     </div>
                                 `;
                     }).join('')}

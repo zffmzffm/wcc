@@ -111,4 +111,41 @@ export const DEFAULT_TIMEZONE = 'America/Toronto';
 // =============================================================================
 export const SVG_CONFIG = {
     zIndex: 400,
+    // Note: Leaflet map-pane uses z-index 400, so all our overlays must be higher
+    groupPathZIndex: 401,    // Group stage paths (above map, bottom of our layers)
+    knockoutPathZIndex: 405, // Knockout paths (above group stage)
+    labelZIndex: 410,        // Labels (top layer, above all paths)
+} as const;
+
+// =============================================================================
+// Stage Names - Knockout stage display labels
+// =============================================================================
+export const STAGE_NAMES = {
+    // Full names for sidebars and detailed views
+    full: {
+        'R32': 'Round of 32',
+        'R16': 'Round of 16',
+        'QF': 'Quarter-Final',
+        'SF': 'Semi-Final',
+        'F': 'Final',
+        '3P': 'Third Place'
+    },
+    // Short names for map labels and compact views
+    short: {
+        'R32': 'R32',
+        'R16': 'R16',
+        'QF': 'QF',
+        'SF': 'SF',
+        'F': 'Final',
+        '3P': '3P'
+    },
+    // Chinese names for localization
+    zh: {
+        'R32': '32强赛',
+        'R16': '16强赛',
+        'QF': '四分之一决赛',
+        'SF': '半决赛',
+        'F': '决赛',
+        '3P': '季军赛'
+    }
 } as const;

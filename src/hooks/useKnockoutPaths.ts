@@ -10,6 +10,7 @@ import { useMemo } from 'react';
 import { MatchWithCoords, City, Match } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { knockoutPathTemplates, thirdPlacePathTemplates } from '@/data/knockoutBracket';
+import { STAGE_NAMES } from '@/constants';
 
 export interface KnockoutPath {
     position: 1 | 2 | 3;
@@ -115,13 +116,9 @@ export function useKnockoutPaths(
  * 格式化淘汰赛阶段名称
  */
 export function getStageLabel(stage: string, lang: 'zh' | 'en' = 'zh'): string {
-    const labels: Record<string, { zh: string; en: string }> = {
-        'R32': { zh: '32强赛', en: 'Round of 32' },
-        'R16': { zh: '16强赛', en: 'Round of 16' },
-        'QF': { zh: '四分之一决赛', en: 'Quarter-final' },
-        'SF': { zh: '半决赛', en: 'Semi-final' },
-        'F': { zh: '决赛', en: 'Final' },
-        '3P': { zh: '季军赛', en: 'Third Place' },
-    };
-    return labels[stage]?.[lang] || stage;
+    const stageKey = stage as keyof typeof STAGE_NAMES.full;
+    if (lang === 'zh') {
+        return STAGE_NAMES.zh[stageKey] || stage;
+    }
+    return STAGE_NAMES.full[stageKey] || stage;
 }

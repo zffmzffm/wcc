@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { City, Match, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
+import { STAGE_NAMES } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
 import FlagIcon from './FlagIcon';
@@ -28,15 +29,7 @@ const venueImages: Record<string, string> = {
     'vancouver': '/venues/vancouver.jpg',
 };
 
-// Stage display names
-const stageNames: Record<string, string> = {
-    'R32': 'Round of 32',
-    'R16': 'Round of 16',
-    'QF': 'Quarter-Final',
-    'SF': 'Semi-Final',
-    'F': 'Final',
-    '3P': 'Third Place'
-};
+
 
 // Tournament start date for Day X calculation (June 11, 2026)
 const TOURNAMENT_START_STR = '2026-06-11';
@@ -204,7 +197,7 @@ export default function CitySidebar({
                                         <li key={venue.matchId} className="match-item" role="listitem">
                                             <div className="match-header">
                                                 <span className="match-group knockout-stage">
-                                                    {stageNames[venue.stage] || venue.stage}
+                                                    {STAGE_NAMES.full[venue.stage as keyof typeof STAGE_NAMES.full] || venue.stage}
                                                 </span>
                                                 <span className="match-datetime">
                                                     <span className="match-date">{date}</span>
@@ -271,7 +264,7 @@ export default function CitySidebar({
                                         <li key={venue.matchId} className="match-item" role="listitem">
                                             <div className="match-header">
                                                 <span className="match-group knockout-stage">
-                                                    {stageNames[venue.stage] || venue.stage}
+                                                    {STAGE_NAMES.full[venue.stage as keyof typeof STAGE_NAMES.full] || venue.stage}
                                                 </span>
                                                 <span className="match-datetime">
                                                     <span className="match-venue">📍 {getCityName(venue.cityId)}</span>

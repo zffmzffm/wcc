@@ -4,6 +4,7 @@ import { useMap } from 'react-leaflet';
 import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useTeamMatches, useFlightSegments } from '@/hooks/useTeamMatches';
+import { useMapRefresh } from '@/hooks/useMapRefresh';
 import { useFlightAnimation } from './useFlightAnimation';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG, PADDING_CONFIG } from '@/constants';
@@ -11,6 +12,7 @@ import FlightSegment from './FlightSegment';
 import CityLabel from './CityLabel';
 import MatchMarker from './MatchMarker';
 import KnockoutFlightPath from './KnockoutFlightPath';
+import { knockoutPathTemplates, thirdPlacePathTemplates } from '@/data/knockoutBracket';
 
 interface TeamFlightPathProps {
     teamCode: string;
@@ -31,8 +33,10 @@ interface TeamFlightPathProps {
 export default function TeamFlightPath({ teamCode, matches, cities, teams, knockoutVenues = [] }: TeamFlightPathProps) {
     const svgRef = useRef<SVGSVGElement>(null);
     const map = useMap();
-    const [, forceUpdate] = useState({});
     const { visibility } = useLayerVisibility();
+
+    // Force re-render on map move/zoom for SVG path updates
+    useMapRefresh();
 
     // Use centralized hooks for data
     const teamMatches = useTeamMatches(teamCode, matches, cities);
@@ -65,16 +69,13 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
     // Note: Map view adjustment for team selection is handled by useMapViewControl hook
     // Do not add fitBounds here to avoid conflicts
 
-    // Import useKnockoutPaths for bounds fitting
+    // Calculate knockout paths for bounds fitting
     const knockoutPaths = useMemo(() => {
         if (!currentTeam) return [];
 
-        // Get knockout path templates
-        const { knockoutPathTemplates, thirdPlacePathTemplates } = require('@/data/knockoutBracket');
-
         // Get templates for this group
-        const mainTemplates = knockoutPathTemplates.filter((t: { groupId: string }) => t.groupId === currentTeam.group);
-        const thirdTemplate = thirdPlacePathTemplates.find((t: { groupId: string }) => t.groupId === currentTeam.group);
+        const mainTemplates = knockoutPathTemplates.filter(t => t.groupId === currentTeam.group);
+        const thirdTemplate = thirdPlacePathTemplates.find(t => t.groupId === currentTeam.group);
         const allTemplates = thirdTemplate ? [...mainTemplates, thirdTemplate] : mainTemplates;
 
         // Create venue map
@@ -121,17 +122,6 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
         }
     }, [fitBoundsTrigger, selectedKnockoutPath, knockoutPaths, teamMatches, map]);
 
-    // Listen for map move/zoom, update SVG paths
-    useEffect(() => {
-        const handleMoveEnd = () => forceUpdate({});
-        map.on('move', handleMoveEnd);
-        map.on('zoom', handleMoveEnd);
-        return () => {
-            map.off('move', handleMoveEnd);
-            map.off('zoom', handleMoveEnd);
-        };
-    }, [map]);
-
     if (teamMatches.length === 0) {
         return null;
     }
@@ -150,6 +140,11 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
         });
     })();
 
+    // Calculate group stage city IDs for knockout path label offset
+    const groupStageCityIds = useMemo(() => {
+        return new Set(teamMatches.map(m => m.city.id));
+    }, [teamMatches]);
+
     return (
         <>
             {/* SVG flight path overlay - only show if group stage is visible */}
@@ -164,7 +159,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
                         width: mapSize.x,
                         height: mapSize.y,
                         pointerEvents: 'none',
-                        zIndex: SVG_CONFIG.zIndex
+                        zIndex: SVG_CONFIG.groupPathZIndex  // Group stage paths (bottom layer)
                     }}
                 >
                     {/* Define chevron marker */}
@@ -249,6 +244,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
                     knockoutVenues={knockoutVenues}
                     cities={cities}
                     lastGroupMatchCoords={lastGroupMatchCoords}
+                    groupStageCityIds={groupStageCityIds}
                 />
             )}
         </>

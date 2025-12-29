@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
@@ -140,42 +140,54 @@ export default function Home() {
   // Check if back navigation is available
   const canGoBack = history.length > 0;
 
-  // Get selected team info
-  const selectedTeamInfo = selectedTeam
-    ? teams.find(t => t.code === selectedTeam)
-    : null;
+  // Get selected team info - memoized to avoid unnecessary lookups
+  const selectedTeamInfo = useMemo(() =>
+    selectedTeam ? teams.find(t => t.code === selectedTeam) : null,
+    [selectedTeam]
+  );
 
-  // Get matches for selected city
-  const cityMatches = selectedCity
-    ? matches.filter(m => m.cityId === selectedCity.id)
-    : [];
+  // Get matches for selected city - memoized to avoid filtering on every render
+  const cityMatches = useMemo(() =>
+    selectedCity ? matches.filter(m => m.cityId === selectedCity.id) : [],
+    [selectedCity]
+  );
 
   // Get knockout matches for selected city
-  const cityKnockoutVenues = selectedCity
-    ? knockoutVenues.filter(v => v.cityId === selectedCity.id)
-    : [];
+  const cityKnockoutVenues = useMemo(() =>
+    selectedCity ? knockoutVenues.filter(v => v.cityId === selectedCity.id) : [],
+    [selectedCity]
+  );
 
   // Get matches for selected day
-  const dayMatches = selectedDay
-    ? matches.filter(m => getMatchDay(m.datetime) === selectedDay)
-    : [];
+  const dayMatches = useMemo(() =>
+    selectedDay ? matches.filter(m => getMatchDay(m.datetime) === selectedDay) : [],
+    [selectedDay]
+  );
 
   // Get knockout matches for selected day
-  const dayKnockoutVenues = selectedDay
-    ? knockoutVenues.filter(v => getMatchDay(v.datetime) === selectedDay)
-    : [];
+  const dayKnockoutVenues = useMemo(() =>
+    selectedDay ? knockoutVenues.filter(v => getMatchDay(v.datetime) === selectedDay) : [],
+    [selectedDay]
+  );
 
   // Get matches for selected team
-  const teamMatches = selectedTeam
-    ? matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam)
-    : [];
+  const teamMatches = useMemo(() =>
+    selectedTeam ? matches.filter(m => m.team1 === selectedTeam || m.team2 === selectedTeam) : [],
+    [selectedTeam]
+  );
 
   // Timezone for display, use default if not selected
   const displayTimezone = selectedTimezone || DEFAULT_TIMEZONE;
 
-  // Determine which matches to show in CitySidebar
-  const sidebarMatches = selectedCity ? cityMatches : dayMatches;
-  const sidebarKnockoutVenues = selectedCity ? cityKnockoutVenues : dayKnockoutVenues;
+  // Determine which matches to show in CitySidebar - memoized
+  const sidebarMatches = useMemo(() =>
+    selectedCity ? cityMatches : dayMatches,
+    [selectedCity, cityMatches, dayMatches]
+  );
+  const sidebarKnockoutVenues = useMemo(() =>
+    selectedCity ? cityKnockoutVenues : dayKnockoutVenues,
+    [selectedCity, cityKnockoutVenues, dayKnockoutVenues]
+  );
 
   // Close handler for CitySidebar
   const handleSidebarClose = useCallback(() => {
@@ -259,7 +271,7 @@ export default function Home() {
                 teams={teams}
                 cities={cities}
                 timezone={displayTimezone}
-                knockoutVenues={new JsonMatchRepository().getKnockoutVenues()}
+                knockoutVenues={knockoutVenues}
                 onClose={() => setSelectedTeam(null)}
               />
               <Footer />
