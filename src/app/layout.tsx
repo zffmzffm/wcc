@@ -98,6 +98,7 @@ export default function RootLayout({
     '@type': 'SportsEvent',
     name: '2026 FIFA World Cup',
     description: 'The 23rd FIFA World Cup, hosted jointly by United States, Mexico, and Canada featuring 48 teams.',
+    image: 'https://cup26map.com/og-image.jpg',
     startDate: '2026-06-11',
     endDate: '2026-07-19',
     eventStatus: 'https://schema.org/EventScheduled',
