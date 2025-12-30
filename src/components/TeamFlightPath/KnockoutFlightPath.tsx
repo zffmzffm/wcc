@@ -144,7 +144,7 @@ export default function KnockoutFlightPath({
                     width: mapSize.x,
                     height: mapSize.y,
                     pointerEvents: 'none',
-                    zIndex: SVG_CONFIG.labelZIndex  // Higher z-index for labels
+                    zIndex: SVG_CONFIG.knockoutLabelZIndex  // Below group stage labels
                 }}
             >
                 {/* Render each visible knockout path - LABELS ONLY */}
@@ -293,23 +293,31 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
 
                     return (
                         <g key={`marker-${position}-${idx}`}>
-                            {/* City name label with match numbers - positioned below marker, offset more if group stage already labeled */}
-                            {shouldShowLabel && cityName && (
-                                <text
-                                    x={pixel.x + 12}
-                                    y={pixel.y + (groupStageCityIds.has(cityId!) ? 45 : 25)}
-                                    textAnchor="start"
-                                    fontSize="15"
-                                    fontWeight={700}
-                                    fill={color}
-                                    stroke="white"
-                                    strokeWidth="4"
-                                    paintOrder="stroke fill"
-                                    style={{ pointerEvents: 'none' }}
-                                >
-                                    {matchNumbersPrefix}{cityName}
-                                </text>
-                            )}
+                            {/* City name label with match numbers - offset in different direction if group stage already labeled */}
+                            {shouldShowLabel && cityName && (() => {
+                                // If this city was already labeled by group stage, offset to a different direction
+                                const isAlreadyLabeled = groupStageCityIds.has(cityId!);
+                                // When already labeled, place label closer and above marker
+                                const xOffset = isAlreadyLabeled ? 12 : 12;
+                                const yOffset = isAlreadyLabeled ? -8 : 25; // Closer above marker when already labeled
+
+                                return (
+                                    <text
+                                        x={pixel.x + xOffset}
+                                        y={pixel.y + yOffset}
+                                        textAnchor="start"
+                                        fontSize="15"
+                                        fontWeight={700}
+                                        fill={color}
+                                        stroke="white"
+                                        strokeWidth="4"
+                                        paintOrder="stroke fill"
+                                        style={{ pointerEvents: 'none' }}
+                                    >
+                                        {matchNumbersPrefix}{cityName}
+                                    </text>
+                                );
+                            })()}
                         </g>
                     );
                 });

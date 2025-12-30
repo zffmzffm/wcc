@@ -114,7 +114,8 @@ export const SVG_CONFIG = {
     // Note: Leaflet map-pane uses z-index 400, so all our overlays must be higher
     groupPathZIndex: 401,    // Group stage paths (above map, bottom of our layers)
     knockoutPathZIndex: 405, // Knockout paths (above group stage)
-    labelZIndex: 410,        // Labels (top layer, above all paths)
+    knockoutLabelZIndex: 408, // Knockout labels (above knockout paths)
+    labelZIndex: 412,        // Group stage labels (top layer, above knockout labels)
 } as const;
 
 // =============================================================================
