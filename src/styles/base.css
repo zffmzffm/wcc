@@ -83,6 +83,27 @@ body {
     line-height: 1.5;
     /* Prevent Android Chrome from auto-inverting colors in forced dark mode */
     color-scheme: light only;
+    forced-color-adjust: none;
+    -webkit-text-fill-color: inherit;
+}
+
+/* Force light mode colors for elements Android Chrome likes to invert */
+html {
+    color-scheme: light only;
+    background-color: #F5F7F5 !important;
+}
+
+/* Override Android forced dark mode inversions */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: light only;
+        forced-color-adjust: none;
+    }
+
+    body {
+        background-color: #F5F7F5 !important;
+        color: #2D3A2D !important;
+    }
 }
 
 /* Main Container Styles */

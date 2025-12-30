@@ -133,8 +133,9 @@
     font-size: 0.875rem;
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
-    background: var(--card-bg);
-    color: var(--text-primary);
+    background-color: #ffffff;
+    color: #2D3A2D;
+    -webkit-text-fill-color: #2D3A2D;
     cursor: pointer;
     width: 180px;
     transition: all 0.2s ease;
@@ -142,9 +143,14 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    /* Hide native select indicator on Android */
+    text-indent: 0.01px;
+    text-overflow: '';
+    /* Custom arrow icon */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
+    background-size: 16px 16px;
     padding-right: 36px;
     font-weight: 500;
 }
