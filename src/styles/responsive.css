@@ -192,13 +192,6 @@
         background-position: right 3px center;
         background-size: 10px;
         text-align: center;
-        /* Force override for Android Chrome */
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-        background-color: #ffffff !important;
-        color: #2D3A2D !important;
-        -webkit-text-fill-color: #2D3A2D !important;
     }
 
     .team-select-wrapper,
@@ -219,16 +212,6 @@
     .select-icon {
         left: 5px;
         font-size: 0.7rem;
-    }
-
-    /* Mobile arrow overlay - smaller size */
-    .team-select-wrapper::after,
-    .timezone-select-wrapper::after,
-    .city-select-wrapper::after,
-    .matchday-select-wrapper::after {
-        width: 22px;
-        background-size: 10px 10px;
-        border-radius: 0 8px 8px 0;
     }
 
     .content-wrapper {

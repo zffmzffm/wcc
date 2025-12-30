@@ -225,12 +225,34 @@ export default function WorldCupMap({
     // Ref for map container element
     const mapContainerRef = useRef<HTMLDivElement>(null);
 
-    // CSS-based fullscreen state (avoids browser auto-rotation)
+    // Fullscreen state
     const [isFullscreen, setIsFullscreen] = useState(false);
 
-    // Toggle CSS-based fullscreen (no browser fullscreen API = no auto-rotate)
-    const toggleFullscreen = useCallback(() => {
-        setIsFullscreen(prev => !prev);
+    // Listen for fullscreen changes
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
+    // Toggle fullscreen for map container
+    const toggleFullscreen = useCallback(async () => {
+        try {
+            if (!document.fullscreenElement) {
+                if (mapContainerRef.current) {
+                    await mapContainerRef.current.requestFullscreen();
+                }
+            } else {
+                await document.exitFullscreen();
+            }
+        } catch (error) {
+            console.error('Fullscreen error:', error);
+        }
     }, []);
 
     // Calculate which cities are relevant for the selected team
@@ -250,17 +272,17 @@ export default function WorldCupMap({
 
     // Wrapper for city selection that exits fullscreen
     const handleCitySelect = useCallback((city: City | null) => {
-        // Exit CSS fullscreen if currently in fullscreen mode
-        if (isFullscreen) {
-            setIsFullscreen(false);
+        // Exit fullscreen if currently in fullscreen mode
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(console.error);
         }
         onCitySelect(city);
-    }, [onCitySelect, isFullscreen]);
+    }, [onCitySelect]);
 
     return (
         <div
             ref={mapContainerRef}
-            className={`map-fullscreen-wrapper ${isFullscreen ? 'map-css-fullscreen' : ''}`}
+            className="map-fullscreen-wrapper"
             style={{ height: '100%', width: '100%', position: 'relative' }}
         >
             <MapContainer

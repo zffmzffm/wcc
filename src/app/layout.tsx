@@ -177,10 +177,6 @@ export default function RootLayout({
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#2D5A3D" />
 
-        {/* Prevent Android Chrome forced dark mode from inverting colors */}
-        <meta name="color-scheme" content="light only" />
-        <meta name="supported-color-schemes" content="light only" />
-
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://flagcdn.com" />
         <link rel="dns-prefetch" href="https://basemaps.cartocdn.com" />

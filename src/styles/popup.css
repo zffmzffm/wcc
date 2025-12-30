@@ -184,8 +184,7 @@
 .team-name {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #2D3A2D !important;
-    -webkit-text-fill-color: #2D3A2D !important;
+    color: var(--text-primary);
     white-space: nowrap;
 }
 

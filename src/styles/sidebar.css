@@ -239,8 +239,7 @@
 }
 
 .sidebar-matches .team-name {
-    color: #2D3A2D !important;
-    -webkit-text-fill-color: #2D3A2D !important;
+    color: var(--text-primary);
     font-weight: 600;
 }
 
