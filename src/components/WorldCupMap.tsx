@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -222,6 +222,9 @@ export default function WorldCupMap({
     canGoBack = false,
     onBack
 }: WorldCupMapProps) {
+    // Ref for map container element
+    const mapContainerRef = useRef<HTMLDivElement>(null);
+
     // Fullscreen state
     const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -237,12 +240,19 @@ export default function WorldCupMap({
         };
     }, []);
 
-    // Toggle fullscreen
-    const toggleFullscreen = useCallback(() => {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(console.error);
-        } else {
-            document.exitFullscreen().catch(console.error);
+    // Toggle fullscreen for map container only
+    const toggleFullscreen = useCallback(async () => {
+        try {
+            if (!document.fullscreenElement) {
+                // Request fullscreen on map container, not the whole document
+                if (mapContainerRef.current) {
+                    await mapContainerRef.current.requestFullscreen();
+                }
+            } else {
+                await document.exitFullscreen();
+            }
+        } catch (error) {
+            console.error('Fullscreen error:', error);
         }
     }, []);
 
@@ -261,8 +271,17 @@ export default function WorldCupMap({
         return new Set([...matchCities, ...knockoutCities]);
     }, [selectedDay, dayMatches, dayKnockoutVenues]);
 
+    // Wrapper for city selection that exits fullscreen
+    const handleCitySelect = useCallback((city: City | null) => {
+        // Exit fullscreen if currently in fullscreen mode
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(console.error);
+        }
+        onCitySelect(city);
+    }, [onCitySelect]);
+
     return (
-        <>
+        <div ref={mapContainerRef} className="map-fullscreen-wrapper" style={{ height: '100%', width: '100%', position: 'relative' }}>
             <MapContainer
                 center={MAP_CONFIG.defaultCenter}
                 zoom={MAP_CONFIG.defaultZoom}
@@ -283,7 +302,7 @@ export default function WorldCupMap({
                     selectedDay={selectedDay}
                     dayMatches={dayMatches}
                     dayKnockoutVenues={dayKnockoutVenues}
-                    onCitySelect={onCitySelect}
+                    onCitySelect={handleCitySelect}
                     isSidebarOpen={isSidebarOpen}
                     isMobile={isMobile}
                     teamCityIds={teamCityIds}
@@ -315,6 +334,7 @@ export default function WorldCupMap({
                         <path d="M11 1H15V5" />
                         <path d="M5 15H1V11" />
                         <path d="M11 15H15V11" />
+                        <rect x="6" y="6" width="4" height="4" fill="currentColor" stroke="none" />
                     </svg>
                 ) : (
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -325,6 +345,6 @@ export default function WorldCupMap({
                     </svg>
                 )}
             </button>
-        </>
+        </div>
     );
 }
