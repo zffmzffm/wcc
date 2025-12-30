@@ -197,6 +197,29 @@
     position: relative;
     display: flex;
     align-items: center;
+    /* Clip any overflow to hide native select arrows on Android */
+    overflow: hidden;
+}
+
+/* Custom arrow overlay to mask native arrows */
+.team-select-wrapper::after,
+.timezone-select-wrapper::after,
+.city-select-wrapper::after,
+.matchday-select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .select-flag,
@@ -273,13 +296,15 @@
     margin: 0;
     font-size: 0.65rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #2D3A2D !important;
+    -webkit-text-fill-color: #2D3A2D !important;
 }
 
 .footer-disclaimer {
     margin: 0;
     font-size: 0.55rem;
-    color: var(--text-muted);
+    color: #8A9B8A !important;
+    -webkit-text-fill-color: #8A9B8A !important;
     line-height: 1.4;
 }
 

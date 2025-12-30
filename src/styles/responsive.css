@@ -221,6 +221,16 @@
         font-size: 0.7rem;
     }
 
+    /* Mobile arrow overlay - smaller size */
+    .team-select-wrapper::after,
+    .timezone-select-wrapper::after,
+    .city-select-wrapper::after,
+    .matchday-select-wrapper::after {
+        width: 22px;
+        background-size: 10px 10px;
+        border-radius: 0 8px 8px 0;
+    }
+
     .content-wrapper {
         margin-top: 100px;
         height: auto;
