@@ -66,6 +66,7 @@ export default function CityMarker({ city, onClick, isDimmed = false, isSelected
             position={[city.lat, city.lng]}
             icon={customIcon}
             eventHandlers={{ click: onClick }}
+            zIndexOffset={1000}  // Ensure markers appear above SVG paths
         >
             <Tooltip direction="top" offset={[0, -12]} opacity={0.95}>
                 <div style={{ fontWeight: 600, fontSize: '14px', color: '#2D5A3D' }}>{city.name}</div>

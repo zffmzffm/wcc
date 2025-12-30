@@ -158,6 +158,10 @@
         display: none;
     }
 
+    .header-tagline {
+        display: none;
+    }
+
     /* Header nav - 2x2 grid for dropdowns */
     .header-nav {
         width: 100%;

@@ -218,7 +218,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                 }
 
                 // Normal segment: draw arc with chevrons
-                const glowPathD = generateArcPath(segment.from, segment.to, FLIGHT_PATH_CONFIG.curvature * 0.8);
+                const glowPathD = generateArcPath(segment.from, segment.to, FLIGHT_PATH_CONFIG.curvature * 0.8, 18);
                 const chevronPathD = generateChevronPath(
                     segment.from,
                     segment.to,

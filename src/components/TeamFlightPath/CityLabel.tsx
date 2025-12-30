@@ -45,6 +45,46 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
 
     const pixel = latLngToPixel(coords);
 
+    // Get all OTHER city positions for collision detection
+    const otherCityPixels = useMemo(() => {
+        const seenCities = new Set<string>();
+        const pixels: { x: number; y: number }[] = [];
+        teamMatches.forEach((m) => {
+            if (m.city.id !== city.id && !seenCities.has(m.city.id)) {
+                seenCities.add(m.city.id);
+                pixels.push(latLngToPixel(m.coords));
+            }
+        });
+        return pixels;
+    }, [teamMatches, city.id, latLngToPixel]);
+
+    // Check if a label position would overlap with any other city marker
+    const wouldOverlapMarker = useCallback((labelX: number, labelY: number, textAnchor: string): boolean => {
+        // Estimate label bounds (approximate)
+        const labelWidth = (matchNumbersPrefix.length * 12) + (city.name.length * 9);
+        const labelHeight = 18;
+
+        // Calculate label bounds based on anchor
+        let left = labelX;
+        let right = labelX + labelWidth;
+        if (textAnchor === 'end') {
+            left = labelX - labelWidth;
+            right = labelX;
+        } else if (textAnchor === 'middle') {
+            left = labelX - labelWidth / 2;
+            right = labelX + labelWidth / 2;
+        }
+        const top = labelY - labelHeight;
+        const bottom = labelY + 4;
+
+        // Check collision with each other city marker (radius ~15px)
+        const markerRadius = 15;
+        return otherCityPixels.some(mp => {
+            return mp.x > left - markerRadius && mp.x < right + markerRadius &&
+                mp.y > top - markerRadius && mp.y < bottom + markerRadius;
+        });
+    }, [otherCityPixels, matchNumbersPrefix.length, city.name.length]);
+
     // Calculate label position based on flight path directions
     const labelPosition = useMemo(() => {
         // Collect all path directions from this city
@@ -74,6 +114,14 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
             }
         }
 
+        // Also add directions TO other cities as blocked directions
+        otherCityPixels.forEach(mp => {
+            pathDirections.push({
+                dx: mp.x - pixel.x,
+                dy: mp.y - pixel.y
+            });
+        });
+
         let labelX = pixel.x;
         let labelY = pixel.y;
         let textAnchor: 'start' | 'end' | 'middle' = 'start';
@@ -90,7 +138,7 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
             pathAngles.forEach(angle => {
                 allBlockedAngles.push(angle);
                 allBlockedAngles.push(angle - Math.PI / 4);
-                allBlockedAngles.push(angle - Math.PI / 3);
+                allBlockedAngles.push(angle + Math.PI / 4);
             });
 
             // Normalize all angles to [0, 2π)
@@ -117,7 +165,7 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
             }
 
             // If no clear gap found, go opposite
-            if (maxGap < Math.PI / 3 && pathAngles.length > 0) {
+            if (maxGap < Math.PI / 4 && pathAngles.length > 0) {
                 const avgAngle = pathAngles.reduce((a, b) => a + b, 0) / pathAngles.length;
                 bestAngle = avgAngle + Math.PI;
             }
@@ -144,7 +192,7 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
         }
 
         return { labelX, labelY, textAnchor };
-    }, [pixel, markerIndex, teamMatches, latLngToPixel]);
+    }, [pixel, markerIndex, teamMatches, latLngToPixel, otherCityPixels]);
 
     return (
         <text

@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -222,6 +222,30 @@ export default function WorldCupMap({
     canGoBack = false,
     onBack
 }: WorldCupMapProps) {
+    // Fullscreen state
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    // Listen for fullscreen changes
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
+    // Toggle fullscreen
+    const toggleFullscreen = useCallback(() => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(console.error);
+        } else {
+            document.exitFullscreen().catch(console.error);
+        }
+    }, []);
+
     // Calculate which cities are relevant for the selected team
     const teamCityIds = useMemo(() => {
         if (!selectedTeam) return new Set<string>();
@@ -278,6 +302,29 @@ export default function WorldCupMap({
                     ↩
                 </button>
             )}
+            {/* Fullscreen toggle button */}
+            <button
+                className="map-fullscreen-button"
+                onClick={toggleFullscreen}
+                aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                title={isFullscreen ? "退出全屏" : "全屏显示"}
+            >
+                {isFullscreen ? (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M5 1H1V5" />
+                        <path d="M11 1H15V5" />
+                        <path d="M5 15H1V11" />
+                        <path d="M11 15H15V11" />
+                    </svg>
+                ) : (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M1 5V1H5" />
+                        <path d="M15 5V1H11" />
+                        <path d="M1 11V15H5" />
+                        <path d="M15 11V15H11" />
+                    </svg>
+                )}
+            </button>
         </>
     );
 }

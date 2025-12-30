@@ -18,12 +18,17 @@ export function useMapRefresh(): number {
     useEffect(() => {
         const handleRefresh = () => setRefreshKey(prev => prev + 1);
 
+        // Listen to move for panning
         map.on('move', handleRefresh);
+        // Listen to zoom for zoom end
         map.on('zoom', handleRefresh);
+        // Listen to zoomanim for smooth updates during zoom animation
+        map.on('zoomanim', handleRefresh);
 
         return () => {
             map.off('move', handleRefresh);
             map.off('zoom', handleRefresh);
+            map.off('zoomanim', handleRefresh);
         };
     }, [map]);
 

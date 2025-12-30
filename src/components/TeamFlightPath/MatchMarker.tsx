@@ -50,10 +50,10 @@ export default function MatchMarker({
             center={coords}
             radius={isLatest ? FLIGHT_PATH_CONFIG.activeMarkerRadius : FLIGHT_PATH_CONFIG.markerRadius}
             pathOptions={{
-                color: '#fff',
-                weight: FLIGHT_PATH_CONFIG.markerWeight,
-                fillColor: countryColor,
-                fillOpacity: 0.95
+                color: 'transparent',  // Invisible stroke - CityMarker provides the visual
+                weight: 0,
+                fillColor: 'transparent',  // Invisible fill - CityMarker provides the visual
+                fillOpacity: 0
             }}
         >
             <Popup className="match-popup">

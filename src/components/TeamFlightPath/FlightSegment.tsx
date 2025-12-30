@@ -33,7 +33,7 @@ export default function FlightSegmentComponent({ segment, isNew, animationKey, i
     }
 
     // Normal flight path
-    const glowPathD = generateArcPath(startPixel, endPixel, FLIGHT_PATH_CONFIG.curvature);
+    const glowPathD = generateArcPath(startPixel, endPixel, FLIGHT_PATH_CONFIG.curvature, 18);
     const chevronPathD = generateChevronPath(
         startPixel,
         endPixel,
