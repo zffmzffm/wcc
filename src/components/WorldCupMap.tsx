@@ -225,35 +225,12 @@ export default function WorldCupMap({
     // Ref for map container element
     const mapContainerRef = useRef<HTMLDivElement>(null);
 
-    // Fullscreen state
+    // CSS-based fullscreen state (avoids browser auto-rotation)
     const [isFullscreen, setIsFullscreen] = useState(false);
 
-    // Listen for fullscreen changes
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
-
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-        };
-    }, []);
-
-    // Toggle fullscreen for map container only
-    const toggleFullscreen = useCallback(async () => {
-        try {
-            if (!document.fullscreenElement) {
-                // Request fullscreen on map container, not the whole document
-                if (mapContainerRef.current) {
-                    await mapContainerRef.current.requestFullscreen();
-                }
-            } else {
-                await document.exitFullscreen();
-            }
-        } catch (error) {
-            console.error('Fullscreen error:', error);
-        }
+    // Toggle CSS-based fullscreen (no browser fullscreen API = no auto-rotate)
+    const toggleFullscreen = useCallback(() => {
+        setIsFullscreen(prev => !prev);
     }, []);
 
     // Calculate which cities are relevant for the selected team
@@ -273,15 +250,19 @@ export default function WorldCupMap({
 
     // Wrapper for city selection that exits fullscreen
     const handleCitySelect = useCallback((city: City | null) => {
-        // Exit fullscreen if currently in fullscreen mode
-        if (document.fullscreenElement) {
-            document.exitFullscreen().catch(console.error);
+        // Exit CSS fullscreen if currently in fullscreen mode
+        if (isFullscreen) {
+            setIsFullscreen(false);
         }
         onCitySelect(city);
-    }, [onCitySelect]);
+    }, [onCitySelect, isFullscreen]);
 
     return (
-        <div ref={mapContainerRef} className="map-fullscreen-wrapper" style={{ height: '100%', width: '100%', position: 'relative' }}>
+        <div
+            ref={mapContainerRef}
+            className={`map-fullscreen-wrapper ${isFullscreen ? 'map-css-fullscreen' : ''}`}
+            style={{ height: '100%', width: '100%', position: 'relative' }}
+        >
             <MapContainer
                 center={MAP_CONFIG.defaultCenter}
                 zoom={MAP_CONFIG.defaultZoom}
