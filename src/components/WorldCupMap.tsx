@@ -153,7 +153,7 @@ function MapContent({
         teamCityIds.forEach(id => combined.add(id));
         knockoutCityIds.forEach(id => combined.add(id));
         return combined;
-    }, [teamCityIds, knockoutCityIds]);
+    }, [teamCityIds, knockoutCityIds, selectedTeam]);
 
     return (
         <>
