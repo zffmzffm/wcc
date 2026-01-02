@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 
 interface TimezoneSelectorProps {
     selectedTimezone: string | null;
@@ -33,6 +34,15 @@ const timezones = [
 ];
 
 export default function TimezoneSelector({ selectedTimezone, onSelect }: TimezoneSelectorProps) {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 600);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         onSelect(value === '' ? null : value);
@@ -52,7 +62,7 @@ export default function TimezoneSelector({ selectedTimezone, onSelect }: Timezon
                     className="timezone-select"
                     aria-label="Select timezone"
                 >
-                    <option value="">TIME ZONE</option>
+                    <option value="">{isMobile ? 'TIME' : 'TIME ZONE'}</option>
                     <optgroup label="North America">
                         {timezones.filter(tz =>
                             tz.value.startsWith('America/') &&
@@ -102,4 +112,3 @@ export default function TimezoneSelector({ selectedTimezone, onSelect }: Timezon
 }
 
 export { timezones };
-
