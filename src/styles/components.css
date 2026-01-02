@@ -6,7 +6,7 @@
     top: 12px;
     left: 12px;
     right: 12px;
-    z-index: 2000;
+    z-index: 1000;
     height: 64px;
     background: #2D5A3D;
     display: flex;

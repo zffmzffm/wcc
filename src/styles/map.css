@@ -9,6 +9,8 @@
     background: var(--accent-light);
     border-radius: 24px;
     overflow: hidden;
+    /* Create new stacking context to contain Leaflet controls z-index */
+    isolation: isolate;
     /* Squircle shadow */
     box-shadow:
         8px 8px 16px rgba(45, 90, 61, 0.12),
