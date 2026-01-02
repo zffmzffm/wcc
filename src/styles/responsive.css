@@ -360,10 +360,32 @@
         border-radius: 0;
         overflow-y: auto;
         overflow-x: hidden;
+        background: var(--sidebar-bg-light);
     }
 
-    /* Hide sidebar entirely when it only shows placeholder */
-    .sidebar:has(.sidebar-placeholder) {
+    /* Mobile sidebar placeholder - compact styling */
+    .sidebar-placeholder {
+        padding: 1rem;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .sidebar-placeholder-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .sidebar-placeholder p {
+        font-size: 0.75rem;
+    }
+
+    /* On mobile, add "or team" to the placeholder text via CSS */
+    .sidebar-placeholder p:first-of-type::after {
+        content: " or team";
+    }
+
+    /* Hide right-column sidebar (TeamScheduleSidebar) when it only shows placeholder */
+    .right-column .sidebar:has(.sidebar-placeholder) {
         display: none;
     }
 
@@ -482,8 +504,8 @@
         padding: 0.3rem 0.6rem;
     }
 
-    /* Hide placeholder panels on mobile */
-    .sidebar-placeholder {
+    /* Show main sidebar placeholder for initial state, hide only right-column placeholder */
+    .right-column .sidebar-placeholder {
         display: none;
     }
 
