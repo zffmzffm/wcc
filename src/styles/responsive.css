@@ -124,6 +124,20 @@
    ============================================ */
 @media (max-width: 600px) {
 
+    /* Prevent page-level scrolling on mobile - only sidebar scrolls */
+    html,
+    body {
+        overflow: hidden;
+        height: 100%;
+        position: fixed;
+        width: 100%;
+    }
+
+    .main-container {
+        height: 100%;
+        overflow: hidden;
+    }
+
     /* Header mobile layout - ultra compact */
     .header {
         top: 4px;
@@ -216,11 +230,10 @@
 
     .content-wrapper {
         margin-top: 100px;
-        height: auto;
-        min-height: calc(100vh - 100px);
+        height: calc(100vh - 100px);
         flex-direction: column;
-        overflow-y: auto;
-        overflow-x: hidden;
+        /* Prevent page-level scrolling - only allow internal scroll in sidebar */
+        overflow: hidden;
         padding: 6px;
         gap: 6px;
     }
@@ -306,12 +319,13 @@
         padding: 1px 3px !important;
     }
 
-    /* Sidebar - natural height, no max-height limit */
+    /* Sidebar - fills remaining space, scrolls internally */
     .sidebar {
         width: 100%;
-        height: auto;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
         order: 2;
-        flex-shrink: 0;
         border-radius: 16px;
     }
 
