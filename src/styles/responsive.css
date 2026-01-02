@@ -255,23 +255,23 @@
         gap: 0;
     }
 
-    /* Map - takes more space, 55% of content area when sidebar is open */
+    /* Map - default to full height when no sidebar is visible */
     .map-container {
-        height: 55%;
-        min-height: 55%;
-        max-height: 55%;
-        flex: 0 0 55%;
+        flex: 1;
+        min-height: 0;
         order: 1;
         border-radius: 0;
         overflow: hidden;
     }
 
-    /* Map expands to full height when no sidebar is visible */
-    .content-wrapper:not(:has(.sidebar:not(:has(.sidebar-placeholder)))) .map-container {
-        height: 100%;
-        min-height: 100%;
-        max-height: 100%;
-        flex: 1;
+    /* Map shrinks to 55% when there's an active sidebar with content */
+    .sidebar:not(:has(.sidebar-placeholder))~.map-container,
+    .map-container:has(~ .sidebar:not(:has(.sidebar-placeholder))),
+    .content-wrapper:has(.sidebar-header) .map-container {
+        height: 55%;
+        min-height: 55%;
+        max-height: 55%;
+        flex: 0 0 55%;
     }
 
     /* Map legend compact */
