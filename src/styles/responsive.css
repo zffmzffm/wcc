@@ -162,22 +162,24 @@
         display: none;
     }
 
-    /* Header nav - 2x2 grid for dropdowns */
+    /* Header nav - single row for all 4 dropdowns */
     .header-nav {
         width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.2rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 0.15rem;
     }
 
-    /* Outer selector containers - center within grid cells */
+    /* Outer selector containers - equal width in row */
     .team-selector,
     .timezone-selector,
     .city-selector,
     .matchday-selector {
         display: flex;
         justify-content: center;
-        width: 100%;
+        flex: 1;
+        min-width: 0;
     }
 
     .team-select,
@@ -500,22 +502,27 @@
         min-height: 50px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         border-radius: 0;
-        padding: 0.2rem 0.5rem;
-        padding-bottom: env(safe-area-inset-bottom, 0.2rem);
+        padding: 0.15rem 0.5rem;
+        padding-bottom: env(safe-area-inset-bottom, 0.15rem);
         text-align: center;
         z-index: 100;
         background: var(--sidebar-bg-light);
     }
 
+    .footer-content {
+        gap: 0.15rem;
+    }
+
     .footer-copyright {
-        font-size: 0.6rem;
+        font-size: 0.5rem;
     }
 
     .footer-disclaimer {
-        font-size: 0.5rem;
+        font-size: 0.4rem;
+        line-height: 1.2;
     }
 }
 
