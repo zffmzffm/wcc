@@ -365,3 +365,29 @@
 .map-fullscreen-button:active {
     background: #e4e4e4;
 }
+
+/* ============================================
+   CSS-based Fullscreen (for iOS which doesn't support Fullscreen API)
+   ============================================ */
+.map-css-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+    border-radius: 0 !important;
+    background: #fff;
+}
+
+.map-css-fullscreen .leaflet-container {
+    border-radius: 0 !important;
+}
+
+/* Ensure buttons are visible in CSS fullscreen */
+.map-css-fullscreen .map-back-button,
+.map-css-fullscreen .map-fullscreen-button {
+    z-index: 10000 !important;
+}

@@ -228,8 +228,20 @@ export default function WorldCupMap({
     // Fullscreen state
     const [isFullscreen, setIsFullscreen] = useState(false);
 
-    // Listen for fullscreen changes
+    // Detect if device is iOS (doesn't support Fullscreen API)
+    const [isIOS, setIsIOS] = useState(false);
+
     useEffect(() => {
+        // Check for iOS device
+        const checkIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        setIsIOS(checkIOS);
+    }, []);
+
+    // Listen for fullscreen changes (for non-iOS devices)
+    useEffect(() => {
+        if (isIOS) return; // iOS uses CSS-based fullscreen
+
         const handleFullscreenChange = () => {
             setIsFullscreen(!!document.fullscreenElement);
         };
@@ -238,22 +250,30 @@ export default function WorldCupMap({
         return () => {
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
         };
-    }, []);
+    }, [isIOS]);
 
-    // Toggle fullscreen for map container
+    // Toggle fullscreen - uses native API on supported platforms, CSS on iOS
     const toggleFullscreen = useCallback(async () => {
-        try {
-            if (!document.fullscreenElement) {
-                if (mapContainerRef.current) {
-                    await mapContainerRef.current.requestFullscreen();
+        if (isIOS) {
+            // iOS: use CSS-based fullscreen
+            setIsFullscreen(prev => !prev);
+        } else {
+            // Other platforms: use native Fullscreen API
+            try {
+                if (!document.fullscreenElement) {
+                    if (mapContainerRef.current) {
+                        await mapContainerRef.current.requestFullscreen();
+                    }
+                } else {
+                    await document.exitFullscreen();
                 }
-            } else {
-                await document.exitFullscreen();
+            } catch (error) {
+                // Fallback to CSS if native fails
+                console.warn('Native fullscreen failed, using CSS fallback:', error);
+                setIsFullscreen(prev => !prev);
             }
-        } catch (error) {
-            console.error('Fullscreen error:', error);
         }
-    }, []);
+    }, [isIOS]);
 
     // Calculate which cities are relevant for the selected team
     const teamCityIds = useMemo(() => {
@@ -273,16 +293,21 @@ export default function WorldCupMap({
     // Wrapper for city selection that exits fullscreen
     const handleCitySelect = useCallback((city: City | null) => {
         // Exit fullscreen if currently in fullscreen mode
-        if (document.fullscreenElement) {
+        if (isIOS) {
+            if (isFullscreen) setIsFullscreen(false);
+        } else if (document.fullscreenElement) {
             document.exitFullscreen().catch(console.error);
         }
         onCitySelect(city);
-    }, [onCitySelect]);
+    }, [onCitySelect, isIOS, isFullscreen]);
+
+    // Determine if CSS fullscreen class should be applied (iOS only)
+    const cssFullscreenClass = isIOS && isFullscreen ? 'map-css-fullscreen' : '';
 
     return (
         <div
             ref={mapContainerRef}
-            className="map-fullscreen-wrapper"
+            className={`map-fullscreen-wrapper ${cssFullscreenClass}`}
             style={{ height: '100%', width: '100%', position: 'relative' }}
         >
             <MapContainer
