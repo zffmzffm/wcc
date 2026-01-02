@@ -393,3 +393,21 @@
 .map-css-fullscreen .map-fullscreen-button {
     z-index: 10000 !important;
 }
+
+/* Hide other elements when map is in CSS fullscreen (iOS) */
+.map-css-fullscreen~.sidebar,
+.map-css-fullscreen~.right-column {
+    display: none !important;
+}
+
+/* When map container has fullscreen class, hide siblings via parent */
+.content-wrapper:has(.map-css-fullscreen) .sidebar,
+.content-wrapper:has(.map-css-fullscreen) .right-column {
+    display: none !important;
+}
+
+/* Hide header and footer when CSS fullscreen is active */
+.main-container:has(.map-css-fullscreen) .header,
+.main-container:has(.map-css-fullscreen) .app-footer {
+    display: none !important;
+}
