@@ -384,13 +384,13 @@
         content: " or team";
     }
 
-    /* Hide right-column sidebar (TeamScheduleSidebar) when it only shows placeholder */
-    .right-column .sidebar:has(.sidebar-placeholder) {
+    /* Hide right sidebar (TeamScheduleSidebar) when it only shows placeholder */
+    .sidebar-right:has(.sidebar-placeholder) {
         display: none;
     }
 
-    /* Hide CitySidebar placeholder when TeamScheduleSidebar has content (team selected) */
-    .content-wrapper:has(.right-column .sidebar:not(:has(.sidebar-placeholder))) .sidebar:has(.sidebar-placeholder):not(.right-column .sidebar) {
+    /* Hide left sidebar placeholder when right sidebar has actual content (no placeholder inside) */
+    body:has(.sidebar-right .sidebar-header) .sidebar:not(.sidebar-right):has(.sidebar-placeholder) {
         display: none;
     }
 
