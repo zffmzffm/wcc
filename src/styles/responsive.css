@@ -193,7 +193,20 @@
         padding-right: 20px;
         background-position: right 3px center;
         background-size: 10px;
-        text-align: center;
+        text-align: left;
+    }
+
+    /* Dropdown options left-aligned */
+    .team-select option,
+    .timezone-select option,
+    .city-select option,
+    .matchday-select option,
+    .team-select optgroup,
+    .timezone-select optgroup,
+    .city-select optgroup,
+    .matchday-select optgroup {
+        text-align: left;
+        padding-left: 0.5rem;
     }
 
     .team-select-wrapper,
@@ -255,23 +268,15 @@
         gap: 0;
     }
 
-    /* Map - default to full height when no sidebar is visible */
+    /* Map - takes more space, 55% of content area */
     .map-container {
-        flex: 1;
-        min-height: 0;
-        order: 1;
-        border-radius: 0;
-        overflow: hidden;
-    }
-
-    /* Map shrinks to 55% when there's an active sidebar with content */
-    .sidebar:not(:has(.sidebar-placeholder))~.map-container,
-    .map-container:has(~ .sidebar:not(:has(.sidebar-placeholder))),
-    .content-wrapper:has(.sidebar-header) .map-container {
         height: 55%;
         min-height: 55%;
         max-height: 55%;
         flex: 0 0 55%;
+        order: 1;
+        border-radius: 0;
+        overflow: hidden;
     }
 
     /* Map legend compact */
