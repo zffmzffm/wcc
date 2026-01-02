@@ -389,6 +389,11 @@
         display: none;
     }
 
+    /* Hide CitySidebar placeholder when TeamScheduleSidebar has content (team selected) */
+    .content-wrapper:has(.right-column .sidebar:not(:has(.sidebar-placeholder))) .sidebar:has(.sidebar-placeholder):not(.right-column .sidebar) {
+        display: none;
+    }
+
     .sidebar-header {
         margin: 8px;
         padding: 0.5rem 0.75rem;
