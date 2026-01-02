@@ -1,6 +1,6 @@
 'use client';
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -56,6 +56,24 @@ function MapViewController({
     return null;
 }
 
+/**
+ * Component to invalidate map size when container size changes (for CSS fullscreen on iOS)
+ */
+function MapSizeInvalidator({ isFullscreen }: { isFullscreen: boolean }) {
+    const map = useMap();
+
+    useEffect(() => {
+        // Small delay to allow CSS transition to complete
+        const timer = setTimeout(() => {
+            map.invalidateSize();
+        }, 100);
+
+        return () => clearTimeout(timer);
+    }, [map, isFullscreen]);
+
+    return null;
+}
+
 interface WorldCupMapProps {
     selectedTeam: string | null;
     selectedCity: City | null;
@@ -84,7 +102,8 @@ function MapContent({
     isMobile,
     teamCityIds,
     dayCityIds,
-    timezone
+    timezone,
+    isFullscreen
 }: {
     selectedTeam: string | null;
     selectedCity: City | null;
@@ -97,6 +116,7 @@ function MapContent({
     teamCityIds: Set<string>;
     dayCityIds: Set<string>;
     timezone: string;
+    isFullscreen: boolean;
 }) {
     // Get current team for knockout path calculation
     const currentTeam = teams.find(t => t.code === selectedTeam);
@@ -157,6 +177,8 @@ function MapContent({
 
     return (
         <>
+            {/* Invalidate map size when fullscreen state changes (for iOS CSS fullscreen) */}
+            <MapSizeInvalidator isFullscreen={isFullscreen} />
             {/* Consolidated map view controller */}
             <MapViewController
                 selectedTeam={selectedTeam}
@@ -336,6 +358,7 @@ export default function WorldCupMap({
                     teamCityIds={teamCityIds}
                     dayCityIds={dayCityIds}
                     timezone={timezone}
+                    isFullscreen={isFullscreen}
                 />
             </MapContainer>
             {/* Back button overlay */}
