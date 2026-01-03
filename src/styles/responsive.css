@@ -361,6 +361,8 @@
         overflow-y: auto;
         overflow-x: hidden;
         background: var(--sidebar-bg-light);
+        padding-bottom: 48px;
+        /* Account for fixed footer height */
     }
 
     /* Mobile sidebar placeholder - compact styling */
@@ -536,32 +538,77 @@
         bottom: 0;
         left: 0;
         right: 0;
-        height: 8vh;
-        height: 8dvh;
-        min-height: 50px;
+        height: auto;
+        min-height: 48px;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: center;
         border-radius: 0;
-        padding: 0.15rem 0.5rem;
-        padding-bottom: env(safe-area-inset-bottom, 0.15rem);
+        padding: 0.5rem 0.75rem;
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0));
         text-align: center;
         z-index: 100;
         background: var(--sidebar-bg-light);
     }
 
-    .footer-content {
-        gap: 0.15rem;
+    .footer-content-inline {
+        gap: 0.5rem;
+    }
+
+    .footer-split {
+        flex-direction: row;
+        padding: 0 0.5rem;
+    }
+
+    .footer-left {
+        gap: 0.4rem;
     }
 
     .footer-copyright {
-        font-size: 0.5rem;
+        font-size: 0.75rem;
     }
 
-    .footer-disclaimer {
-        font-size: 0.4rem;
-        line-height: 1.2;
+    .footer-separator {
+        font-size: 0.75rem;
+    }
+
+    .footer-legal-link {
+        font-size: 0.75rem;
+    }
+
+    .footer-support-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.65rem;
+        border-radius: 6px;
+        gap: 0.3rem;
+    }
+
+    /* Legal modal on mobile */
+    .legal-modal {
+        max-width: 95%;
+        max-height: 85vh;
+        margin: 0 10px;
+    }
+
+    .legal-modal-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .legal-modal-header h2 {
+        font-size: 0.9rem;
+    }
+
+    .legal-modal-body {
+        padding: 1rem;
+    }
+
+    .legal-modal-body .legal-copyright {
+        font-size: 0.8rem;
+    }
+
+    .legal-modal-body .legal-disclaimer {
+        font-size: 0.75rem;
     }
 }
 
