@@ -162,10 +162,14 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                                                 isHome = leftSide.includes(winnerMarker);
                                             }
 
+                                            // Get opponent descriptor from matchup
+                                            const matchupParts = matchup.split(' vs ');
+                                            const opponentLabel = isHome ? (matchupParts[1] || 'TBD') : (matchupParts[0] || 'TBD');
+
                                             const knockoutMatch: Match = {
                                                 ...matchInfo.match,
-                                                team1: isHome ? team.code : 'TBD',
-                                                team2: isHome ? 'TBD' : team.code,
+                                                team1: isHome ? team.code : opponentLabel,
+                                                team2: isHome ? opponentLabel : team.code,
                                             };
                                             const cityName = matchInfo.city?.name || matchInfo.match.cityId;
                                             const matchNumber = sortedMatches.length + idx;

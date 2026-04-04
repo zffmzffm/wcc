@@ -238,6 +238,7 @@ export default function MatchDayLabels({
                     }).join('')}
                                 ${sortedKnockout.slice(0, 2).map(v => {
                         const { time } = formatDateTimeWithTimezone(v.datetime, timezone);
+                        const matchupParts = (v.matchup || 'TBD vs TBD').split(' vs ');
                         return `
                                     <div style="
                                         font-size: ${styles.row.fontSize};
@@ -246,6 +247,7 @@ export default function MatchDayLabels({
                                         display: flex;
                                         align-items: center;
                                         gap: ${styles.row.gap};
+                                        padding: ${styles.row.padding};
                                     ">
                                         <span style="
                                             color: #3D7A53;
@@ -258,14 +260,23 @@ export default function MatchDayLabels({
                                             text-align: center;
                                         ">${time}</span>
                                         <span style="
-                                            font-weight: 700;
-                                            font-size: ${styles.time.fontSize};
-                                            color: white;
-                                            padding: ${styles.time.padding};
-                                            background: linear-gradient(135deg, #2D5A3D 0%, #3D7A53 100%);
-                                            border-radius: 4px;
-                                            letter-spacing: 0.3px;
-                                        ">${STAGE_NAMES.short[v.stage as keyof typeof STAGE_NAMES.short] || v.stage}</span>
+                                            font-weight: 600;
+                                            color: #5A6B5A;
+                                            display: flex;
+                                            align-items: center;
+                                            gap: ${styles.teams.gap};
+                                        ">
+                                            <span style="color: #2D3A2D;">${matchupParts[0]}</span>
+                                            <span style="
+                                                font-size: ${styles.vs.fontSize};
+                                                color: #8A9B8A;
+                                                font-weight: 700;
+                                                padding: ${styles.vs.padding};
+                                                background: rgba(45,90,61,0.06);
+                                                border-radius: 3px;
+                                            ">VS</span>
+                                            <span style="color: #2D3A2D;">${matchupParts[1] || 'TBD'}</span>
+                                        </span>
                                     </div>
                                 `;
                     }).join('')}
@@ -291,6 +302,7 @@ export default function MatchDayLabels({
                         key={`label-${cityId}`}
                         position={[city.lat, city.lng]}
                         icon={labelIcon}
+                        zIndexOffset={2000}
                         eventHandlers={{}}
                     />
                 );

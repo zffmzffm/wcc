@@ -81,12 +81,15 @@ export function useKnockoutPaths(
                     const city = cityMap.get(venue.cityId);
                     if (!city) return null;
 
-                    // 构造 Match 对象（淘汰赛比赛）
+                    // Parse matchup to get team labels
+                    const matchupParts = (venue.matchup || 'TBD vs TBD').split(' vs ');
+
+                    // Construct Match object for knockout match
                     const match: Match = {
                         id: parseInt(matchId.split('_')[1]) || 0,
-                        group: '',  // 淘汰赛没有小组
-                        team1: 'TBD',
-                        team2: 'TBD',
+                        group: '',  // knockout matches have no group
+                        team1: matchupParts[0] || 'TBD',
+                        team2: matchupParts[1] || 'TBD',
                         cityId: venue.cityId,
                         datetime: venue.datetime,
                         stage: venue.stage,

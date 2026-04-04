@@ -25,7 +25,7 @@
   },
   {
     "teamCode": "KOR",
-    "teamName": "South Korea",
+    "teamName": "Korea Republic",
     "group": "A",
     "position": 1,
     "pathLabel": "1st Place",
@@ -97,7 +97,7 @@
   },
   {
     "teamCode": "IRN",
-    "teamName": "Iran",
+    "teamName": "IR Iran",
     "group": "G",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -120,8 +120,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_F2",
-    "teamName": "FIFA 2",
+    "teamCode": "IRQ",
+    "teamName": "Iraq",
     "group": "I",
     "position": 1,
     "pathLabel": "1st Place",
@@ -145,7 +145,7 @@
   },
   {
     "teamCode": "CIV",
-    "teamName": "Ivory Coast",
+    "teamName": "Côte d'Ivoire",
     "group": "E",
     "position": 1,
     "pathLabel": "1st Place",
@@ -193,7 +193,7 @@
   },
   {
     "teamCode": "IRN",
-    "teamName": "Iran",
+    "teamName": "IR Iran",
     "group": "G",
     "position": 1,
     "pathLabel": "1st Place",
@@ -240,8 +240,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_B",
-    "teamName": "UEFA B",
+    "teamCode": "SWE",
+    "teamName": "Sweden",
     "group": "F",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -289,7 +289,7 @@
   },
   {
     "teamCode": "CPV",
-    "teamName": "Cape Verde",
+    "teamName": "Cabo Verde",
     "group": "H",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -432,8 +432,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_C",
-    "teamName": "UEFA C",
+    "teamCode": "TUR",
+    "teamName": "Türkiye",
     "group": "D",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -445,7 +445,7 @@
   },
   {
     "teamCode": "CPV",
-    "teamName": "Cape Verde",
+    "teamName": "Cabo Verde",
     "group": "H",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -504,8 +504,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_F2",
-    "teamName": "FIFA 2",
+    "teamCode": "IRQ",
+    "teamName": "Iraq",
     "group": "I",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -517,7 +517,7 @@
   },
   {
     "teamCode": "CIV",
-    "teamName": "Ivory Coast",
+    "teamName": "Côte d'Ivoire",
     "group": "E",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -588,8 +588,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_D",
-    "teamName": "UEFA D",
+    "teamCode": "CZE",
+    "teamName": "Czechia",
     "group": "A",
     "position": 1,
     "pathLabel": "1st Place",
@@ -601,7 +601,7 @@
   },
   {
     "teamCode": "IRN",
-    "teamName": "Iran",
+    "teamName": "IR Iran",
     "group": "G",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -684,8 +684,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_F2",
-    "teamName": "FIFA 2",
+    "teamCode": "IRQ",
+    "teamName": "Iraq",
     "group": "I",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -696,8 +696,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_B",
-    "teamName": "UEFA B",
+    "teamCode": "SWE",
+    "teamName": "Sweden",
     "group": "F",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -816,8 +816,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_C",
-    "teamName": "UEFA C",
+    "teamCode": "TUR",
+    "teamName": "Türkiye",
     "group": "D",
     "position": 1,
     "pathLabel": "1st Place",
@@ -841,7 +841,7 @@
   },
   {
     "teamCode": "CIV",
-    "teamName": "Ivory Coast",
+    "teamName": "Côte d'Ivoire",
     "group": "E",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -877,7 +877,7 @@
   },
   {
     "teamCode": "KOR",
-    "teamName": "South Korea",
+    "teamName": "Korea Republic",
     "group": "A",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -948,8 +948,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_B",
-    "teamName": "UEFA B",
+    "teamCode": "SWE",
+    "teamName": "Sweden",
     "group": "F",
     "position": 1,
     "pathLabel": "1st Place",
@@ -984,8 +984,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_F1",
-    "teamName": "FIFA 1",
+    "teamCode": "COD",
+    "teamName": "Congo DR",
     "group": "K",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -996,8 +996,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_A",
-    "teamName": "UEFA A",
+    "teamCode": "BIH",
+    "teamName": "Bosnia and Herzegovina",
     "group": "B",
     "position": 1,
     "pathLabel": "1st Place",
@@ -1236,8 +1236,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_C",
-    "teamName": "UEFA C",
+    "teamCode": "TUR",
+    "teamName": "Türkiye",
     "group": "D",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -1428,8 +1428,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_F1",
-    "teamName": "FIFA 1",
+    "teamCode": "COD",
+    "teamName": "Congo DR",
     "group": "K",
     "position": 1,
     "pathLabel": "1st Place",
@@ -1441,7 +1441,7 @@
   },
   {
     "teamCode": "KOR",
-    "teamName": "South Korea",
+    "teamName": "Korea Republic",
     "group": "A",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -1561,7 +1561,7 @@
   },
   {
     "teamCode": "CPV",
-    "teamName": "Cape Verde",
+    "teamName": "Cabo Verde",
     "group": "H",
     "position": 1,
     "pathLabel": "1st Place",
@@ -1596,8 +1596,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_F1",
-    "teamName": "FIFA 1",
+    "teamCode": "COD",
+    "teamName": "Congo DR",
     "group": "K",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -1644,8 +1644,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_D",
-    "teamName": "UEFA D",
+    "teamCode": "CZE",
+    "teamName": "Czechia",
     "group": "A",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -1656,8 +1656,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_A",
-    "teamName": "UEFA A",
+    "teamCode": "BIH",
+    "teamName": "Bosnia and Herzegovina",
     "group": "B",
     "position": 3,
     "pathLabel": "3rd Place",
@@ -1704,8 +1704,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_A",
-    "teamName": "UEFA A",
+    "teamCode": "BIH",
+    "teamName": "Bosnia and Herzegovina",
     "group": "B",
     "position": 2,
     "pathLabel": "2nd Place",
@@ -1716,8 +1716,8 @@
     "numCities": 8
   },
   {
-    "teamCode": "PO_D",
-    "teamName": "UEFA D",
+    "teamCode": "CZE",
+    "teamName": "Czechia",
     "group": "A",
     "position": 2,
     "pathLabel": "2nd Place",

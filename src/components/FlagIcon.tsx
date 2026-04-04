@@ -16,7 +16,7 @@ const codeToISO2: Record<string, string> = {
     'CAN': 'ca',
     // Participating countries
     'RSA': 'za', // South Africa
-    'KOR': 'kr', // South Korea
+    'KOR': 'kr', // Korea Republic
     'BRA': 'br', // Brazil
     'MAR': 'ma', // Morocco
     'SCO': 'gb-sct', // Scotland
@@ -25,19 +25,19 @@ const codeToISO2: Record<string, string> = {
     'AUS': 'au', // Australia
     'GER': 'de', // Germany
     'ECU': 'ec', // Ecuador
-    'CIV': 'ci', // Ivory Coast
+    'CIV': 'ci', // Côte d'Ivoire
     'CUW': 'cw', // Curaçao
     'NED': 'nl', // Netherlands
     'JPN': 'jp', // Japan
     'TUN': 'tn', // Tunisia
     'BEL': 'be', // Belgium
-    'IRN': 'ir', // Iran
+    'IRN': 'ir', // IR Iran
     'EGY': 'eg', // Egypt
     'NZL': 'nz', // New Zealand
     'ESP': 'es', // Spain
     'URU': 'uy', // Uruguay
     'KSA': 'sa', // Saudi Arabia
-    'CPV': 'cv', // Cape Verde
+    'CPV': 'cv', // Cabo Verde
     'FRA': 'fr', // France
     'SEN': 'sn', // Senegal
     'NOR': 'no', // Norway
@@ -54,13 +54,13 @@ const codeToISO2: Record<string, string> = {
     'PAN': 'pa', // Panama
     'QAT': 'qa', // Qatar
     'SUI': 'ch', // Switzerland
-    // Playoff placeholders
-    'PO_A': 'eu',
-    'PO_B': 'eu',
-    'PO_C': 'eu',
-    'PO_D': 'eu',
-    'PO_F1': 'un',
-    'PO_F2': 'un',
+    // Qualified through playoffs
+    'BIH': 'ba', // Bosnia and Herzegovina (UEFA Path A)
+    'SWE': 'se', // Sweden (UEFA Path B)
+    'TUR': 'tr', // Türkiye (UEFA Path C)
+    'CZE': 'cz', // Czechia (UEFA Path D)
+    'COD': 'cd', // Congo DR (FIFA Pathway 1)
+    'IRQ': 'iq', // Iraq (FIFA Pathway 2)
     // TBD placeholder for knockout matches
     'TBD': 'xx', // Will fallback to emoji
 };

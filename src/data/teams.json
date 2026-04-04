@@ -13,15 +13,15 @@
     },
     {
         "code": "KOR",
-        "name": "South Korea",
+        "name": "Korea Republic",
         "group": "A",
         "flag": "🇰🇷"
     },
     {
-        "code": "PO_D",
-        "name": "UEFA D",
+        "code": "CZE",
+        "name": "Czechia",
         "group": "A",
-        "flag": "🏳️"
+        "flag": "🇨🇿"
     },
     {
         "code": "CAN",
@@ -30,10 +30,10 @@
         "flag": "🇨🇦"
     },
     {
-        "code": "PO_A",
-        "name": "UEFA A",
+        "code": "BIH",
+        "name": "Bosnia and Herzegovina",
         "group": "B",
-        "flag": "🏳️"
+        "flag": "🇧🇦"
     },
     {
         "code": "QAT",
@@ -90,10 +90,10 @@
         "flag": "🇦🇺"
     },
     {
-        "code": "PO_C",
-        "name": "UEFA C",
+        "code": "TUR",
+        "name": "Türkiye",
         "group": "D",
-        "flag": "🏳️"
+        "flag": "🇹🇷"
     },
     {
         "code": "GER",
@@ -109,7 +109,7 @@
     },
     {
         "code": "CIV",
-        "name": "Ivory Coast",
+        "name": "Côte d'Ivoire",
         "group": "E",
         "flag": "🇨🇮"
     },
@@ -132,10 +132,10 @@
         "flag": "🇯🇵"
     },
     {
-        "code": "PO_B",
-        "name": "UEFA B",
+        "code": "SWE",
+        "name": "Sweden",
         "group": "F",
-        "flag": "🏳️"
+        "flag": "🇸🇪"
     },
     {
         "code": "TUN",
@@ -151,7 +151,7 @@
     },
     {
         "code": "IRN",
-        "name": "Iran",
+        "name": "IR Iran",
         "group": "G",
         "flag": "🇮🇷"
     },
@@ -187,7 +187,7 @@
     },
     {
         "code": "CPV",
-        "name": "Cape Verde",
+        "name": "Cabo Verde",
         "group": "H",
         "flag": "🇨🇻"
     },
@@ -204,10 +204,10 @@
         "flag": "🇸🇳"
     },
     {
-        "code": "PO_F2",
-        "name": "FIFA 2",
+        "code": "IRQ",
+        "name": "Iraq",
         "group": "I",
-        "flag": "🏳️"
+        "flag": "🇮🇶"
     },
     {
         "code": "NOR",
@@ -246,10 +246,10 @@
         "flag": "🇵🇹"
     },
     {
-        "code": "PO_F1",
-        "name": "FIFA 1",
+        "code": "COD",
+        "name": "Congo DR",
         "group": "K",
-        "flag": "🏳️"
+        "flag": "🇨🇩"
     },
     {
         "code": "UZB",

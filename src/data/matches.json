@@ -12,7 +12,7 @@
         "id": 2,
         "group": "A",
         "team1": "KOR",
-        "team2": "PO_D",
+        "team2": "CZE",
         "cityId": "guadalajara",
         "datetime": "2026-06-11T22:00:00-04:00",
         "stage": "group"
@@ -20,7 +20,7 @@
     {
         "id": 25,
         "group": "A",
-        "team1": "PO_D",
+        "team1": "CZE",
         "team2": "RSA",
         "cityId": "atlanta",
         "datetime": "2026-06-18T12:00:00-04:00",
@@ -38,7 +38,7 @@
     {
         "id": 53,
         "group": "A",
-        "team1": "PO_D",
+        "team1": "CZE",
         "team2": "MEX",
         "cityId": "mexico_city",
         "datetime": "2026-06-24T21:00:00-04:00",
@@ -57,7 +57,7 @@
         "id": 3,
         "group": "B",
         "team1": "CAN",
-        "team2": "PO_A",
+        "team2": "BIH",
         "cityId": "toronto",
         "datetime": "2026-06-12T15:00:00-04:00",
         "stage": "group"
@@ -75,7 +75,7 @@
         "id": 26,
         "group": "B",
         "team1": "SUI",
-        "team2": "PO_A",
+        "team2": "BIH",
         "cityId": "los_angeles",
         "datetime": "2026-06-18T15:00:00-04:00",
         "stage": "group"
@@ -101,7 +101,7 @@
     {
         "id": 52,
         "group": "B",
-        "team1": "PO_A",
+        "team1": "BIH",
         "team2": "QAT",
         "cityId": "seattle",
         "datetime": "2026-06-24T15:00:00-04:00",
@@ -174,7 +174,7 @@
         "id": 6,
         "group": "D",
         "team1": "AUS",
-        "team2": "PO_C",
+        "team2": "TUR",
         "cityId": "vancouver",
         "datetime": "2026-06-14T00:00:00-04:00",
         "stage": "group"
@@ -191,7 +191,7 @@
     {
         "id": 31,
         "group": "D",
-        "team1": "PO_C",
+        "team1": "TUR",
         "team2": "PAR",
         "cityId": "san_francisco",
         "datetime": "2026-06-20T00:00:00-04:00",
@@ -200,7 +200,7 @@
     {
         "id": 59,
         "group": "D",
-        "team1": "PO_C",
+        "team1": "TUR",
         "team2": "USA",
         "cityId": "los_angeles",
         "datetime": "2026-06-25T22:00:00-04:00",
@@ -281,7 +281,7 @@
     {
         "id": 12,
         "group": "F",
-        "team1": "PO_B",
+        "team1": "SWE",
         "team2": "TUN",
         "cityId": "monterrey",
         "datetime": "2026-06-14T22:00:00-04:00",
@@ -291,7 +291,7 @@
         "id": 35,
         "group": "F",
         "team1": "NED",
-        "team2": "PO_B",
+        "team2": "SWE",
         "cityId": "houston",
         "datetime": "2026-06-20T13:00:00-04:00",
         "stage": "group"
@@ -309,7 +309,7 @@
         "id": 57,
         "group": "F",
         "team1": "JPN",
-        "team2": "PO_B",
+        "team2": "SWE",
         "cityId": "dallas",
         "datetime": "2026-06-25T19:00:00-04:00",
         "stage": "group"
@@ -443,7 +443,7 @@
     {
         "id": 18,
         "group": "I",
-        "team1": "PO_F2",
+        "team1": "IRQ",
         "team2": "NOR",
         "cityId": "boston",
         "datetime": "2026-06-16T18:00:00-04:00",
@@ -453,7 +453,7 @@
         "id": 42,
         "group": "I",
         "team1": "FRA",
-        "team2": "PO_F2",
+        "team2": "IRQ",
         "cityId": "philadelphia",
         "datetime": "2026-06-22T17:00:00-04:00",
         "stage": "group"
@@ -480,7 +480,7 @@
         "id": 62,
         "group": "I",
         "team1": "SEN",
-        "team2": "PO_F2",
+        "team2": "IRQ",
         "cityId": "toronto",
         "datetime": "2026-06-26T15:00:00-04:00",
         "stage": "group"
@@ -543,7 +543,7 @@
         "id": 23,
         "group": "K",
         "team1": "POR",
-        "team2": "PO_F1",
+        "team2": "COD",
         "cityId": "houston",
         "datetime": "2026-06-17T13:00:00-04:00",
         "stage": "group"
@@ -570,7 +570,7 @@
         "id": 48,
         "group": "K",
         "team1": "COL",
-        "team2": "PO_F1",
+        "team2": "COD",
         "cityId": "guadalajara",
         "datetime": "2026-06-23T22:00:00-04:00",
         "stage": "group"
@@ -587,7 +587,7 @@
     {
         "id": 72,
         "group": "K",
-        "team1": "PO_F1",
+        "team1": "COD",
         "team2": "UZB",
         "cityId": "atlanta",
         "datetime": "2026-06-27T19:30:00-04:00",

@@ -50,6 +50,33 @@
     border-top-color: var(--sidebar-bg) !important;
 }
 
+/* Permanent city name labels (initial map state) */
+.city-permanent-label {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    text-shadow:
+        -1px -1px 0 #fff,
+        1px -1px 0 #fff,
+        -1px 1px 0 #fff,
+        1px 1px 0 #fff,
+        0 -1.5px 0 #fff,
+        0 1.5px 0 #fff,
+        -1.5px 0 0 #fff,
+        1.5px 0 0 #fff;
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 0.01em;
+}
+
+.city-permanent-label::before {
+    display: none !important;
+}
+
 /* Match day label hover styles */
 .match-label-row {
     margin: -3px -10px !important;
@@ -72,7 +99,7 @@
 
 /* Ensure match day labels appear above city markers */
 .match-day-label {
-    z-index: 1000 !important;
+    z-index: 10000 !important;
 }
 
 /* ============================================

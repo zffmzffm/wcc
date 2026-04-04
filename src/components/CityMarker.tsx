@@ -10,9 +10,25 @@ interface CityMarkerProps {
     onClick: () => void;
     isDimmed?: boolean;
     isSelected?: boolean;
+    showLabel?: boolean;
 }
+// Custom label directions for crowded city clusters to avoid overlap
+const labelConfig: Record<string, { direction: 'top' | 'bottom' | 'left' | 'right'; offset: [number, number] }> = {
+    // Vancouver & Seattle cluster — spread vertically
+    'vancouver':     { direction: 'top',    offset: [0, -14] },
+    'seattle':       { direction: 'right',  offset: [14, 0] },
+    // Boston / New York / Philadelphia cluster — spread in different directions
+    'boston':         { direction: 'right',  offset: [14, 0] },
+    'new_york':      { direction: 'right',  offset: [14, 0] },
+    'philadelphia':  { direction: 'bottom', offset: [0, 14] },
+    // Guadalajara & Mexico City cluster
+    'guadalajara':   { direction: 'left',   offset: [-14, 0] },
+    'mexico_city':   { direction: 'right',  offset: [14, 0] },
+};
 
-export default function CityMarker({ city, onClick, isDimmed = false, isSelected = false }: CityMarkerProps) {
+const defaultLabelConfig = { direction: 'top' as const, offset: [0, -14] as [number, number] };
+
+export default function CityMarker({ city, onClick, isDimmed = false, isSelected = false, showLabel = false }: CityMarkerProps) {
     const color = getCountryColor(city.country);
     const opacity = isDimmed ? 0.25 : 1;
 
@@ -68,10 +84,25 @@ export default function CityMarker({ city, onClick, isDimmed = false, isSelected
             eventHandlers={{ click: onClick }}
             zIndexOffset={1000}  // Ensure markers appear above SVG paths
         >
-            <Tooltip direction="top" offset={[0, -12]} opacity={0.95}>
-                <div style={{ fontWeight: 600, fontSize: '14px', color: '#2D5A3D' }}>{city.name}</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>{city.venue}</div>
-            </Tooltip>
+            {showLabel && !isDimmed && (() => {
+                const cfg = labelConfig[city.id] || defaultLabelConfig;
+                return (
+                    <Tooltip
+                        direction={cfg.direction}
+                        offset={cfg.offset}
+                        permanent
+                        className="city-permanent-label"
+                    >
+                        {city.name}
+                    </Tooltip>
+                );
+            })()}
+            {!showLabel && !isDimmed && (
+                <Tooltip direction="top" offset={[0, -12]} opacity={0.95}>
+                    <div style={{ fontWeight: 600, fontSize: '14px', color: '#2D5A3D' }}>{city.name}</div>
+                    <div style={{ fontSize: '12px', color: '#666' }}>{city.venue}</div>
+                </Tooltip>
+            )}
         </Marker>
     );
 }

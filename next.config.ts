@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   // Static export for Cloudflare Pages
   output: 'export',
 
+  // Disable Next.js dev indicator (the "N" badge in bottom-left)
+  devIndicators: false,
+
   // Image optimization configuration
   images: {
     // Static export requires unoptimized images

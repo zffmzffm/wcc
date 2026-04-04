@@ -205,15 +205,20 @@ export default function CitySidebar({
                                                 </span>
                                             </div>
                                             <div className="match-teams">
-                                                <span className="team">
-                                                    <FlagIcon code="TBD" size={20} />
-                                                    <span className="team-name">TBD</span>
-                                                </span>
-                                                <span className="vs">VS</span>
-                                                <span className="team">
-                                                    <FlagIcon code="TBD" size={20} />
-                                                    <span className="team-name">TBD</span>
-                                                </span>
+                                                {(() => {
+                                                    const parts = venue.matchup?.split(' vs ') || ['TBD', 'TBD'];
+                                                    return (
+                                                        <>
+                                                            <span className="team">
+                                                                <span className="team-name">{parts[0]}</span>
+                                                            </span>
+                                                            <span className="vs">VS</span>
+                                                            <span className="team">
+                                                                <span className="team-name">{parts[1] || 'TBD'}</span>
+                                                            </span>
+                                                        </>
+                                                    );
+                                                })()}
                                             </div>
                                         </li>
                                     );
@@ -272,15 +277,20 @@ export default function CitySidebar({
                                                 </span>
                                             </div>
                                             <div className="match-teams">
-                                                <span className="team">
-                                                    <FlagIcon code="TBD" size={20} />
-                                                    <span className="team-name">TBD</span>
-                                                </span>
-                                                <span className="vs">VS</span>
-                                                <span className="team">
-                                                    <FlagIcon code="TBD" size={20} />
-                                                    <span className="team-name">TBD</span>
-                                                </span>
+                                                {(() => {
+                                                    const parts = venue.matchup?.split(' vs ') || ['TBD', 'TBD'];
+                                                    return (
+                                                        <>
+                                                            <span className="team">
+                                                                <span className="team-name">{parts[0]}</span>
+                                                            </span>
+                                                            <span className="vs">VS</span>
+                                                            <span className="team">
+                                                                <span className="team-name">{parts[1] || 'TBD'}</span>
+                                                            </span>
+                                                        </>
+                                                    );
+                                                })()}
                                             </div>
                                         </li>
                                     );

@@ -200,6 +200,7 @@ function MapContent({
                         (selectedDay !== null && !dayCityIds.has(city.id))
                     }
                     isSelected={selectedCity?.id === city.id}
+                    showLabel={selectedTeam === null && selectedDay === null}
                 />
             ))}
 
