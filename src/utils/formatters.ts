@@ -1,24 +1,6 @@
 import { Team } from '@/types';
 
 /**
- * Format datetime for display
- */
-export const formatDateTime = (datetime: string): { date: string; time: string } => {
-    const d = new Date(datetime);
-    const date = d.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        weekday: 'short'
-    });
-    const time = d.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-    return { date, time };
-};
-
-/**
  * Format datetime for specified timezone
  * @param datetime ISO format datetime string
  * @param timezone IANA timezone name, e.g. 'America/New_York'

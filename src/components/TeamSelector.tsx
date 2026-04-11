@@ -1,4 +1,5 @@
 'use client';
+import { useMemo, memo } from 'react';
 import { Team } from '@/types';
 import FlagIcon from './FlagIcon';
 
@@ -20,9 +21,9 @@ const groupBy = <T, K extends keyof T>(array: T[], key: K): Record<string, T[]> 
     }, {} as Record<string, T[]>);
 };
 
-export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSelectorProps) {
-    const groupedTeams = groupBy(teams, 'group');
-    const sortedGroups = Object.keys(groupedTeams).sort();
+const TeamSelector = memo(function TeamSelector({ teams, selectedTeam, onSelect }: TeamSelectorProps) {
+    const groupedTeams = useMemo(() => groupBy(teams, 'group'), [teams]);
+    const sortedGroups = useMemo(() => Object.keys(groupedTeams).sort(), [groupedTeams]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
@@ -66,4 +67,6 @@ export default function TeamSelector({ teams, selectedTeam, onSelect }: TeamSele
             </div>
         </div>
     );
-}
+});
+
+export default TeamSelector;

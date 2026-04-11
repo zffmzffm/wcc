@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
@@ -15,43 +15,14 @@ import { HoverMatchProvider } from '@/contexts/HoverMatchContext';
 import { City } from '@/types';
 import { teams, matches, cities } from '@/data';
 import { JsonMatchRepository } from '@/repositories/JsonMatchRepository';
+import { useUrlState } from '@/hooks/useUrlState';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { getMatchDay } from '@/utils/dateUtils';
 import { BREAKPOINTS, DEFAULT_TIMEZONE } from '@/constants';
 
 // Get knockout venues singleton
 const matchRepository = new JsonMatchRepository();
 const knockoutVenues = matchRepository.getKnockoutVenues();
-
-// Helper to extract match day from ISO datetime
-// Matches before 6am EDT are considered part of the previous day's schedule
-function getMatchDay(datetime: string): string {
-  const date = new Date(datetime);
-  // Format in EDT timezone
-  const edtFormatter = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/New_York',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    hour12: false
-  });
-  const parts = edtFormatter.formatToParts(date);
-  const year = parts.find(p => p.type === 'year')?.value;
-  const month = parts.find(p => p.type === 'month')?.value;
-  const day = parts.find(p => p.type === 'day')?.value;
-  const hour = parseInt(parts.find(p => p.type === 'hour')?.value || '12', 10);
-
-  // If before 6am EDT, count as previous day
-  if (hour < 6) {
-    const prevDate = new Date(date.getTime() - 24 * 60 * 60 * 1000);
-    const prevParts = edtFormatter.formatToParts(prevDate);
-    const prevYear = prevParts.find(p => p.type === 'year')?.value;
-    const prevMonth = prevParts.find(p => p.type === 'month')?.value;
-    const prevDay = prevParts.find(p => p.type === 'day')?.value;
-    return `${prevYear}-${prevMonth}-${prevDay}`;
-  }
-
-  return `${year}-${month}-${day}`;
-}
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
   ssr: false, // Leaflet doesn't support SSR
@@ -64,81 +35,24 @@ const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
 });
 
 export default function Home() {
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
 
-  // Navigation history for back button functionality
-  type SelectionState = { team: string | null; city: City | null; day: string | null };
-  const [history, setHistory] = useState<SelectionState[]>([]);
-  const isNavigatingBack = useRef(false);
-
-  // Detect mobile on mount and resize
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= BREAKPOINTS.mobile);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Helper to push current state to history (only if something is selected)
-  const pushToHistory = useCallback(() => {
-    if (isNavigatingBack.current) return; // Don't push when navigating back
-    const hasSelection = selectedTeam || selectedCity || selectedDay;
-    if (hasSelection) {
-      setHistory(prev => [...prev, { team: selectedTeam, city: selectedCity, day: selectedDay }]);
-    }
-  }, [selectedTeam, selectedCity, selectedDay]);
-
-  // Mobile-aware city selection: close team sidebar and clear day when selecting city
-  const handleCitySelect = useCallback((city: City | null) => {
-    pushToHistory();
-    setSelectedCity(city);
-    if (city) {
-      setSelectedDay(null);  // City and day are mutually exclusive
-      if (isMobile) {
-        setSelectedTeam(null);
-      }
-    }
-  }, [isMobile, pushToHistory]);
-
-  // Mobile-aware team selection: close city sidebar when selecting team
-  const handleTeamSelect = useCallback((teamCode: string | null) => {
-    pushToHistory();
-    setSelectedTeam(teamCode);
-    if (isMobile && teamCode) {
-      setSelectedCity(null);
-      setSelectedDay(null);
-    }
-  }, [isMobile, pushToHistory]);
-
-  // Day selection: clear city and team selection when selecting a day
-  const handleDaySelect = useCallback((day: string | null) => {
-    pushToHistory();
-    setSelectedDay(day);
-    if (day) {
-      setSelectedCity(null);  // Day and city are mutually exclusive
-      setSelectedTeam(null);  // Day and team are mutually exclusive
-    }
-  }, [pushToHistory]);
-
-  // Back navigation handler
-  const handleBack = useCallback(() => {
-    if (history.length === 0) return;
-    isNavigatingBack.current = true;
-    const prevState = history[history.length - 1];
-    setHistory(prev => prev.slice(0, -1));
-    setSelectedTeam(prevState.team);
-    setSelectedCity(prevState.city);
-    setSelectedDay(prevState.day);
-    // Reset the flag after state updates
-    setTimeout(() => { isNavigatingBack.current = false; }, 0);
-  }, [history]);
-
-  // Check if back navigation is available
-  const canGoBack = history.length > 0;
+  // URL-synchronized state management
+  const {
+    selectedTeam,
+    selectedCity,
+    selectedDay,
+    selectedTimezone,
+    setSelectedTeam,
+    setSelectedCity,
+    setSelectedDay,
+    handleTeamSelect,
+    handleCitySelect,
+    handleDaySelect,
+    handleTimezoneSelect,
+    canGoBack,
+    handleBack,
+  } = useUrlState({ cities, isMobile });
 
   // Get selected team info - memoized to avoid unnecessary lookups
   const selectedTeamInfo = useMemo(() =>
@@ -193,7 +107,7 @@ export default function Home() {
   const handleSidebarClose = useCallback(() => {
     setSelectedCity(null);
     setSelectedDay(null);
-  }, []);
+  }, [setSelectedCity, setSelectedDay]);
 
   // City selection by ID (for clicking city names in sidebar)
   const handleCitySelectById = useCallback((cityId: string) => {
@@ -214,7 +128,7 @@ export default function Home() {
           <Header>
             <TimezoneSelector
               selectedTimezone={selectedTimezone}
-              onSelect={setSelectedTimezone}
+              onSelect={handleTimezoneSelect}
             />
             <MatchDaySelector
               matches={matches}

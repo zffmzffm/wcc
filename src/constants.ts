@@ -107,6 +107,11 @@ export const PADDING_CONFIG = {
 export const DEFAULT_TIMEZONE = 'America/Toronto';
 
 // =============================================================================
+// Tournament Dates
+// =============================================================================
+export const TOURNAMENT_START = '2026-06-11';
+
+// =============================================================================
 // SVG Configuration
 // =============================================================================
 export const SVG_CONFIG = {
@@ -139,14 +144,5 @@ export const STAGE_NAMES = {
         'SF': 'SF',
         'F': 'Final',
         '3P': '3P'
-    },
-    // Chinese names for localization
-    zh: {
-        'R32': '32强赛',
-        'R16': '16强赛',
-        'QF': '四分之一决赛',
-        'SF': '半决赛',
-        'F': '决赛',
-        '3P': '季军赛'
     }
 } as const;

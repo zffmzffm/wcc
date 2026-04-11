@@ -1,4 +1,5 @@
 'use client';
+import { useMemo, memo } from 'react';
 import { City } from '@/types';
 import FlagIcon from './FlagIcon';
 
@@ -23,9 +24,9 @@ const groupByCountry = (cities: City[]): Record<string, City[]> => {
 // Country order: USA first, then Canada, then Mexico
 const countryOrder = ['USA', 'Canada', 'Mexico'];
 
-export default function CitySelector({ cities, selectedCity, onSelect }: CitySelectorProps) {
-    const groupedCities = groupByCountry(cities);
-    const sortedCountries = countryOrder.filter(c => groupedCities[c]);
+const CitySelector = memo(function CitySelector({ cities, selectedCity, onSelect }: CitySelectorProps) {
+    const groupedCities = useMemo(() => groupByCountry(cities), [cities]);
+    const sortedCountries = useMemo(() => countryOrder.filter(c => groupedCities[c]), [groupedCities]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
@@ -73,4 +74,6 @@ export default function CitySelector({ cities, selectedCity, onSelect }: CitySel
             </div>
         </div>
     );
-}
+});
+
+export default CitySelector;

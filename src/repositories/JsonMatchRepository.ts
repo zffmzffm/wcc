@@ -1,7 +1,7 @@
 /**
  * JSON-based Match Repository Implementation
- * 当前使用本地 JSON 文件作为数据源
- * 未来可替换为 ApiMatchRepository 接入远程 API
+ * Currently uses local JSON files as the data source.
+ * Can be replaced with ApiMatchRepository to connect to a remote API.
  */
 import { IMatchRepository, KnockoutVenue } from './types';
 import { Match, City, Team } from '@/types';
@@ -16,7 +16,7 @@ export class JsonMatchRepository implements IMatchRepository {
     }
 
     getKnockoutVenues(): KnockoutVenue[] {
-        // 扁平化所有阶段的场地数据
+        // Flatten knockout venue data from all stages
         return Object.values(knockoutVenuesData).flat() as KnockoutVenue[];
     }
 

@@ -1,10 +1,10 @@
 /**
  * useKnockoutPaths Hook
  * 
- * 根据球队所在小组生成三条淘汰赛假设性晋级路径：
- * - 🟢 小组第1名出线路径
- * - 🔵 小组第2名出线路径  
- * - 🟠 最佳第3名出线路径
+ * Generates three hypothetical knockout advancement paths based on a team's group:
+ * - 🟢 Group Winner path (1st place)
+ * - 🔵 Group Runner-up path (2nd place)
+ * - 🟠 Best 3rd Place path (3rd place)
  */
 import { useMemo } from 'react';
 import { MatchWithCoords, City, Match } from '@/types';
@@ -15,39 +15,31 @@ import { STAGE_NAMES } from '@/constants';
 export interface KnockoutPath {
     position: 1 | 2 | 3;
     label: string;
-    labelEn: string;
     color: string;
     matches: MatchWithCoords[];
 }
 
-// 路径颜色方案 - 高级配色
+// Path color scheme
 const PATH_COLORS = {
-    1: '#D4AF37',  // 金色 - 第1名 (冠军荣耀)
-    2: '#A0B8A0',  // 鼠尾草绿 - 第2名 (Sage)
-    3: '#D08080',  // 珊瑚粉 - 第3名 (Coral)
+    1: '#D4AF37',  // Gold - 1st place (Champion's glory)
+    2: '#A0B8A0',  // Sage green - 2nd place
+    3: '#D08080',  // Coral - 3rd place
 } as const;
 
-// 路径标签（中文）
+// Path labels
 const PATH_LABELS = {
-    1: '小组第1出线',
-    2: '小组第2出线',
-    3: '最佳第3名出线',
-} as const;
-
-// 路径标签（英文）
-const PATH_LABELS_EN = {
     1: 'Group Winner',
     2: 'Group Runner-up',
     3: 'Best 3rd Place',
 } as const;
 
 /**
- * 获取指定小组的所有淘汰赛晋级路径
+ * Get all knockout advancement paths for a given group.
  * 
- * @param groupId - 小组 ID (A-L)
- * @param knockoutVenues - 淘汰赛场地数据
- * @param cities - 城市数据
- * @returns 三条晋级路径（第1名、第2名、第3名）
+ * @param groupId - Group ID (A-L)
+ * @param knockoutVenues - Knockout venue data
+ * @param cities - City data
+ * @returns Three advancement paths (1st, 2nd, 3rd place)
  */
 export function useKnockoutPaths(
     groupId: string,
@@ -57,22 +49,22 @@ export function useKnockoutPaths(
     return useMemo(() => {
         if (!groupId) return [];
 
-        // 获取该小组的所有路径模板（第1名和第2名）
+        // Get path templates for this group (1st and 2nd place)
         const mainTemplates = knockoutPathTemplates.filter(t => t.groupId === groupId);
-        // 获取第3名路径
+        // Get 3rd place path
         const thirdTemplate = thirdPlacePathTemplates.find(t => t.groupId === groupId);
 
-        // 合并所有模板
+        // Merge all templates
         const allTemplates = thirdTemplate
             ? [...mainTemplates, thirdTemplate]
             : mainTemplates;
 
-        // 创建场地查找映射
+        // Create venue and city lookup maps
         const venueMap = new Map(knockoutVenues.map(v => [v.matchId, v]));
         const cityMap = new Map(cities.map(c => [c.id, c]));
 
         return allTemplates.map(template => {
-            // 将路径模板中的 matchId 序列转换为带坐标的比赛列表
+            // Convert path template matchId sequence to matches with coordinates
             const matches: MatchWithCoords[] = template.path
                 .map(matchId => {
                     const venue = venueMap.get(matchId);
@@ -107,7 +99,6 @@ export function useKnockoutPaths(
             return {
                 position: template.position,
                 label: PATH_LABELS[template.position],
-                labelEn: PATH_LABELS_EN[template.position],
                 color: PATH_COLORS[template.position],
                 matches,
             };
@@ -116,12 +107,9 @@ export function useKnockoutPaths(
 }
 
 /**
- * 格式化淘汰赛阶段名称
+ * Format a knockout stage name for display.
  */
-export function getStageLabel(stage: string, lang: 'zh' | 'en' = 'zh'): string {
+export function getStageLabel(stage: string): string {
     const stageKey = stage as keyof typeof STAGE_NAMES.full;
-    if (lang === 'zh') {
-        return STAGE_NAMES.zh[stageKey] || stage;
-    }
     return STAGE_NAMES.full[stageKey] || stage;
 }

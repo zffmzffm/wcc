@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { City, Match, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
-import { STAGE_NAMES } from '@/constants';
+import { getDayDifference } from '@/utils/dateUtils';
+import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
 import FlagIcon from './FlagIcon';
@@ -31,9 +32,6 @@ const venueImages: Record<string, string> = {
 
 
 
-// Tournament start date for Day X calculation (June 11, 2026)
-const TOURNAMENT_START_STR = '2026-06-11';
-
 // Format match day display
 function formatMatchDayHeader(dateStr: string): { dateDisplay: string; dayNum: number } {
     // Parse the date parts directly to avoid timezone issues
@@ -44,7 +42,7 @@ function formatMatchDayHeader(dateStr: string): { dateDisplay: string; dayNum: n
     const dateDisplay = `${monthNames[month - 1]} ${day}`;
 
     // Calculate tournament day number
-    const startParts = TOURNAMENT_START_STR.split('-').map(Number);
+    const startParts = TOURNAMENT_START.split('-').map(Number);
     const startDate = Date.UTC(startParts[0], startParts[1] - 1, startParts[2]);
     const currentDate = Date.UTC(year, month - 1, day);
     const dayNum = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
@@ -90,6 +88,20 @@ export default function CitySidebar({
             sidebarRef.current.scrollTop = 0;
         }
     }, [city?.id, selectedDay, hasContent]);
+
+    // Handle Escape key to close
+    useEffect(() => {
+        if (!hasContent) return;
+        
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+        
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [hasContent, onClose]);
 
     // Memoize sorted group stage matches to avoid re-sorting on every render
     const sortedMatches = useMemo(() => {
@@ -193,6 +205,9 @@ export default function CitySidebar({
                             <ul className="match-list" role="list">
                                 {sortedKnockoutVenues.map(venue => {
                                     const { date, time } = formatDateTimeWithTimezone(venue.datetime, timezone);
+                                    const dayDiff = getDayDifference(venue.datetime, timezone);
+                                    const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
+                                    
                                     return (
                                         <li key={venue.matchId} className="match-item" role="listitem">
                                             <div className="match-header">
@@ -201,7 +216,7 @@ export default function CitySidebar({
                                                 </span>
                                                 <span className="match-datetime">
                                                     <span className="match-date">{date}</span>
-                                                    <span className="match-time">{time}</span>
+                                                    <span className="match-time">{timeDisplay}</span>
                                                 </span>
                                             </div>
                                             <div className="match-teams">

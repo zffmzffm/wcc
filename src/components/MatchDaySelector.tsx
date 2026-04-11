@@ -1,7 +1,9 @@
 'use client';
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { Match } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
+import { getMatchDay } from '@/utils/dateUtils';
+import { TOURNAMENT_START } from '@/constants';
 
 interface MatchDaySelectorProps {
     matches: Match[];
@@ -9,9 +11,6 @@ interface MatchDaySelectorProps {
     selectedDay: string | null;
     onSelect: (day: string | null) => void;
 }
-
-// Tournament start date for Day X calculation (June 11, 2026)
-const TOURNAMENT_START_STR = '2026-06-11';
 
 // Format a date for display: "June 11, Day 1"
 function formatMatchDay(dateStr: string): { display: string; dayNum: number } {
@@ -24,8 +23,7 @@ function formatMatchDay(dateStr: string): { display: string; dayNum: number } {
     const monthName = monthNames[month - 1];
 
     // Calculate tournament day number
-    // Start is 2026-06-11, so June 11 = Day 1, June 12 = Day 2, etc.
-    const startParts = TOURNAMENT_START_STR.split('-').map(Number);
+    const startParts = TOURNAMENT_START.split('-').map(Number);
     const startDate = Date.UTC(startParts[0], startParts[1] - 1, startParts[2]);
     const currentDate = Date.UTC(year, month - 1, day);
     const dayNum = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
@@ -34,38 +32,6 @@ function formatMatchDay(dateStr: string): { display: string; dayNum: number } {
         display: `${monthName} ${day}, Day ${dayNum}`,
         dayNum
     };
-}
-
-// Extract match day from ISO datetime string (YYYY-MM-DD)
-// Matches before 6am EDT are considered part of the previous day's schedule
-function getMatchDay(datetime: string): string {
-    const date = new Date(datetime);
-    // Format in EDT timezone
-    const edtFormatter = new Intl.DateTimeFormat('en-CA', {
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        hour12: false
-    });
-    const parts = edtFormatter.formatToParts(date);
-    const year = parts.find(p => p.type === 'year')?.value;
-    const month = parts.find(p => p.type === 'month')?.value;
-    const day = parts.find(p => p.type === 'day')?.value;
-    const hour = parseInt(parts.find(p => p.type === 'hour')?.value || '12', 10);
-
-    // If before 6am EDT, count as previous day
-    if (hour < 6) {
-        const prevDate = new Date(date.getTime() - 24 * 60 * 60 * 1000);
-        const prevParts = edtFormatter.formatToParts(prevDate);
-        const prevYear = prevParts.find(p => p.type === 'year')?.value;
-        const prevMonth = prevParts.find(p => p.type === 'month')?.value;
-        const prevDay = prevParts.find(p => p.type === 'day')?.value;
-        return `${prevYear}-${prevMonth}-${prevDay}`;
-    }
-
-    return `${year}-${month}-${day}`;
 }
 
 export default function MatchDaySelector({

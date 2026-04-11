@@ -1,16 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 
 /**
  * Footer component with copyright and a Legal link
  * Click the link to open a modal with disclaimer
  */
-export default function Footer() {
+const Footer = memo(function Footer() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+    useEffect(() => {
+        if (!isModalOpen) return;
+        
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        };
+        
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isModalOpen, closeModal]);
 
     return (
         <>
@@ -18,7 +31,7 @@ export default function Footer() {
                 <div className="footer-content footer-split">
                     <div className="footer-left">
                         <span className="footer-copyright">
-                            © 2025 Cup26Map
+                            © 2026 Cup26Map
                         </span>
                         <span className="footer-separator">·</span>
                         <button
@@ -63,7 +76,7 @@ export default function Footer() {
                         </div>
                         <div className="legal-modal-body">
                             <p className="legal-copyright">
-                                © 2025 Cup26Map. All rights reserved.
+                                © 2026 Cup26Map. All rights reserved.
                             </p>
                             <p className="legal-disclaimer">
                                 <strong>Disclaimer:</strong> This website is an unofficial fan project and is not affiliated with,
@@ -80,4 +93,6 @@ export default function Footer() {
             )}
         </>
     );
-}
+});
+
+export default Footer;

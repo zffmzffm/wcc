@@ -3,7 +3,7 @@ import { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { City, Team, MatchWithCoords } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
-import { useKnockoutPaths, KnockoutPath, getStageLabel } from '@/hooks/useKnockoutPaths';
+import { useKnockoutPaths, KnockoutPath } from '@/hooks/useKnockoutPaths';
 import { useMapRefresh } from '@/hooks/useMapRefresh';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG } from '@/constants';
@@ -74,11 +74,11 @@ export default function KnockoutFlightPath({
 
     const mapSize = map.getSize();
 
-    // Colors for each position's chevron marker - 高级配色
+    // Colors for each position's chevron marker
     const positionColors: { [key: number]: string } = {
-        1: '#D4AF37',  // 1st place - gold (金色)
-        2: '#A0B8A0',  // 2nd place - sage (鼠尾草绿)
-        3: '#D08080',  // 3rd place - coral (珊瑚粉)
+        1: '#D4AF37',  // 1st place - gold
+        2: '#A0B8A0',  // 2nd place - sage
+        3: '#D08080',  // 3rd place - coral
     };
 
     return (

@@ -1,12 +1,12 @@
 /**
  * Repository Interface Definitions
- * 定义数据访问抽象层，支持未来切换到 API/数据库实现
+ * Defines the data access abstraction layer for future API/database implementations.
  */
 import { Match, City, Team } from '@/types';
 
 /**
- * 淘汰赛场地信息
- * 只包含场地和时间，不包含对手（因 FIFA 尚未公布完整配对规则）
+ * Knockout venue information.
+ * Contains venue and schedule data only; opponent details follow FIFA's bracket rules.
  */
 export interface KnockoutVenue {
     matchId: string;
@@ -17,8 +17,8 @@ export interface KnockoutVenue {
 }
 
 /**
- * 数据仓库接口
- * 抽象化数据访问，当前使用 JSON 实现，未来可切换到 API
+ * Data repository interface.
+ * Abstracts data access; currently uses JSON, can be swapped to API.
  */
 export interface IMatchRepository {
     getGroupMatches(): Match[];

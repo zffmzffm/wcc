@@ -2,6 +2,7 @@
 import { memo } from 'react';
 import { Match, Team } from '@/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
+import { getDayDifference } from '@/utils/dateUtils';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
 import FlagIcon from './FlagIcon';
 
@@ -37,6 +38,9 @@ const MatchItem = memo(function MatchItem({
     const team1 = getTeamDisplay(match.team1, teams);
     const team2 = getTeamDisplay(match.team2, teams);
     const { date, time } = formatDateTimeWithTimezone(match.datetime, timezone);
+    const dayDiff = getDayDifference(match.datetime, timezone);
+    const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
+    
     const isTeam1Highlighted = highlightTeamCode === match.team1;
     const isTeam2Highlighted = highlightTeamCode === match.team2;
 
@@ -77,7 +81,7 @@ const MatchItem = memo(function MatchItem({
                     <span className="match-number">Match {(matchIndex ?? 0) + 1}</span>
                     <span className="match-datetime-inline">
                         <span className="match-date">{date}</span>
-                        <span className="match-time">{time}</span>
+                        <span className="match-time">{timeDisplay}</span>
                     </span>
                     {cityName && (
                         <span
@@ -137,7 +141,7 @@ const MatchItem = memo(function MatchItem({
                     ) : (
                         <span className="match-date">{date}</span>
                     )}
-                    <span className="match-time">{time}</span>
+                    <span className="match-time">{timeDisplay}</span>
                 </span>
             </div>
             <div className="match-teams">

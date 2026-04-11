@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
-import { useKnockoutPaths, getStageLabel } from '@/hooks/useKnockoutPaths';
+import { useKnockoutPaths } from '@/hooks/useKnockoutPaths';
 import { formatDateTimeWithTimezone } from '@/utils/formatters';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import SidebarLayout from './SidebarLayout';
@@ -37,6 +37,20 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
             prevTeamCodeRef.current = null;
         }
     }, [team, resetToFirstPath]);
+
+    // Handle Escape key to close
+    useEffect(() => {
+        if (!team) return;
+        
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+        
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [team, onClose]);
 
     // Handle tab click: set visibility, update selected index, and trigger map bounds fit
     const handleTabClick = (index: number) => {

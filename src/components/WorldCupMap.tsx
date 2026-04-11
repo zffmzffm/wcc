@@ -368,7 +368,7 @@ export default function WorldCupMap({
                     className="map-back-button"
                     onClick={onBack}
                     aria-label="Go back to previous selection"
-                    title="返回上一步"
+                    title="Go back"
                 >
                     ↩
                 </button>
@@ -378,7 +378,7 @@ export default function WorldCupMap({
                 className="map-fullscreen-button"
                 onClick={toggleFullscreen}
                 aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-                title={isFullscreen ? "退出全屏" : "全屏显示"}
+                title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
             >
                 {isFullscreen ? (
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">

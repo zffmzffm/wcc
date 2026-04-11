@@ -1,11 +1,11 @@
 'use client';
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 
 interface HeaderProps {
     children?: ReactNode;
 }
 
-export default function Header({ children }: HeaderProps) {
+const Header = memo(function Header({ children }: HeaderProps) {
     return (
         <header className="header" role="banner">
             <div className="header-brand">
@@ -21,4 +21,6 @@ export default function Header({ children }: HeaderProps) {
             </nav>
         </header>
     );
-}
+});
+
+export default Header;

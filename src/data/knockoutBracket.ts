@@ -1,25 +1,25 @@
 /**
  * Knockout Bracket Path Templates
  * 
- * 定义每个小组各名次球队的淘汰赛晋级路径
- * 路径基于已录入的淘汰赛数据精确提取
+ * Defines the knockout advancement path for each group position.
+ * Paths are precisely extracted from the recorded knockout match data.
  * 
- * 路径逻辑：
- * - R32 matchup 显示哪些组别/名次参与
- * - R16 matchup 显示 R32 的胜者配对
- * - 以此类推直到决赛
+ * Path logic:
+ * - R32 matchup shows which group positions participate
+ * - R16 matchup shows R32 winners pairing
+ * - And so on through to the Final
  */
 
 export interface KnockoutPathTemplate {
     groupId: string;
     position: 1 | 2 | 3;
-    path: string[];  // matchId 序列
-    description: string;  // 路径描述
+    path: string[];  // matchId sequence
+    description: string;  // Path description
 }
 
 /**
- * 第1名和第2名的确定性路径
- * 第3名路径取决于哪8支第3名球队晋级，这里提供可能的路径
+ * Deterministic paths for 1st and 2nd place finishers.
+ * 3rd place paths depend on which 8 third-place teams qualify.
  */
 export const knockoutPathTemplates: KnockoutPathTemplate[] = [
     // ============ Group A ============
@@ -96,29 +96,29 @@ export const knockoutPathTemplates: KnockoutPathTemplate[] = [
 ];
 
 /**
- * 第3名晋级路径映射
+ * Third-place advancement path mapping
  * 
- * 第3名的路径取决于哪8支第3名球队晋级（从12组中选8支）
- * FIFA 官方有详细的配对规则表
+ * Third-place paths depend on which 8 third-place teams qualify (from 12 groups).
+ * FIFA has detailed pairing rules for this.
  * 
- * 以下是各组第3名可能进入的 R32 比赛：
- * - 3A: 可能进入 R32_74 或 R32_82
- * - 3B: 可能进入 R32_74 或 R32_81
- * - 3C: 可能进入 R32_74, R32_77, R32_79
- * - 3D: 可能进入 R32_77, R32_81, R32_87
- * - 3E: 可能进入 R32_74, R32_79, R32_80, R32_81, R32_85
- * - 3F: 可能进入 R32_74, R32_77, R32_79, R32_81, R32_85
- * - 3G: 可能进入 R32_77, R32_82, R32_85
- * - 3H: 可能进入 R32_77, R32_79, R32_80, R32_82
- * - 3I: 可能进入 R32_77, R32_79, R32_80, R32_81, R32_82, R32_85, R32_87
- * - 3J: 可能进入 R32_80, R32_81, R32_82, R32_85, R32_87
- * - 3K: 可能进入 R32_80, R32_87
- * - 3L: 可能进入 R32_87
+ * Possible R32 entries for each group's 3rd place team:
+ * - 3A: R32_74 or R32_82
+ * - 3B: R32_74 or R32_81
+ * - 3C: R32_74, R32_77, or R32_79
+ * - 3D: R32_77, R32_81, or R32_87
+ * - 3E: R32_74, R32_79, R32_80, R32_81, or R32_85
+ * - 3F: R32_74, R32_77, R32_79, R32_81, or R32_85
+ * - 3G: R32_77, R32_82, or R32_85
+ * - 3H: R32_77, R32_79, R32_80, or R32_82
+ * - 3I: R32_77, R32_79, R32_80, R32_81, R32_82, R32_85, or R32_87
+ * - 3J: R32_80, R32_81, R32_82, R32_85, or R32_87
+ * - 3K: R32_80 or R32_87
+ * - 3L: R32_87
  * 
- * 由于组合复杂，此处提供最可能的路径（基于典型晋级组合）
+ * Due to the complexity of combinations, we provide the most likely path
+ * (based on a typical qualification scenario).
  */
 export const thirdPlacePathTemplates: KnockoutPathTemplate[] = [
-    // 示例：假设 ABCDEF 组的第3名晋级（一种常见组合）
     { groupId: "A", position: 3, path: ["R32_82", "R16_94", "QF_98", "SF_101", "F_104"], description: "3A → Seattle → Seattle → Los Angeles → Dallas → New York" },
     { groupId: "B", position: 3, path: ["R32_74", "R16_89", "QF_97", "SF_101", "F_104"], description: "3B → Boston → Philadelphia → Boston → Dallas → New York" },
     { groupId: "C", position: 3, path: ["R32_79", "R16_92", "QF_99", "SF_102", "F_104"], description: "3C → Mexico City → Mexico City → Miami → Atlanta → New York" },
@@ -134,7 +134,7 @@ export const thirdPlacePathTemplates: KnockoutPathTemplate[] = [
 ];
 
 /**
- * 获取指定小组和名次的晋级路径
+ * Get the knockout path for a specific group and position.
  */
 export function getKnockoutPath(groupId: string, position: 1 | 2 | 3): KnockoutPathTemplate | undefined {
     if (position === 3) {
@@ -144,7 +144,7 @@ export function getKnockoutPath(groupId: string, position: 1 | 2 | 3): KnockoutP
 }
 
 /**
- * 获取指定小组所有可能的晋级路径
+ * Get all possible knockout paths for a given group.
  */
 export function getGroupPaths(groupId: string): KnockoutPathTemplate[] {
     const mainPaths = knockoutPathTemplates.filter(t => t.groupId === groupId);

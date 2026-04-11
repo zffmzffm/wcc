@@ -44,5 +44,5 @@ export interface FlightSegment {
 }
 
 // Knockout stage types for elimination rounds
-// 3P = Third Place Match (季军赛)
+// 3P = Third Place Match
 export type KnockoutStage = 'R32' | 'R16' | 'QF' | 'SF' | 'F' | '3P';

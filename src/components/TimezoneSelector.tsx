@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { memo } from 'react';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface TimezoneSelectorProps {
     selectedTimezone: string | null;
@@ -33,15 +34,8 @@ const timezones = [
     { value: 'Pacific/Auckland', label: 'New Zealand (NZST, UTC+12)', offset: '+12' },
 ];
 
-export default function TimezoneSelector({ selectedTimezone, onSelect }: TimezoneSelectorProps) {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth <= 600);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
+const TimezoneSelector = memo(function TimezoneSelector({ selectedTimezone, onSelect }: TimezoneSelectorProps) {
+    const isMobile = useIsMobile();
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
@@ -109,6 +103,8 @@ export default function TimezoneSelector({ selectedTimezone, onSelect }: Timezon
             </div>
         </div>
     );
-}
+});
+
+export default TimezoneSelector;
 
 export { timezones };

@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import {
-    formatDateTime,
     formatDateTimeWithTimezone,
     formatDateTimeShort,
     getTeamDisplay,
@@ -10,24 +9,7 @@ import {
 } from '@/utils/formatters';
 
 describe('formatters', () => {
-    describe('formatDateTime', () => {
-        it('should return date and time object', () => {
-            const datetime = '2026-06-11T14:30:00-04:00';
-            const result = formatDateTime(datetime);
 
-            expect(result).toHaveProperty('date');
-            expect(result).toHaveProperty('time');
-            expect(result.date).toBeTruthy();
-            expect(result.time).toBeTruthy();
-        });
-
-        it('should format date with month and day', () => {
-            const datetime = '2026-06-11T14:30:00-04:00';
-            const result = formatDateTime(datetime);
-
-            expect(result.date).toContain('Jun');
-        });
-    });
 
     describe('formatDateTimeWithTimezone', () => {
         it('should return date and time object', () => {

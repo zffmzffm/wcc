@@ -13,11 +13,11 @@
 /* Sidebar layouts and venue cards */
 @import "../styles/sidebar.css";
 
-/* Map container, markers, flight paths */
+/* Map elements and popups */
 @import "../styles/map.css";
-
-/* Popup/modal and match list styles */
 @import "../styles/popup.css";
+@import "../styles/matchday-labels.css";
+
 
 /* Responsive design, dark mode, reduced motion */
 @import "../styles/responsive.css";

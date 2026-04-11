@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Inter } from 'next/font/google';
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   title: "Visualize 2026 Soccer - One Map for All Matches & Cities | Cup26Map",
@@ -183,15 +190,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://basemaps.cartocdn.com" />
         <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
 
-        {/* Preconnect for fonts (existing) */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
         {/* Preconnect for frequently used CDNs */}
         <link rel="preconnect" href="https://flagcdn.com" crossOrigin="anonymous" />
-
-        {/* Load fonts */}
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
@@ -206,8 +206,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="antialiased"
-        style={{ fontFamily: "'Inter', sans-serif" }}
+        className={`antialiased ${inter.variable}`}
+        style={{ fontFamily: "var(--font-inter), sans-serif" }}
       >
         <a href="#main-content" className="skip-link">
           Skip to main content

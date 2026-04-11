@@ -1,11 +1,13 @@
 'use client';
-import { useMemo, useEffect, useCallback, useState } from 'react';
+import { useMemo, useEffect, useCallback } from 'react';
 import { Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { Match, City, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
+import { getDayDifference } from '@/utils/dateUtils';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { STAGE_NAMES } from '@/constants';
 
 interface MatchDayLabelsProps {
@@ -30,15 +32,7 @@ export default function MatchDayLabels({
 }: MatchDayLabelsProps) {
     const map = useMap();
     const { setHoveredMatchId } = useHoverMatch();
-
-    // Detect mobile for compact styles - use state to avoid SSR hydration issues
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth <= 600);
-        checkMobile(); // Initial check
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
+    const isMobile = useIsMobile();
 
     // Handle hover events on match rows in the labels
     const handleMouseOver = useCallback((e: MouseEvent) => {
@@ -108,193 +102,63 @@ export default function MatchDayLabels({
                     (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
                 );
 
-                // Create custom icon with match info
-                // Use compact styles on mobile
                 const matchCount = sortedMatches.length + sortedKnockout.length;
-                const styles = {
-                    container: {
-                        borderRadius: isMobile ? '8px' : '12px',
-                        minWidth: isMobile ? '110px' : '160px',
-                    },
-                    header: {
-                        padding: isMobile ? '4px 6px 3px' : '6px 10px 5px',
-                        gap: isMobile ? '4px' : '6px',
-                    },
-                    headerIcon: isMobile ? '11px' : '16px',
-                    headerText: isMobile ? '10px' : '14px',
-                    content: {
-                        padding: isMobile ? '3px 6px 4px' : '5px 10px 6px',
-                    },
-                    row: {
-                        fontSize: isMobile ? '9px' : '11px',
-                        gap: isMobile ? '4px' : '8px',
-                        padding: isMobile ? '2px 3px' : '3px 4px',
-                        marginBottom: isMobile ? '2px' : '3px',
-                    },
-                    time: {
-                        fontSize: isMobile ? '8px' : '11px',
-                        minWidth: isMobile ? '32px' : '42px',
-                        padding: isMobile ? '1px 4px' : '2px 6px',
-                    },
-                    teams: {
-                        gap: isMobile ? '3px' : '6px',
-                    },
-                    vs: {
-                        fontSize: isMobile ? '7px' : '9px',
-                        padding: isMobile ? '0px 2px' : '1px 4px',
-                    },
-                };
-
+                
                 const labelIcon = L.divIcon({
-                    className: 'match-day-label',
+                    className: 'custom-match-label',
                     html: `
-                        <div style="
-                            position: relative;
-                            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,247,245,0.9) 100%);
-                            backdrop-filter: blur(12px);
-                            -webkit-backdrop-filter: blur(12px);
-                            border-radius: ${styles.container.borderRadius};
-                            padding: 0;
-                            box-shadow: 
-                                0 8px 32px rgba(45,90,61,0.15),
-                                0 2px 8px rgba(0,0,0,0.08),
-                                inset 0 1px 0 rgba(255,255,255,0.8);
-                            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                            min-width: ${styles.container.minWidth};
-                            overflow: hidden;
-                            border: 1px solid rgba(45,90,61,0.12);
-                        ">
+                        <div class="match-day-label-container">
                             <!-- Header with city name -->
-                            <div style="
-                                padding: ${styles.header.padding};
-                                display: flex;
-                                align-items: center;
-                                gap: ${styles.header.gap};
-                                background: #E8EDE8;
-                                border-bottom: 1px solid rgba(45,90,61,0.12);
-                            ">
-                                <span style="font-size: ${styles.headerIcon};">📍</span>
-                                <div style="
-                                    font-weight: 700;
-                                    font-size: ${styles.headerText};
-                                    color: #2D3A2D;
-                                    letter-spacing: -0.3px;
-                                ">${city.name}</div>
+                            <div class="match-day-label-header">
+                                <span>📍</span>
+                                <div>${city.name}</div>
                             </div>
                             
                             <!-- Match list -->
-                            <div style="padding: ${styles.content.padding};">
+                            <div class="match-day-label-content">
                                 ${sortedMatches.slice(0, 3).map(m => {
                         const team1 = getTeamDisplay(m.team1, teams);
                         const team2 = getTeamDisplay(m.team2, teams);
                         const { time } = formatDateTimeWithTimezone(m.datetime, timezone);
+                        const dayDiff = getDayDifference(m.datetime, timezone);
+                        const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
                         return `
-                                    <div 
-                                        data-match-id="${m.id}"
-                                        class="match-label-row"
-                                        style="
-                                            font-size: ${styles.row.fontSize};
-                                            color: #2D3A2D;
-                                            margin-bottom: ${styles.row.marginBottom};
-                                            display: flex;
-                                            align-items: center;
-                                            gap: ${styles.row.gap};
-                                            padding: ${styles.row.padding};
-                                            border-radius: 4px;
-                                            cursor: pointer;
-                                            transition: background 0.15s ease;
-                                        "
-                                    >
-                                        <span style="
-                                            color: #3D7A53;
-                                            font-weight: 700;
-                                            font-size: ${styles.time.fontSize};
-                                            min-width: ${styles.time.minWidth};
-                                            padding: ${styles.time.padding};
-                                            background: rgba(45,90,61,0.08);
-                                            border-radius: 4px;
-                                            text-align: center;
-                                        ">${time}</span>
-                                        <span style="
-                                            font-weight: 600;
-                                            color: #5A6B5A;
-                                            display: flex;
-                                            align-items: center;
-                                            gap: ${styles.teams.gap};
-                                        ">
-                                            <span style="color: #2D3A2D;">${team1.code}</span>
-                                            <span style="
-                                                font-size: ${styles.vs.fontSize};
-                                                color: #8A9B8A;
-                                                font-weight: 700;
-                                                padding: ${styles.vs.padding};
-                                                background: rgba(45,90,61,0.06);
-                                                border-radius: 3px;
-                                            ">VS</span>
-                                            <span style="color: #2D3A2D;">${team2.code}</span>
+                                    <div data-match-id="${m.id}" class="match-day-label-row">
+                                        <span class="match-day-label-time">${timeDisplay}</span>
+                                        <span class="match-day-label-teams">
+                                            <span class="match-day-label-team-code">${team1.code}</span>
+                                            <span class="match-day-label-vs">VS</span>
+                                            <span class="match-day-label-team-code">${team2.code}</span>
                                         </span>
                                     </div>
                                 `;
                     }).join('')}
                                 ${sortedKnockout.slice(0, 2).map(v => {
                         const { time } = formatDateTimeWithTimezone(v.datetime, timezone);
+                        const dayDiff = getDayDifference(v.datetime, timezone);
+                        const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
                         const matchupParts = (v.matchup || 'TBD vs TBD').split(' vs ');
                         return `
-                                    <div style="
-                                        font-size: ${styles.row.fontSize};
-                                        color: #2D3A2D;
-                                        margin-bottom: ${styles.row.marginBottom};
-                                        display: flex;
-                                        align-items: center;
-                                        gap: ${styles.row.gap};
-                                        padding: ${styles.row.padding};
-                                    ">
-                                        <span style="
-                                            color: #3D7A53;
-                                            font-weight: 700;
-                                            font-size: ${styles.time.fontSize};
-                                            min-width: ${styles.time.minWidth};
-                                            padding: ${styles.time.padding};
-                                            background: rgba(45,90,61,0.08);
-                                            border-radius: 4px;
-                                            text-align: center;
-                                        ">${time}</span>
-                                        <span style="
-                                            font-weight: 600;
-                                            color: #5A6B5A;
-                                            display: flex;
-                                            align-items: center;
-                                            gap: ${styles.teams.gap};
-                                        ">
-                                            <span style="color: #2D3A2D;">${matchupParts[0]}</span>
-                                            <span style="
-                                                font-size: ${styles.vs.fontSize};
-                                                color: #8A9B8A;
-                                                font-weight: 700;
-                                                padding: ${styles.vs.padding};
-                                                background: rgba(45,90,61,0.06);
-                                                border-radius: 3px;
-                                            ">VS</span>
-                                            <span style="color: #2D3A2D;">${matchupParts[1] || 'TBD'}</span>
+                                    <div class="match-day-label-row">
+                                        <span class="match-day-label-time">${timeDisplay}</span>
+                                        <span class="match-day-label-teams">
+                                            <span class="match-day-label-team-code">${matchupParts[0] || 'TBD'}</span>
+                                            <span class="match-day-label-vs">VS</span>
+                                            <span class="match-day-label-team-code">${matchupParts[1] || 'TBD'}</span>
                                         </span>
                                     </div>
                                 `;
                     }).join('')}
                                 ${matchCount > 3 ? `
-                                    <div style="
-                                        font-size: ${styles.vs.fontSize};
-                                        color: #8A9B8A;
-                                        font-weight: 500;
-                                        margin-top: 2px;
-                                        padding-top: ${isMobile ? '2px' : '4px'};
-                                        border-top: 1px dashed rgba(45,90,61,0.1);
-                                    ">+${matchCount - 3} more</div>
+                                    <div style="font-size: 9px; color: #8A9B8A; font-weight: 500; margin-top: 2px; padding-top: 2px; border-top: 1px dashed rgba(45,90,61,0.1);">
+                                        +${matchCount - 3} more
+                                    </div>
                                 ` : ''}
                             </div>
                         </div>
                     `,
-                    iconSize: isMobile ? [120, 70] : [180, 100],
-                    iconAnchor: isMobile ? [-10, 35] : [-20, 50],  // Offset to the right of the city marker
+                    iconSize: [0, 0], // CSS handles size
+                    iconAnchor: isMobile ? [-10, 35] : [-20, 50],
                 });
 
                 return (

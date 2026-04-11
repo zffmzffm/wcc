@@ -140,7 +140,7 @@
         "team1": "BRA",
         "team2": "HAI",
         "cityId": "philadelphia",
-        "datetime": "2026-06-19T21:00:00-04:00",
+        "datetime": "2026-06-19T20:30:00-04:00",
         "stage": "group"
     },
     {
@@ -194,7 +194,7 @@
         "team1": "TUR",
         "team2": "PAR",
         "cityId": "san_francisco",
-        "datetime": "2026-06-20T00:00:00-04:00",
+        "datetime": "2026-06-19T23:00:00-04:00",
         "stage": "group"
     },
     {

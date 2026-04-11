@@ -15,18 +15,18 @@ interface CityMarkerProps {
 // Custom label directions for crowded city clusters to avoid overlap
 const labelConfig: Record<string, { direction: 'top' | 'bottom' | 'left' | 'right'; offset: [number, number] }> = {
     // Vancouver & Seattle cluster — spread vertically
-    'vancouver':     { direction: 'top',    offset: [0, -14] },
-    'seattle':       { direction: 'right',  offset: [14, 0] },
+    'vancouver':     { direction: 'top',    offset: [0, -4] },
+    'seattle':       { direction: 'right',  offset: [4, 0] },
     // Boston / New York / Philadelphia cluster — spread in different directions
-    'boston':         { direction: 'right',  offset: [14, 0] },
-    'new_york':      { direction: 'right',  offset: [14, 0] },
-    'philadelphia':  { direction: 'bottom', offset: [0, 14] },
+    'boston':         { direction: 'right',  offset: [4, 0] },
+    'new_york':      { direction: 'right',  offset: [4, 0] },
+    'philadelphia':  { direction: 'bottom', offset: [0, 4] },
     // Guadalajara & Mexico City cluster
-    'guadalajara':   { direction: 'left',   offset: [-14, 0] },
-    'mexico_city':   { direction: 'right',  offset: [14, 0] },
+    'guadalajara':   { direction: 'left',   offset: [-4, 0] },
+    'mexico_city':   { direction: 'right',  offset: [4, 0] },
 };
 
-const defaultLabelConfig = { direction: 'top' as const, offset: [0, -14] as [number, number] };
+const defaultLabelConfig = { direction: 'top' as const, offset: [0, -4] as [number, number] };
 
 export default function CityMarker({ city, onClick, isDimmed = false, isSelected = false, showLabel = false }: CityMarkerProps) {
     const color = getCountryColor(city.country);
@@ -46,20 +46,12 @@ export default function CityMarker({ city, onClick, isDimmed = false, isSelected
 
     // Memoize icon creation to avoid recreating on every render
     const customIcon = useMemo(() => {
-        const flashStyles = isFlashing ? `
-            animation: markerFlash 0.5s ease-in-out 3;
-        ` : '';
+        const flashClass = isFlashing ? 'marker-flashing' : '';
 
         return L.divIcon({
             className: 'custom-marker',
             html: `
-                <style>
-                    @keyframes markerFlash {
-                        0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
-                        50% { transform: scale(1.4); box-shadow: 0 0 20px 8px ${color}88; }
-                    }
-                </style>
-                <div style="
+                <div class="${flashClass}" style="
                     background: ${color};
                     width: 24px;
                     height: 24px;
@@ -69,7 +61,6 @@ export default function CityMarker({ city, onClick, isDimmed = false, isSelected
                     cursor: pointer;
                     transition: transform 0.2s ease, opacity 0.3s ease;
                     opacity: ${opacity};
-                    ${flashStyles}
                 "></div>
             `,
             iconSize: [24, 24],

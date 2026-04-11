@@ -77,6 +77,16 @@
     display: none !important;
 }
 
+/* City marker flash animation (triggered on selection) */
+@keyframes markerFlash {
+    0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+    50% { transform: scale(1.4); box-shadow: 0 0 20px 8px rgba(0,0,0,0.25); }
+}
+
+.marker-flashing {
+    animation: markerFlash 0.5s ease-in-out 3;
+}
+
 /* Match day label hover styles */
 .match-label-row {
     margin: -3px -10px !important;
