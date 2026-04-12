@@ -117,6 +117,13 @@ export default function Home() {
     }
   }, [handleCitySelect]);
 
+  // Reset all selections
+  const handleReset = useCallback(() => {
+    setSelectedCity(null);
+    setSelectedTeam(null);
+    setSelectedDay(null);
+  }, [setSelectedCity, setSelectedTeam, setSelectedDay]);
+
   return (
     <LayerVisibilityProvider>
       <HoverMatchProvider>
@@ -125,7 +132,7 @@ export default function Home() {
           <a href="#main-map" className="skip-link">
             Skip to map
           </a>
-          <Header>
+          <Header onReset={handleReset}>
             <TimezoneSelector
               selectedTimezone={selectedTimezone}
               onSelect={handleTimezoneSelect}

@@ -131,7 +131,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                     {/* Knockout Stage Section with Tabs */}
                     {knockoutPaths.length > 0 && (
                         <>
-                            <h3 className="schedule-section-title knockout-title">Knockout Stage</h3>
+                            <h3 className="schedule-section-title knockout-title">Knockout Stage (Scenarios)</h3>
 
                             {/* Tab Buttons - Index Card Style */}
                             <div className="knockout-tabs" role="tablist">

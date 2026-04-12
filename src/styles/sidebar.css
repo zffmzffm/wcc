@@ -9,11 +9,8 @@
     flex-shrink: 0;
     /* Squircle effect */
     border-radius: 24px;
-    /* Soft shadow */
-    box-shadow:
-        8px 8px 16px rgba(45, 90, 61, 0.12),
-        -8px -8px 16px rgba(255, 255, 255, 0.9),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    /* Faded container - no visible border/shadow */
+    box-shadow: none;
 }
 
 .sidebar-placeholder {
@@ -24,13 +21,29 @@
     justify-content: center;
     color: var(--text-secondary);
     text-align: center;
-    padding: 2rem;
+    padding: 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Abstract subtle background for the placeholder */
+.sidebar-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    opacity: 0.85; /* Slightly increased for visibility of the subtle shadows */
+    /* Layered fluid wave pattern inspired by the reference image */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1400' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='s' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeDropShadow dx='-5' dy='5' stdDeviation='15' flood-opacity='0.04' flood-color='%232D5A3D'/%3E%3CfeDropShadow dx='2' dy='-2' stdDeviation='4' flood-opacity='0.8' flood-color='%23ffffff'/%3E%3C/filter%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23F5F8F5' /%3E%3Cstop offset='100%25' stop-color='%23E1E9E1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23bg)' /%3E%3Cpath fill='%23E9EFE9' filter='url(%23s)' d='M1000,0 C600,100 800,700 0,900 L0,1400 L1000,1400 Z' /%3E%3Cpath fill='%23DFE7DF' filter='url(%23s)' d='M1000,400 C700,450 600,900 0,1100 L0,1400 L1000,1400 Z' /%3E%3Cpath fill='%23D5DFD5' filter='url(%23s)' d='M1000,800 C800,850 500,1200 0,1300 L0,1400 L1000,1400 Z' /%3E%3Cpath fill='%23C9D6C9' filter='url(%23s)' d='M1000,1100 C900,1150 700,1350 200,1400 L1000,1400 Z' /%3E%3Cpath fill='%23EAEFEA' filter='url(%23s)' d='M0,0 L600,0 C400,200 100,200 0,600 Z' /%3E%3Cpath fill='%23E1EAE1' filter='url(%23s)' d='M0,0 L300,0 C200,100 50,150 0,300 Z' /%3E%3C/svg%3E");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
 }
 
 .sidebar-placeholder-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1.25rem;
-    opacity: 0.85;
+    font-size: 4.5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -38,13 +51,14 @@
 }
 
 .sidebar-placeholder p {
-    margin: 0.25rem 0;
-    font-size: 0.9rem;
+    margin: 0.35rem 0;
+    font-size: 1rem;
     color: var(--text-secondary);
 }
 
 .sidebar-placeholder p:first-of-type {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.15rem;
     color: var(--text-primary);
 }
 
@@ -54,11 +68,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.25rem;
-    margin: 12px;
+    margin: 0;
     background: var(--accent);
     color: var(--text-primary);
     position: sticky;
-    top: 12px;
+    top: 0;
     z-index: 10;
     border-radius: 16px;
 }
@@ -114,7 +128,7 @@
 
 /* Venue card - Info + Image merged */
 .sidebar-venue-card {
-    margin: 0 12px;
+    margin: 0;
     background: var(--accent-light);
     border-radius: 12px;
     overflow: hidden;
@@ -159,7 +173,7 @@
 }
 
 .sidebar-venue-card-compact {
-    margin: 0 12px 8px;
+    margin: 0 0 8px;
     background: var(--accent-light);
     border-radius: 10px;
     padding: 8px;
@@ -194,12 +208,12 @@
 }
 
 .sidebar-matches-compact {
-    padding: 0.5rem 12px 1rem !important;
+    padding: 0.5rem 0 1rem !important;
 }
 
 /* Match list area */
 .sidebar-matches {
-    padding: 0.5rem 12px 1rem;
+    padding: 0.5rem 0 1rem;
 }
 
 .sidebar-matches h3 {

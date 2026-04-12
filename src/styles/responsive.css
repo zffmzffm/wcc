@@ -16,6 +16,18 @@
         gap: 0;
     }
 
+    .header-brand-desktop {
+        display: none;
+    }
+
+    .header-brand-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        width: 100%;
+    }
+
     .header-logo {
         display: none;
     }
@@ -367,18 +379,22 @@
 
     /* Mobile sidebar placeholder - compact styling */
     .sidebar-placeholder {
-        padding: 1rem;
+        padding: 1.5rem 1rem;
         height: auto;
         min-height: 100%;
     }
 
     .sidebar-placeholder-icon {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
+        font-size: 3rem;
+        margin-bottom: 1rem;
     }
 
     .sidebar-placeholder p {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-placeholder p:first-of-type {
+        font-size: 1rem;
     }
 
     /* On mobile, add "or team" to the placeholder text via CSS */

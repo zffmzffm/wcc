@@ -32,6 +32,17 @@
     margin-left: 0;
 }
 
+.header-brand-desktop {
+    display: block;
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+}
+
+.header-brand-mobile {
+    display: none;
+}
+
 .header-logo {
     font-size: 1.75rem;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
