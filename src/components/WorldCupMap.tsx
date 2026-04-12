@@ -196,8 +196,9 @@ function MapContent({
                     city={city}
                     onClick={() => onCitySelect(city)}
                     isDimmed={
-                        (selectedTeam !== null && !allHighlightedCityIds.has(city.id)) ||
-                        (selectedDay !== null && !dayCityIds.has(city.id))
+                        selectedTeam !== null
+                            ? !allHighlightedCityIds.has(city.id)
+                            : (selectedDay !== null && !dayCityIds.has(city.id))
                     }
                     isSelected={selectedCity?.id === city.id}
                     showLabel={selectedTeam === null && selectedDay === null}

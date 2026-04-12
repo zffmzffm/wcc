@@ -134,7 +134,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin: -1rem -1rem 0.5rem -1rem;
+    padding: 0.625rem 1rem;
+    background: var(--accent-light);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .match-group {

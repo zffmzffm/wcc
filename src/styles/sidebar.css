@@ -243,6 +243,10 @@
         -4px -4px 8px rgba(255, 255, 255, 0.9);
 }
 
+.sidebar-matches .match-header {
+    border-radius: 16px 16px 0 0;
+}
+
 .sidebar-matches .match-item:hover,
 .sidebar-matches .match-item.match-item-hovered {
     background: var(--accent-light);
@@ -284,9 +288,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    margin: -0.75rem -0.75rem 0.5rem -0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--accent-light);
+    border-radius: 16px 16px 0 0;
     font-size: 0.75rem;
 }
 

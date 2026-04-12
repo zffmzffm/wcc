@@ -96,9 +96,9 @@ body {
 .content-wrapper {
     display: flex;
     flex: 1;
-    margin-top: 88px;
-    height: calc(100vh - 88px);
-    padding: 12px;
+    margin-top: 80px;
+    height: calc(100vh - 80px);
+    padding: 4px 12px 12px 12px;
     gap: 12px;
 }
 
