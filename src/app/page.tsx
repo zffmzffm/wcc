@@ -9,6 +9,7 @@ import TimezoneSelector from '@/components/TimezoneSelector';
 import CitySidebar from '@/components/CitySidebar';
 import TeamScheduleSidebar from '@/components/TeamScheduleSidebar';
 import Footer from '@/components/Footer';
+import SeoContent from '@/components/SeoContent';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { LayerVisibilityProvider } from '@/contexts/LayerVisibilityContext';
 import { HoverMatchProvider } from '@/contexts/HoverMatchContext';
@@ -198,6 +199,7 @@ export default function Home() {
               <Footer />
             </div>
           </div>
+          <SeoContent />
         </main>
       </HoverMatchProvider>
     </LayerVisibilityProvider>

@@ -19,13 +19,13 @@ const Header = memo(function Header({ children, onReset }: HeaderProps) {
                 style={{ cursor: 'pointer' }}
             >
                 {/* Desktop Version: Image Logo */}
-                <img src="/header-logo.png" alt="CUP26MAP Logo" className="header-brand-desktop" />
+                <img src="/header-logo.png" alt="Cup26Map – World Cup 2026 Schedule & Interactive Map" className="header-brand-desktop" />
 
                 {/* Mobile Version: Text and Trophy */}
                 <div className="header-brand-mobile">
                     <span className="header-logo" aria-hidden="true">🏆</span>
                     <div className="header-title">
-                        <h1>CUP26MAP</h1>
+                        <h1><span className="header-brand-name">CUP26MAP</span> <span className="sr-only">– World Cup 2026 Schedule & Map</span></h1>
                         <span className="header-tagline">16 Cities • 48 Teams • 39 Days • One Map</span>
                     </div>
                 </div>

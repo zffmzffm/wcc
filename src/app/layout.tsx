@@ -9,48 +9,56 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Visualize 2026 Soccer - One Map for All Matches & Cities | Cup26Map",
-  description: "Your ultimate guide to 2026 FIFA World Cup in USA, Mexico & Canada. Interactive map with host cities, stadiums, match schedules, team flight paths, and timezone converter. Plan your World Cup journey now!",
+  title: "World Cup 2026 Schedule & Map – All 104 Matches, 16 Cities | Cup26Map",
+  description: "Interactive World Cup 2026 schedule map with all 104 matches across 16 host cities in USA, Mexico & Canada. Filter by team, city, or match day. View stadiums, kickoff times with timezone converter, and team travel paths. The ultimate 2026 World Cup fan guide.",
   keywords: [
+    // Primary Target Keywords (highest search volume)
+    "World Cup Schedule 2026",
+    "World Cup 2026 Map",
+    "World Cup Schedule 2026 Map",
+    "2026 World Cup Schedule",
     // Core Keywords
-    "2026 FIFA World Cup",
     "World Cup 2026",
     "FIFA World Cup 2026",
-    "Soccer Fan Guide",
-    "World Cup Schedule 2026",
     "World Cup Match Schedule",
+    "World Cup 2026 Fixtures",
+    // Map & Interactive Keywords
+    "World Cup Map",
+    "World Cup Interactive Map",
+    "World Cup 2026 Interactive Map",
+    "World Cup Venue Map",
+    "World Cup Cities Map",
     // Feature Keywords
-    "World Cup 2026 venues",
-    "World Cup 2026 cities",
-    "World Cup 2026 stadiums",
-    "World Cup 2026 match finder",
-    "World Cup team tracker",
-    "World Cup flight paths",
+    "World Cup 2026 Venues",
+    "World Cup 2026 Cities",
+    "World Cup 2026 Stadiums",
+    "World Cup 2026 Match Finder",
+    "World Cup Team Tracker",
+    "World Cup Flight Paths",
     // Location Keywords
     "USA Mexico Canada World Cup",
     "North America World Cup 2026",
-    "World Cup host cities 2026",
+    "World Cup Host Cities 2026",
     // Fan & Travel Keywords
-    "World Cup travel guide",
-    "World Cup fan guide",
-    "World Cup planner 2026",
-    "World Cup games schedule",
+    "World Cup Travel Guide",
+    "World Cup Fan Guide 2026",
+    "World Cup Planner 2026",
+    "World Cup Games Schedule",
     // Tool Keywords
-    "World Cup map",
-    "World Cup interactive map",
-    "World Cup timezone converter",
+    "World Cup Timezone Converter",
+    "World Cup Kickoff Times",
     // General Sports
     "Soccer",
     "Football",
-    "FIFA",
+
   ],
   metadataBase: new URL('https://cup26map.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: "Visualize 2026 Soccer - One Map for All Matches & Cities | Cup26Map",
-    description: "Your ultimate guide to 2026 Soccer in USA, Mexico & Canada. Interactive map with host cities, stadiums, match schedules, team flight paths, and timezone converter.",
+    title: "World Cup 2026 Schedule & Map – All 104 Matches in 16 Cities | Cup26Map",
+    description: "Interactive World Cup 2026 schedule map with all matches across 16 host cities in USA, Mexico & Canada. Filter by team, city, or match day with timezone converter.",
     type: "website",
     locale: "en_US",
     siteName: "Cup26Map",
@@ -60,15 +68,15 @@ export const metadata: Metadata = {
         url: 'https://cup26map.com/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: '2026 World Cup: The Travel Disparity - Compare Team Journeys & Explore Host Cities',
+        alt: 'World Cup 2026 Schedule Map – Interactive map showing all 16 host cities and match schedules across USA, Mexico, and Canada',
         type: 'image/jpeg',
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Visualize 2026 Soccer - One Map for All Matches & Cities",
-    description: "Interactive map & schedule for 2026 Soccer in USA, Mexico & Canada",
+    title: "World Cup 2026 Schedule & Map – All 104 Matches, 16 Cities",
+    description: "Interactive map & schedule for World Cup 2026 in USA, Mexico & Canada. Find matches by team, city, or date.",
     creator: "@duo_yj",
     images: ['https://cup26map.com/og-image.jpg'],
   },
@@ -87,12 +95,14 @@ export default function RootLayout({
   const webAppJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'Cup26Map',
-    description: 'Your ultimate guide to 2026 FIFA World Cup in USA, Mexico & Canada. Interactive map with host cities, stadiums, match schedules, team flight paths, and timezone converter.',
+    name: 'Cup26Map – World Cup 2026 Schedule & Map',
+    description: 'Interactive World Cup 2026 schedule map with all 104 matches across 16 host cities in USA, Mexico & Canada. Filter by team, city, or match day with timezone converter.',
     applicationCategory: 'SportsApplication',
     operatingSystem: 'Web',
     url: 'https://cup26map.com',
-    keywords: '2026 FIFA World Cup, World Cup 2026, FIFA World Cup 2026, World Cup Schedule, World Cup Map, Soccer, Football',
+    keywords: 'World Cup Schedule 2026, World Cup 2026 Map, World Cup Schedule 2026 Map, World Cup Interactive Map, 2026 World Cup',
+    screenshot: 'https://cup26map.com/og-image.jpg',
+    featureList: 'Interactive map of 16 host cities, Full 104-match schedule, Team schedule tracker, Match day filter, Timezone converter, Team flight path visualization, Stadium information with images',
     offers: {
       '@type': 'Offer',
       price: '0',
@@ -104,8 +114,8 @@ export default function RootLayout({
   const sportsEventJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SportsEvent',
-    name: '2026 FIFA World Cup',
-    description: 'The 23rd FIFA World Cup, hosted jointly by United States, Mexico, and Canada featuring 48 teams.',
+    name: '2026 World Cup',
+    description: 'The 23rd edition of the World Cup, hosted jointly by United States, Mexico, and Canada featuring 48 teams.',
     image: 'https://cup26map.com/og-image.jpg',
     startDate: '2026-06-11',
     endDate: '2026-07-19',
@@ -146,10 +156,18 @@ export default function RootLayout({
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'When does the 2026 FIFA World Cup start?',
+        name: 'When does the 2026 World Cup start?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The 2026 FIFA World Cup starts on June 11, 2026, and ends on July 19, 2026.',
+          text: 'The 2026 World Cup starts on June 11, 2026, and ends on July 19, 2026. The tournament spans 39 days with 104 matches played across 16 host cities.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is the full World Cup 2026 schedule?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The World Cup 2026 schedule includes 104 matches: 48 group stage matches per round (144 total in groups), followed by the Round of 32, Round of 16, Quarter-finals, Semi-finals, Third-place playoff, and the Final on July 19, 2026 at MetLife Stadium. Cup26Map provides an interactive map to browse the complete schedule by city, team, or date.',
         },
       },
       {
@@ -157,7 +175,7 @@ export default function RootLayout({
         name: 'Which countries are hosting the 2026 World Cup?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The 2026 FIFA World Cup will be jointly hosted by the United States, Mexico, and Canada, featuring 16 host cities across the three countries.',
+          text: 'The 2026 World Cup will be jointly hosted by the United States (11 cities), Mexico (3 cities), and Canada (2 cities), featuring 16 host cities across the three countries.',
         },
       },
       {
@@ -165,7 +183,7 @@ export default function RootLayout({
         name: 'How many teams will participate in the 2026 World Cup?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The 2026 World Cup will feature an expanded format with 48 teams, up from the previous 32-team format.',
+          text: 'The 2026 World Cup features an expanded format with 48 teams divided into 12 groups of 4, up from the previous 32-team format.',
         },
       },
       {
@@ -173,8 +191,38 @@ export default function RootLayout({
         name: 'What are the host cities for the 2026 World Cup?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The 16 host cities are: USA - New York/New Jersey, Los Angeles, Dallas, Houston, Miami, Atlanta, Philadelphia, Seattle, San Francisco, Boston, Kansas City; Mexico - Mexico City, Monterrey, Guadalajara; Canada - Vancouver, Toronto.',
+          text: 'The 16 host cities are: USA – New York/New Jersey (MetLife Stadium), Los Angeles (Rose Bowl), Dallas (AT&T Stadium), Houston (NRG Stadium), Miami (Hard Rock Stadium), Atlanta (Mercedes-Benz Stadium), Philadelphia (Lincoln Financial Field), Seattle (Lumen Field), San Francisco (Levi\'s Stadium), Boston (Gillette Stadium), Kansas City (Arrowhead Stadium); Mexico – Mexico City (Estadio Azteca), Monterrey (Estadio BBVA), Guadalajara (Estadio Akron); Canada – Vancouver (BC Place), Toronto (BMO Field).',
         },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is there an interactive map for the 2026 World Cup schedule?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! Cup26Map.com provides a free interactive map showing all 16 World Cup 2026 host cities with complete match schedules. You can filter by team, city, or match day, convert kickoff times to your timezone, and view team travel paths across North America.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where is the 2026 World Cup Final?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The 2026 World Cup Final will be held on July 19, 2026, at MetLife Stadium in East Rutherford, New Jersey (New York/New Jersey metro area), with a capacity of 82,500 spectators.',
+        },
+      },
+    ],
+  };
+
+  // Structured data for SEO - BreadcrumbList
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'World Cup 2026 Schedule & Map',
+        item: 'https://cup26map.com',
       },
     ],
   };
@@ -203,6 +251,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       </head>
       <body

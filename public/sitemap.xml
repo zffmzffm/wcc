@@ -3,12 +3,13 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://cup26map.com/</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://cup26map.com/og-image.jpg</image:loc>
-      <image:title>2026 World Cup Interactive Map - All Host Cities and Match Schedules</image:title>
+      <image:title>World Cup 2026 Schedule Map - Interactive Map of All 16 Host Cities and Match Schedules</image:title>
+      <image:caption>Interactive World Cup 2026 schedule map showing all host cities, stadiums, and matches across USA, Mexico, and Canada</image:caption>
     </image:image>
   </url>
 </urlset>
