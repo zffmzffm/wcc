@@ -92,7 +92,7 @@
     "totalDistance": 6524,
     "groupStageDistance": 1519,
     "knockoutDistance": 4810,
-    "citySequence": "San Francisco Bay Area → Vancouver → Seattle → Vancouver → Vancouver → Kansas City → Atlanta → New York",
+    "citySequence": "San Francisco → Vancouver → Seattle → Vancouver → Vancouver → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -164,7 +164,7 @@
     "totalDistance": 7063,
     "groupStageDistance": 2253,
     "knockoutDistance": 4810,
-    "citySequence": "San Francisco Bay Area → Los Angeles → Vancouver → Vancouver → Vancouver → Kansas City → Atlanta → New York",
+    "citySequence": "San Francisco → Los Angeles → Vancouver → Vancouver → Vancouver → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -212,7 +212,7 @@
     "totalDistance": 7362,
     "groupStageDistance": 505,
     "knockoutDistance": 4542,
-    "citySequence": "Los Angeles → San Francisco Bay Area → San Francisco Bay Area → Dallas → Atlanta → Kansas City → Atlanta → New York",
+    "citySequence": "Los Angeles → San Francisco → San Francisco → Dallas → Atlanta → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -224,7 +224,7 @@
     "totalDistance": 7395,
     "groupStageDistance": 505,
     "knockoutDistance": 6890,
-    "citySequence": "Los Angeles → San Francisco Bay Area → San Francisco Bay Area → San Francisco Bay Area → Seattle → Los Angeles → Dallas → New York",
+    "citySequence": "Los Angeles → San Francisco → San Francisco → San Francisco → Seattle → Los Angeles → Dallas → New York",
     "numCities": 8
   },
   {
@@ -392,7 +392,7 @@
     "totalDistance": 8187,
     "groupStageDistance": 1329,
     "knockoutDistance": 4542,
-    "citySequence": "Vancouver → Seattle → San Francisco Bay Area → Dallas → Atlanta → Kansas City → Atlanta → New York",
+    "citySequence": "Vancouver → Seattle → San Francisco → Dallas → Atlanta → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -404,7 +404,7 @@
     "totalDistance": 8219,
     "groupStageDistance": 1329,
     "knockoutDistance": 6890,
-    "citySequence": "Vancouver → Seattle → San Francisco Bay Area → San Francisco Bay Area → Seattle → Los Angeles → Dallas → New York",
+    "citySequence": "Vancouver → Seattle → San Francisco → San Francisco → Seattle → Los Angeles → Dallas → New York",
     "numCities": 8
   },
   {
@@ -440,7 +440,7 @@
     "totalDistance": 8345,
     "groupStageDistance": 1828,
     "knockoutDistance": 4542,
-    "citySequence": "Vancouver → San Francisco Bay Area → Los Angeles → Dallas → Atlanta → Kansas City → Atlanta → New York",
+    "citySequence": "Vancouver → San Francisco → Los Angeles → Dallas → Atlanta → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -464,7 +464,7 @@
     "totalDistance": 8423,
     "groupStageDistance": 2315,
     "knockoutDistance": 4311,
-    "citySequence": "San Francisco Bay Area → San Francisco Bay Area → Dallas → Miami → Atlanta → Kansas City → Atlanta → New York",
+    "citySequence": "San Francisco → San Francisco → Dallas → Miami → Atlanta → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -824,7 +824,7 @@
     "totalDistance": 9223,
     "groupStageDistance": 1828,
     "knockoutDistance": 6890,
-    "citySequence": "Vancouver → San Francisco Bay Area → Los Angeles → San Francisco Bay Area → Seattle → Los Angeles → Dallas → New York",
+    "citySequence": "Vancouver → San Francisco → Los Angeles → San Francisco → Seattle → Los Angeles → Dallas → New York",
     "numCities": 8
   },
   {
@@ -860,7 +860,7 @@
     "totalDistance": 9336,
     "groupStageDistance": 3054,
     "knockoutDistance": 4311,
-    "citySequence": "San Francisco Bay Area → Dallas → Kansas City → Miami → Atlanta → Kansas City → Atlanta → New York",
+    "citySequence": "San Francisco → Dallas → Kansas City → Miami → Atlanta → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -968,7 +968,7 @@
     "totalDistance": 9871,
     "groupStageDistance": 505,
     "knockoutDistance": 5268,
-    "citySequence": "Los Angeles → San Francisco Bay Area → San Francisco Bay Area → New York → Philadelphia → Boston → Dallas → New York",
+    "citySequence": "Los Angeles → San Francisco → San Francisco → New York → Philadelphia → Boston → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1076,7 +1076,7 @@
     "totalDistance": 10394,
     "groupStageDistance": 3054,
     "knockoutDistance": 7340,
-    "citySequence": "San Francisco Bay Area → Dallas → Kansas City → Kansas City → Vancouver → Kansas City → Atlanta → New York",
+    "citySequence": "San Francisco → Dallas → Kansas City → Kansas City → Vancouver → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -1088,7 +1088,7 @@
     "totalDistance": 10394,
     "groupStageDistance": 2315,
     "knockoutDistance": 7340,
-    "citySequence": "San Francisco Bay Area → San Francisco Bay Area → Dallas → Kansas City → Vancouver → Kansas City → Atlanta → New York",
+    "citySequence": "San Francisco → San Francisco → Dallas → Kansas City → Vancouver → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -1112,7 +1112,7 @@
     "totalDistance": 10501,
     "groupStageDistance": 3106,
     "knockoutDistance": 6890,
-    "citySequence": "Los Angeles → Seattle → Los Angeles → San Francisco Bay Area → Seattle → Los Angeles → Dallas → New York",
+    "citySequence": "Los Angeles → Seattle → Los Angeles → San Francisco → Seattle → Los Angeles → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1148,7 +1148,7 @@
     "totalDistance": 10696,
     "groupStageDistance": 1329,
     "knockoutDistance": 5268,
-    "citySequence": "Vancouver → Seattle → San Francisco Bay Area → New York → Philadelphia → Boston → Dallas → New York",
+    "citySequence": "Vancouver → Seattle → San Francisco → New York → Philadelphia → Boston → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1244,7 +1244,7 @@
     "totalDistance": 11038,
     "groupStageDistance": 1828,
     "knockoutDistance": 5268,
-    "citySequence": "Vancouver → San Francisco Bay Area → Los Angeles → New York → Philadelphia → Boston → Dallas → New York",
+    "citySequence": "Vancouver → San Francisco → Los Angeles → New York → Philadelphia → Boston → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1256,7 +1256,7 @@
     "totalDistance": 11057,
     "groupStageDistance": 1519,
     "knockoutDistance": 5539,
-    "citySequence": "San Francisco Bay Area → Vancouver → Seattle → Boston → Philadelphia → Boston → Dallas → New York",
+    "citySequence": "San Francisco → Vancouver → Seattle → Boston → Philadelphia → Boston → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1268,7 +1268,7 @@
     "totalDistance": 11079,
     "groupStageDistance": 4797,
     "knockoutDistance": 4311,
-    "citySequence": "Kansas City → San Francisco Bay Area → Kansas City → Miami → Atlanta → Kansas City → Atlanta → New York",
+    "citySequence": "Kansas City → San Francisco → Kansas City → Miami → Atlanta → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -1400,7 +1400,7 @@
     "totalDistance": 11816,
     "groupStageDistance": 2253,
     "knockoutDistance": 5539,
-    "citySequence": "San Francisco Bay Area → Los Angeles → Vancouver → Boston → Philadelphia → Boston → Dallas → New York",
+    "citySequence": "San Francisco → Los Angeles → Vancouver → Boston → Philadelphia → Boston → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1460,7 +1460,7 @@
     "totalDistance": 12137,
     "groupStageDistance": 4797,
     "knockoutDistance": 7340,
-    "citySequence": "Kansas City → San Francisco Bay Area → Kansas City → Kansas City → Vancouver → Kansas City → Atlanta → New York",
+    "citySequence": "Kansas City → San Francisco → Kansas City → Kansas City → Vancouver → Kansas City → Atlanta → New York",
     "numCities": 8
   },
   {
@@ -1496,7 +1496,7 @@
     "totalDistance": 12441,
     "groupStageDistance": 2315,
     "knockoutDistance": 8152,
-    "citySequence": "San Francisco Bay Area → San Francisco Bay Area → Dallas → Los Angeles → Dallas → Los Angeles → Dallas → New York",
+    "citySequence": "San Francisco → San Francisco → Dallas → Los Angeles → Dallas → Los Angeles → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1520,7 +1520,7 @@
     "totalDistance": 12569,
     "groupStageDistance": 1519,
     "knockoutDistance": 9497,
-    "citySequence": "San Francisco Bay Area → Vancouver → Seattle → Los Angeles → Houston → Boston → Dallas → New York",
+    "citySequence": "San Francisco → Vancouver → Seattle → Los Angeles → Houston → Boston → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1628,7 +1628,7 @@
     "totalDistance": 13405,
     "groupStageDistance": 3054,
     "knockoutDistance": 8152,
-    "citySequence": "San Francisco Bay Area → Dallas → Kansas City → Los Angeles → Dallas → Los Angeles → Dallas → New York",
+    "citySequence": "San Francisco → Dallas → Kansas City → Los Angeles → Dallas → Los Angeles → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1640,7 +1640,7 @@
     "totalDistance": 13499,
     "groupStageDistance": 2253,
     "knockoutDistance": 9497,
-    "citySequence": "San Francisco Bay Area → Los Angeles → Vancouver → Los Angeles → Houston → Boston → Dallas → New York",
+    "citySequence": "San Francisco → Los Angeles → Vancouver → Los Angeles → Houston → Boston → Dallas → New York",
     "numCities": 8
   },
   {
@@ -1688,7 +1688,7 @@
     "totalDistance": 15149,
     "groupStageDistance": 4797,
     "knockoutDistance": 8152,
-    "citySequence": "Kansas City → San Francisco Bay Area → Kansas City → Los Angeles → Dallas → Los Angeles → Dallas → New York",
+    "citySequence": "Kansas City → San Francisco → Kansas City → Los Angeles → Dallas → Los Angeles → Dallas → New York",
     "numCities": 8
   },
   {
