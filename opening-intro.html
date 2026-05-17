@@ -223,6 +223,10 @@
       <span class="stat-number">0</span>
       <span class="stat-label">Days</span>
     </div>
+    <div class="stat-line" data-target="104">
+      <span class="stat-number">0</span>
+      <span class="stat-label">Matches</span>
+    </div>
     <div id="tagline">
       <span>All in One Map</span>
     </div>
@@ -654,7 +658,7 @@
        =================================================================== */
     function startAutoDemo() {
       autoDemoRunning = true;
-      const SHOW_DURATION = 2000;  // ms each country is shown
+      const SHOW_DURATION = 1000;  // ms each country is shown
       const PAUSE = 400;           // ms gap between countries
       const sequence = [
         { countries: ['Canada'], at: 0 },
@@ -696,8 +700,8 @@
     function startStatsAnimation() {
       const lines = document.querySelectorAll('.stat-line');
       const tagline = document.getElementById('tagline');
-      const STAGGER = 1800;       // ms between each line
-      const COUNT_DURATION = 1600; // ms for number count-up
+      const STAGGER = 1500;       // ms between each line
+      const COUNT_DURATION = 600; // ms for number count-up
 
       lines.forEach((line, i) => {
         const delay = i * STAGGER;
@@ -724,7 +728,7 @@
       // Tagline appears 3s after all stats
       setTimeout(() => {
         tagline.classList.add('visible');
-      }, lines.length * STAGGER + 3400);
+      }, lines.length * STAGGER + 3000);
     }
 
     /* ===================================================================

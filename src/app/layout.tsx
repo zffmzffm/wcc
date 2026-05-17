@@ -10,8 +10,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "World Cup 2026 Schedule & Map – All 104 Matches, 16 Cities | Cup26Map",
-  description: "Interactive World Cup 2026 schedule map with all 104 matches across 16 host cities in USA, Mexico & Canada. Filter by team, city, or match day. View stadiums, kickoff times with timezone converter, and team travel paths. The ultimate 2026 World Cup fan guide.",
+  description: "Cup26Map is your interactive World Cup 2026 schedule map with all 104 matches across 16 host cities in USA, Mexico & Canada. Filter by team, city, or match day. View stadiums, kickoff times with timezone converter, and team travel paths. The ultimate 2026 World Cup fan guide.",
   keywords: [
+    // Brand Keywords
+    "Cup26Map",
+    "cup26map.com",
     // Primary Target Keywords (highest search volume)
     "World Cup Schedule 2026",
     "World Cup 2026 Map",
