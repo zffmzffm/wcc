@@ -1,7 +1,8 @@
 'use client';
 import { CircleMarker, Popup } from 'react-leaflet';
 import { Match, Team, City } from '@/types';
-import { formatDateTimeShort, getCountryColor } from '@/utils/formatters';
+import { formatDateTimeWithTimezone, getCountryColor } from '@/utils/formatters';
+import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
 import { FLIGHT_PATH_CONFIG } from '@/constants';
 import FlagIcon from '../FlagIcon';
 
@@ -15,6 +16,7 @@ interface MatchMarkerProps {
     markerIndex: number;
     isLatest: boolean;
     animationKey: number;
+    timezone: string;
 }
 
 /**
@@ -38,10 +40,14 @@ export default function MatchMarker({
     teams,
     markerIndex,
     isLatest,
-    animationKey
+    animationKey,
+    timezone
 }: MatchMarkerProps) {
     const opponent = getOpponent(match, teamCode, teams);
-    const { date, time } = formatDateTimeShort(match.datetime);
+    const { date: tzDate, time } = formatDateTimeWithTimezone(match.datetime, timezone);
+    const dayDiff = getDayDifference(match.datetime, timezone);
+    const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
+    const date = dayDiff !== 0 ? formatMatchDayDate(match.datetime) : tzDate;
     const countryColor = getCountryColor(city.country);
 
     return (
@@ -78,10 +84,11 @@ export default function MatchMarker({
                     </div>
                     <div className="flight-popup-datetime">
                         <span className="date">📅 {date}</span>
-                        <span className="time">⏰ {time}</span>
+                        <span className="time">⏰ {timeDisplay}</span>
                     </div>
                 </div>
             </Popup>
         </CircleMarker>
     );
 }
+

@@ -20,6 +20,7 @@ interface TeamFlightPathProps {
     cities: City[];
     teams: Team[];
     knockoutVenues?: KnockoutVenue[];
+    timezone: string;
 }
 
 /**
@@ -30,7 +31,7 @@ interface TeamFlightPathProps {
  * - City name labels with smart positioning
  * - Match location markers with popup details
  */
-export default function TeamFlightPath({ teamCode, matches, cities, teams, knockoutVenues = [] }: TeamFlightPathProps) {
+export default function TeamFlightPath({ teamCode, matches, cities, teams, knockoutVenues = [], timezone }: TeamFlightPathProps) {
     const svgRef = useRef<SVGSVGElement>(null);
     const map = useMap();
     const { visibility } = useLayerVisibility();
@@ -248,6 +249,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
                         markerIndex={markerIndex}
                         isLatest={isLatest}
                         animationKey={animationKey}
+                        timezone={timezone}
                     />
                 );
             })}

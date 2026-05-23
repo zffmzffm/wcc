@@ -224,6 +224,7 @@ function MapContent({
                     cities={cities}
                     teams={teams}
                     knockoutVenues={matchRepository.getKnockoutVenues()}
+                    timezone={timezone}
                 />
             )}
 

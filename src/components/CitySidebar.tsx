@@ -281,6 +281,8 @@ export default function CitySidebar({
                             <ul className="match-list" role="list">
                                 {sortedKnockoutVenues.map(venue => {
                                     const { time } = formatDateTimeWithTimezone(venue.datetime, timezone);
+                                    const dayDiff = getDayDifference(venue.datetime, timezone);
+                                    const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
                                     return (
                                         <li key={venue.matchId} className="match-item" role="listitem">
                                             <div className="match-header">
@@ -289,7 +291,7 @@ export default function CitySidebar({
                                                 </span>
                                                 <span className="match-datetime">
                                                     <span className="match-venue">📍 {getCityName(venue.cityId)}</span>
-                                                    <span className="match-time">{time}</span>
+                                                    <span className="match-time">{timeDisplay}</span>
                                                 </span>
                                             </div>
                                             <div className="match-teams">
