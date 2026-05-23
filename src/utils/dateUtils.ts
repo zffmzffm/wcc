@@ -50,6 +50,22 @@ export function getTournamentDayNum(dateStr: string): number {
  * Calculate the difference in calendar days between the local timezone date and the official tournament match day.
  * Returns +1 if local is tomorrow, -1 if local is yesterday, 0 if same day.
  */
+/**
+ * Format the official match day date (YYYY-MM-DD) into a display string like "Fri, June 11".
+ * This uses UTC to parse the date string to avoid any timezone shifting.
+ */
+export function formatMatchDayDate(datetime: string): string {
+    const matchDayStr = getMatchDay(datetime);
+    const [year, month, day] = matchDayStr.split('-').map(Number);
+    // Use UTC to avoid any local timezone shifting
+    const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+
+    const weekday = date.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
+    const monthName = date.toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' });
+
+    return `${weekday}, ${monthName} ${day}`;
+}
+
 export function getDayDifference(datetime: string, timezone: string): number {
     const matchDayStr = getMatchDay(datetime);
     

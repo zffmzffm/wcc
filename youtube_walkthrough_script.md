@@ -119,3 +119,144 @@ CUP26MAP，这是一个简洁直观、易于上手的地图App。你可以在这
 现在来揭晓开头的问题！最幸运的"低碳模范"是东道主之一的墨西哥队——如果他们以小组第一出线并最终夺冠，总飞行距离不足5200公里，这就是传说中的东道主优势吧！与之形成鲜明对比的是捷克队，如果他们以小组第二出线并最终捧杯，总飞行距离将超过16500公里。这是什么概念呢？比从悉尼飞到波士顿还远！
 
 好了，现在就打开CUP26MAP.COM，查看你主队的完整赛程吧！祝球迷朋友们观赛愉快！
+
+****************************最终录制版如下***************************************
+
+2026年夏天，一场规模空前的足球盛宴即将在加拿大、美国和墨西哥上演 。三个国家，16座城市，48支球队，39天，104场比赛 。你准备好了吗 ？让我们用一张地图打造你的终极观战指南 。开始之前不妨猜一猜，哪支球队不得不东奔西走，面临最漫长的夺冠征途，而哪支球队又能幸运地以逸待劳 ？答案将在本片最后揭晓 。
+
+CUP26MAP 。这是一个简洁直观，易于上手的地图App 。你可以在这里任意选择你支持的球队，查看某个城市举办了哪些比赛，了解特定日期的赛事安排 。你还可以切换到自己所在的时区，以免因时差错过精彩对决 。随时点击logo，就能回到App的初始状态 。
+
+我们来深入了解一下 。当你选定自己喜欢的球队，就能看到该队的完整比赛日程 。让我们以荷兰为例，选定后，地图上会用深绿色标出荷兰队三场小组赛的比赛城市和飞行路线，比赛顺序以城市名称前的序号标志 。首战达拉斯，次战休斯顿，小组赛收官战在堪萨斯城 。同时用米黄色标出荷兰队若以小组头名出线，一路高奏凯歌直到夺冠的潜在路线 。32强赛在蒙特雷，16强赛回到休斯顿，八强赛远赴波士顿，半决赛重访达拉斯，最后决战纽约 。屏幕右侧则按顺序展示该队所在小组，每场比赛的开球时间、地点和对阵双方 。
+
+那如果是小组第二出线呢 ？点击这个面板，看浅绿色的路线 。小组第三呢 ？点击这个面板，看红色路线 。你也可以在地图界面上把复选框全部勾选，一目了然地掌握你所钟爱的球队征战四方的所有可能路径 。或是随意切换不同组合，只要是途中可能停留的城市都会被高亮显示 。
+
+再看城市选择，你可以在下拉菜单中选择城市，也可以直接在地图上点击，比如你住在纽约或是准备前往纽约看球，点击后，屏幕左侧会显示城市名称、场馆名称以及场馆容量，并按照时间的顺序列出该场馆将举办的全部赛事，包括所属小组，比赛时间和对阵双方 。如果你对某支球队感兴趣，可以直接点击队名，就能跳转到该队的完整比赛日程 。
+
+如果你想知道某一天有哪些精彩赛事，让我们选择6月14日，这是开赛后的第一个星期天 。选定后，屏幕左侧会展示日期、第几个比赛日，以及当天全部比赛的时间地点和对阵双方，地图上也会同步展示 。默认显示的是北美东部时间EDT 。如果你在其他时区，别忘了切换 。以北京时间为例，虽然这四场比赛的官方比赛日是6月14日，但换算成北京时间就要往后推一天，也就是6月15日的凌晨1点、4点、上午7点和10点开球 。熬夜看球不容易，更要善用这个App，根据自己的喜好和作息提前做好规划 。
+
+来揭晓开头的问题，最幸运的低碳模范是东道主之一的墨西哥队，如果他们以小组第一出线并最终夺冠，总飞行距离不足5200公里 。这就是传说中的东道主优势吧 。与之形成鲜明对比的是捷克队，如果他们以小组第二出线并最终捧杯，总飞行距离将超过16500公里 。这是什么概念呢 ？比从悉尼飞到波士顿还远 。
+
+好了，现在就打开 cup26map.com，查看你主队的完整赛程吧 。祝球迷朋友们观赛愉快 。
+
+****************************英文版如下***************************************
+
+Script: Your Ultimate World Cup 2026 Travel Guide: Cup26Map
+
+**[Opening Animation]**
+
+Summer 2026. The biggest soccer tournament ever is coming to Canada, the US, and Mexico. 3 countries, 16 cities, 48 teams, 39 days, 104 matches. Ready? Let this map be your ultimate guide.
+
+Quick trivia before we start: Which team faces the longest travel to the final? And which has the easiest route? Stick around for the answer!
+
+**[App Interface, Start Operation]**
+
+CUP26MAP is a clean, intuitive map app. Pick your favorite team, browse matches by city, or see what's happening on any given day. You can also switch to your local time zone so you never miss a kickoff.
+
+Click the logo anytime to reset the map.
+
+Let's dive in.
+
+Select a team to see their full schedule. Let's use the Netherlands. The dark green line shows their group stage path, numbered in order: starting in Dallas, then Houston, and finishing in Kansas City. The beige line shows their potential path to the final if they win their group: Round of 32 in Monterrey, Round of 16 in Houston, Quarterfinals in Boston, Semifinals in Dallas, and the Final in New York.
+
+The right panel lists their group, kickoff times, venues, and opponents.
+
+What if they finish second in their group? Click here for the light green route. Third place? Click here for the red route. You can check all boxes to see every possible path, or mix and match. Any potential stop will be highlighted.
+
+Now, let's explore by city. Use the dropdown or click the map. Say you're heading to New York. The left panel shows the stadium details and a chronological list of all matches there. Click any team name to jump straight to their schedule.
+
+Looking for games on a specific day? Let's pick June 14th, the first Sunday. The left panel details all matches for that day, and the map updates to match.
+
+The default time is EDT. If you're elsewhere, just switch it. For example, selecting Beijing Time shifts these June 14th matches to the next day—kicking off at 1 AM, 4 AM, 7 AM, and 10 AM on June 15th. Perfect for planning those late-night soccer watch parties!
+
+**[Show two extremes via App]**
+
+Time for the trivia answer! The luckiest team is co-host Mexico. If they win their group and go all the way, they'll fly less than 5,200 kilometers. That's real home-field advantage! In contrast, if Czechia finishes second and reaches the final, they'll travel over 16,500 kilometers—longer than a flight from Sydney to Boston!
+
+Head over to CUP26MAP.COM now to check your team's schedule. Enjoy the games!
+
+---
+
+## 📺 YouTube 发布元数据建议 (YouTube Metadata Suggestions)
+
+### 🇨🇳 中文方案一 (Chinese Option 1)
+- **视频标题 (Title)**: 2026美加墨世界杯赛程怎么看？Cup26Map 交互式地图体验指南
+- **缩略图文字 (Thumbnail Text)**: 2026世界杯赛程 / 最佳观赛地图
+- **视频简介 (Description)**:
+  2026年美加墨世界杯的比赛分布在3个国家的16座城市。本视频将为您演示如何使用 Cup26Map 交互式地图来规划您的世界杯行程。
+  
+  核心功能演示：
+  - 按城市查询小组赛及淘汰赛安排
+  - 追踪特定球队的潜在晋级路线与飞行距离
+  - 根据特定日期查询当日所有赛事
+  - 一键自动转换本地时区，轻松掌握开球时间
+  
+  网站地址：[https://cup26map.com]
+  如果您觉得这个工具对您有帮助，欢迎点赞和订阅频道！
+  
+  #2026世界杯 #世界杯赛程 #Cup26Map #世界杯地图 #北美世界杯
+
+### 🇨🇳 中文方案二 (Chinese Option 2)
+- **视频标题 (Title)**: 2026世界杯终极观战指南：用交互式地图追踪球队行程与时区
+- **缩略图文字 (Thumbnail Text)**: 2026世界杯 / 交互地图指南
+- **视频简介 (Description)**:
+  面对史上规模最大的2026年世界杯，如何快速理清跨越三个国家的复杂赛程？Cup26Map 提供了一个直观的地图解决方案。视频中我们将带您了解如何查看各城市承办的比赛，分析不同球队的潜在淘汰赛飞行路线，并利用时区转换功能轻松获取当地开球时间。
+  
+  立即体验：[https://cup26map.com]
+  感谢观看，欢迎在评论区分享您最期待的比赛和球队！
+  
+  #2026世界杯 #世界杯赛程 #Cup26Map #世界杯地图 #北美世界杯
+
+### 🇺🇸 英文方案一 (English Option 1)
+- **视频标题 (Title)**: How to Track the 2026 World Cup Schedule: Cup26Map Interactive Guide
+- **缩略图文字 (Thumbnail Text)**: 2026 World Cup / Map Guide
+- **视频简介 (Description)**:
+
+  
+  Try the map here: [https://cup26map.com]
+   
+  #WorldCup2026 #WorldCupSchedule #Cup26Map #SoccerMap #FIFA2026
+
+### 🇺🇸 英文方案二 (English Option 2)
+- **视频标题 (Title)**: 2026 World Cup Travel & Match Guide: Interactive Map Walkthrough
+- **缩略图文字 (Thumbnail Text)**: World Cup 2026 / Interactive Map
+- **视频简介 (Description)**:
+  Planning your 2026 World Cup experience? With 48 teams playing across three countries, tracking the schedule can be difficult. Cup26Map offers a visual solution. In this video, we demonstrate how to view matches by city, track team flight paths and potential knockout brackets, and easily convert kickoff times to your local timezone.
+  
+  Visit the website: [https://cup26map.com]
+  Thanks for watching! Let us know which team you are supporting in the comments below.
+  
+  #WorldCup2026 #WorldCupSchedule #Cup26Map #SoccerMap #FIFA2026
+
+
+英文拟采用最终稿：
+title: 2026 World Cup Travel & Match Schedule on One Interactive Map
+Thumbnail Text: 2026 World Cup / All Matches / One Map
+Description: 
+🔗 Visit the website: https://cup26map.com
+
+  The 2026 World Cup spans 16 cities across the US, Canada, and Mexico. In this video, I’ll show you Cup26Map, an interactive map that makes it easier to explore the full match schedule, host cities, team routes, and travel logistics.
+
+  Features shown in this video:
+  - Explore match schedules by host city
+  - Track specific teams' potential knockout routes
+  - Filter matches by specific dates
+  - Auto-convert kickoff times to your local time zone
+
+#WorldCup2026 #WorldCupSchedule #FIFA2026 #WebMap #Soccer
+
+中文拟采用最终稿：
+
+title: 一幅地图囊括2026美加墨世界杯全部赛程
+Thumbnail Text: 2026世界杯 / 全部赛程 / 一图览尽
+Description: 
+🔗 网站: https://cup26map.com
+
+  2026年世界杯将在美加墨三国16座城市举行。本视频将带您了解 Cup26Map，这是一个强大的交互式地图，可帮助您轻松浏览完整的比赛日程、主办城市，以及各支球队的潜在晋级路线。
+  
+  本视频将为您演示以下核心功能：
+  - 按主办城市查看比赛日程
+  - 追踪特定球队的潜在淘汰赛路线
+  - 按特定日期筛选并查看当日比赛
+  - 自动将比赛开球时间转换为您的本地时间
+
+#2026世界杯 #世界杯赛程 #足球 #FIFA2026

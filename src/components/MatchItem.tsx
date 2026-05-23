@@ -2,7 +2,7 @@
 import { memo } from 'react';
 import { Match, Team } from '@/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
-import { getDayDifference } from '@/utils/dateUtils';
+import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
 import FlagIcon from './FlagIcon';
 
@@ -37,9 +37,14 @@ const MatchItem = memo(function MatchItem({
 }: MatchItemProps) {
     const team1 = getTeamDisplay(match.team1, teams);
     const team2 = getTeamDisplay(match.team2, teams);
-    const { date, time } = formatDateTimeWithTimezone(match.datetime, timezone);
+    const { date: tzDate, time } = formatDateTimeWithTimezone(match.datetime, timezone);
     const dayDiff = getDayDifference(match.datetime, timezone);
     const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
+    // When there's a day difference, show the official match day date (EDT-based)
+    // so that the (+1/-1) suffix correctly indicates the shift from the displayed date.
+    // Otherwise show the timezone-local date (which is the same as the match day).
+    const date = dayDiff !== 0 ? formatMatchDayDate(match.datetime) : tzDate;
+
     
     const isTeam1Highlighted = highlightTeamCode === match.team1;
     const isTeam2Highlighted = highlightTeamCode === match.team2;

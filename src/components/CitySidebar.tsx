@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { City, Match, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
-import { getDayDifference } from '@/utils/dateUtils';
+import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
 import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
@@ -204,9 +204,10 @@ export default function CitySidebar({
                         <div className="sidebar-matches">
                             <ul className="match-list" role="list">
                                 {sortedKnockoutVenues.map(venue => {
-                                    const { date, time } = formatDateTimeWithTimezone(venue.datetime, timezone);
+                                    const { date: tzDate, time } = formatDateTimeWithTimezone(venue.datetime, timezone);
                                     const dayDiff = getDayDifference(venue.datetime, timezone);
                                     const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
+                                    const date = dayDiff !== 0 ? formatMatchDayDate(venue.datetime) : tzDate;
                                     
                                     return (
                                         <li key={venue.matchId} className="match-item" role="listitem">
