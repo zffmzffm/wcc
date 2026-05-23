@@ -28,8 +28,26 @@ const Footer = memo(function Footer() {
     return (
         <>
             <footer className="app-footer" role="contentinfo">
-                <div className="footer-content footer-split">
-                    <div className="footer-left">
+                <div className="footer-content footer-stacked">
+                    <div className="footer-row footer-row-buttons">
+                        <a
+                            href="https://www.youtube.com/watch?v=WxOD7-CB0qI"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="footer-support-btn"
+                        >
+                            Video Guide
+                        </a>
+                        <a
+                            href="https://ko-fi.com/duoyj"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="footer-support-btn"
+                        >
+                            Support the project
+                        </a>
+                    </div>
+                    <div className="footer-row footer-row-legal">
                         <span className="footer-copyright">
                             © 2026 Cup26Map
                         </span>
@@ -41,16 +59,6 @@ const Footer = memo(function Footer() {
                         >
                             Legal
                         </button>
-                    </div>
-                    <div className="footer-right">
-                        <a
-                            href="https://ko-fi.com/duoyj"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="footer-support-btn"
-                        >
-                            Support the project
-                        </a>
                     </div>
                 </div>
             </footer>

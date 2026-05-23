@@ -575,12 +575,16 @@
         gap: 0.5rem;
     }
 
-    .footer-split {
-        flex-direction: row;
+    .footer-stacked {
+        gap: 0.2rem;
         padding: 0 0.5rem;
     }
 
-    .footer-left {
+    .footer-row-buttons {
+        gap: 0.4rem;
+    }
+
+    .footer-row-legal {
         gap: 0.4rem;
     }
 

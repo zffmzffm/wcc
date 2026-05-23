@@ -306,23 +306,32 @@
     color: var(--primary-dark);
 }
 
-/* Footer split layout */
-.footer-split {
-    flex-direction: row;
+/* Footer stacked two-row layout */
+.footer-stacked {
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    gap: 0.25rem;
     width: 100%;
 }
 
-.footer-left {
+.footer-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
 }
 
-.footer-right {
-    display: flex;
-    align-items: center;
+.footer-row-buttons {
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.footer-row-buttons .footer-support-btn {
+    flex: 1;
+    justify-content: center;
+}
+
+.footer-row-legal {
+    gap: 0.5rem;
 }
 
 .footer-support-btn {
