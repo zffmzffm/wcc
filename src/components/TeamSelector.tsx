@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, memo } from 'react';
+import { Fragment, useMemo, memo } from 'react';
 import { Team } from '@/types';
 import FlagIcon from './FlagIcon';
 
@@ -55,13 +55,16 @@ const TeamSelector = memo(function TeamSelector({ teams, selectedTeam, onSelect 
                 >
                     <option value="">TEAM</option>
                     {sortedGroups.map(group => (
-                        <optgroup key={group} label={`Group ${group}`}>
+                        <Fragment key={group}>
+                            <option className="team-group-option" value={`group-${group}`} disabled>
+                                {`Group ${group}`}
+                            </option>
                             {groupedTeams[group].map(team => (
                                 <option key={team.code} value={team.code}>
                                     {team.name}
                                 </option>
                             ))}
-                        </optgroup>
+                        </Fragment>
                     ))}
                 </select>
             </div>
