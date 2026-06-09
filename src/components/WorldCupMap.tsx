@@ -10,9 +10,9 @@ import MapLegendControl from './MapLegendControl';
 import MatchDayLabels from './MatchDayLabels';
 import { useMapViewControl } from '@/hooks/useMapViewControl';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
-import { City, Match, Team } from '@/types';
-import { cities, matches, teams, knockoutVenues } from '@/data';
-import { knockoutPathTemplates, thirdPlacePathTemplates } from '@/data/knockoutBracket';
+import { useKnockoutPaths } from '@/hooks/useKnockoutPaths';
+import { City, Match } from '@/types';
+import { cities, matches, teams } from '@/data';
 import { matchRepository } from '@/repositories';
 import { KnockoutVenue } from '@/repositories/types';
 import { MAP_CONFIG, MAP_BOUNDS, DEFAULT_TIMEZONE } from '@/constants';
@@ -123,49 +123,22 @@ function MapContent({
 
     // Get layer visibility
     const { visibility } = useLayerVisibility();
+    const allKnockoutVenues = useMemo(() => matchRepository.getKnockoutVenues(), []);
+    const knockoutPaths = useKnockoutPaths(currentTeam?.group || '', allKnockoutVenues, cities);
 
     // Calculate knockout path cities based on visible layers
     const knockoutCityIds = useMemo(() => {
         if (!selectedTeam || !currentTeam) return new Set<string>();
 
-        const groupId = currentTeam.group;
-        const allKnockoutVenues = matchRepository.getKnockoutVenues();
-        const venueMap = new Map(allKnockoutVenues.map(v => [v.matchId, v]));
-
         const cityIds = new Set<string>();
-
-        // Get templates for this group
-        const mainTemplates = knockoutPathTemplates.filter(t => t.groupId === groupId);
-        const thirdTemplate = thirdPlacePathTemplates.find(t => t.groupId === groupId);
-
-        // Add cities for 1st place path if visible
-        if (visibility.firstPlace) {
-            const template = mainTemplates.find(t => t.position === 1);
-            template?.path.forEach(matchId => {
-                const venue = venueMap.get(matchId);
-                if (venue) cityIds.add(venue.cityId);
+        knockoutPaths
+            .filter(path => visibility.scenarios[path.scenarioId] ?? false)
+            .forEach(path => {
+                path.matches.forEach(matchInfo => cityIds.add(matchInfo.city.id));
             });
-        }
-
-        // Add cities for 2nd place path if visible
-        if (visibility.secondPlace) {
-            const template = mainTemplates.find(t => t.position === 2);
-            template?.path.forEach(matchId => {
-                const venue = venueMap.get(matchId);
-                if (venue) cityIds.add(venue.cityId);
-            });
-        }
-
-        // Add cities for 3rd place path if visible
-        if (visibility.thirdPlace && thirdTemplate) {
-            thirdTemplate.path.forEach(matchId => {
-                const venue = venueMap.get(matchId);
-                if (venue) cityIds.add(venue.cityId);
-            });
-        }
 
         return cityIds;
-    }, [selectedTeam, currentTeam, visibility.firstPlace, visibility.secondPlace, visibility.thirdPlace]);
+    }, [selectedTeam, currentTeam, knockoutPaths, visibility.scenarios]);
 
     // Combine all highlighted city IDs
     const allHighlightedCityIds = useMemo(() => {
@@ -173,7 +146,7 @@ function MapContent({
         teamCityIds.forEach(id => combined.add(id));
         knockoutCityIds.forEach(id => combined.add(id));
         return combined;
-    }, [teamCityIds, knockoutCityIds, selectedTeam]);
+    }, [teamCityIds, knockoutCityIds]);
 
     return (
         <>
@@ -223,13 +196,13 @@ function MapContent({
                     matches={matches}
                     cities={cities}
                     teams={teams}
-                    knockoutVenues={matchRepository.getKnockoutVenues()}
+                    knockoutVenues={allKnockoutVenues}
                     timezone={timezone}
                 />
             )}
 
             {/* Path legend as Leaflet control */}
-            {selectedTeam && <MapLegendControl />}
+            {selectedTeam && <MapLegendControl knockoutPaths={knockoutPaths} />}
         </>
     );
 }
@@ -254,13 +227,10 @@ export default function WorldCupMap({
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     // Detect if device is iOS (doesn't support Fullscreen API)
-    const [isIOS, setIsIOS] = useState(false);
-
-    useEffect(() => {
-        // Check for iOS device
-        const checkIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    const isIOS = useMemo(() => {
+        if (typeof navigator === 'undefined') return false;
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        setIsIOS(checkIOS);
     }, []);
 
     // Listen for fullscreen changes (for non-iOS devices)

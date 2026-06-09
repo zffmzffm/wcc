@@ -1,45 +1,34 @@
 /**
  * useKnockoutPaths Hook
- * 
- * Generates three hypothetical knockout advancement paths based on a team's group:
- * - 🟢 Group Winner path (1st place)
- * - 🔵 Group Runner-up path (2nd place)
- * - 🟠 Best 3rd Place path (3rd place)
+ *
+ * Builds the available knockout scenarios for a team's group:
+ * 1st, 2nd, and every third-place variant derived from R32 matchup placeholders.
  */
 import { useMemo } from 'react';
 import { MatchWithCoords, City, Match } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
-import { knockoutPathTemplates, thirdPlacePathTemplates } from '@/data/knockoutBracket';
+import { getGroupPaths, KnockoutPosition } from '@/data/knockoutBracket';
 import { STAGE_NAMES } from '@/constants';
 
 export interface KnockoutPath {
-    position: 1 | 2 | 3;
+    id: string;
+    scenarioId: string;
+    position: KnockoutPosition;
     label: string;
+    variantIndex: number;
+    r32MatchId: string;
     color: string;
+    matchIds: string[];
     matches: MatchWithCoords[];
 }
 
-// Path color scheme
-const PATH_COLORS = {
-    1: '#D4AF37',  // Gold - 1st place (Champion's glory)
-    2: '#A0B8A0',  // Sage green - 2nd place
-    3: '#D08080',  // Coral - 3rd place
-} as const;
-
-// Path labels
-const PATH_LABELS = {
-    1: 'Group Winner',
-    2: 'Group Runner-up',
-    3: 'Best 3rd Place',
-} as const;
-
 /**
  * Get all knockout advancement paths for a given group.
- * 
+ *
  * @param groupId - Group ID (A-L)
- * @param knockoutVenues - Knockout venue data
+ * @param knockoutVenues - Flattened knockout venue data
  * @param cities - City data
- * @returns Three advancement paths (1st, 2nd, 3rd place)
+ * @returns Advancement paths for 1st, 2nd, and all possible third-place slots
  */
 export function useKnockoutPaths(
     groupId: string,
@@ -49,22 +38,11 @@ export function useKnockoutPaths(
     return useMemo(() => {
         if (!groupId) return [];
 
-        // Get path templates for this group (1st and 2nd place)
-        const mainTemplates = knockoutPathTemplates.filter(t => t.groupId === groupId);
-        // Get 3rd place path
-        const thirdTemplate = thirdPlacePathTemplates.find(t => t.groupId === groupId);
-
-        // Merge all templates
-        const allTemplates = thirdTemplate
-            ? [...mainTemplates, thirdTemplate]
-            : mainTemplates;
-
-        // Create venue and city lookup maps
+        const templates = getGroupPaths(groupId);
         const venueMap = new Map(knockoutVenues.map(v => [v.matchId, v]));
         const cityMap = new Map(cities.map(c => [c.id, c]));
 
-        return allTemplates.map(template => {
-            // Convert path template matchId sequence to matches with coordinates
+        return templates.map(template => {
             const matches: MatchWithCoords[] = template.path
                 .map(matchId => {
                     const venue = venueMap.get(matchId);
@@ -73,19 +51,17 @@ export function useKnockoutPaths(
                     const city = cityMap.get(venue.cityId);
                     if (!city) return null;
 
-                    // Parse matchup to get team labels
                     const matchupParts = (venue.matchup || 'TBD vs TBD').split(' vs ');
-
-                    // Construct Match object for knockout match
+                    const matchNumber = Number(matchId.split('_')[1]) || 0;
                     const match: Match = {
-                        id: parseInt(matchId.split('_')[1]) || 0,
-                        group: '',  // knockout matches have no group
+                        id: matchNumber,
+                        group: '',
                         team1: matchupParts[0] || 'TBD',
                         team2: matchupParts[1] || 'TBD',
                         cityId: venue.cityId,
                         datetime: venue.datetime,
                         stage: venue.stage,
-                        matchup: venue.matchup,  // Include matchup for home/away determination
+                        matchup: venue.matchup,
                     };
 
                     return {
@@ -94,12 +70,17 @@ export function useKnockoutPaths(
                         city,
                     };
                 })
-                .filter((m): m is MatchWithCoords => m !== null);
+                .filter((match): match is MatchWithCoords => match !== null);
 
             return {
+                id: template.id,
+                scenarioId: template.scenarioId,
                 position: template.position,
-                label: PATH_LABELS[template.position],
-                color: PATH_COLORS[template.position],
+                label: template.label,
+                variantIndex: template.variantIndex,
+                r32MatchId: template.r32MatchId,
+                color: template.color,
+                matchIds: template.path,
                 matches,
             };
         });
