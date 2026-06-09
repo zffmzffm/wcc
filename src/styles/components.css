@@ -192,6 +192,12 @@
     font-weight: 700;
 }
 
+.team-select .team-group-option {
+    background: var(--background);
+    color: var(--primary);
+    font-weight: 700;
+}
+
 .team-select-wrapper,
 .timezone-select-wrapper,
 .city-select-wrapper,

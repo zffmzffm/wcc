@@ -1,78 +1,88 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useState, ReactNode } from 'react';
 
 /**
- * Layer visibility state management
- * Controls which flight path layers are visible on the map
+ * Layer visibility state management.
+ * Controls group-stage visibility plus dynamic knockout scenario ids.
  */
 
 export interface LayerVisibility {
     groupStage: boolean;
-    firstPlace: boolean;
-    secondPlace: boolean;
-    thirdPlace: boolean;
+    scenarios: Record<string, boolean>;
 }
 
 interface LayerVisibilityContextType {
     visibility: LayerVisibility;
-    toggleLayer: (layer: keyof LayerVisibility) => void;
-    setAllLayers: (visible: boolean) => void;
+    toggleLayer: (layer: string) => void;
+    setAllLayers: (visible: boolean, scenarioIds?: string[]) => void;
     setVisibility: (newVisibility: Partial<LayerVisibility>) => void;
-    // Selected knockout path for map bounds fitting (0=1st, 1=2nd, 2=3rd, null=none)
-    selectedKnockoutPath: number | null;
-    fitBoundsTrigger: number; // Increments to trigger bounds fit
-    selectKnockoutPath: (pathIndex: number) => void;
-    resetToFirstPath: () => void; // Reset to default: Group Stage + 1st Place only
+    selectedKnockoutPath: string | null;
+    fitBoundsTrigger: number;
+    selectKnockoutPath: (scenarioId: string) => void;
+    resetToFirstPath: () => void;
 }
 
-// Default visibility: Only Group Stage and 1st Place Path
+const FIRST_SCENARIO_ID = '1st';
+
 const defaultVisibility: LayerVisibility = {
     groupStage: true,
-    firstPlace: true,
-    secondPlace: false,
-    thirdPlace: false,
+    scenarios: {
+        [FIRST_SCENARIO_ID]: true,
+    },
 };
 
 const LayerVisibilityContext = createContext<LayerVisibilityContextType | null>(null);
 
 export function LayerVisibilityProvider({ children }: { children: ReactNode }) {
     const [visibility, setVisibilityState] = useState<LayerVisibility>(defaultVisibility);
-    const [selectedKnockoutPath, setSelectedKnockoutPath] = useState<number | null>(0); // Default to 1st path
+    const [selectedKnockoutPath, setSelectedKnockoutPath] = useState<string | null>(FIRST_SCENARIO_ID);
     const [fitBoundsTrigger, setFitBoundsTrigger] = useState(0);
 
-    const toggleLayer = (layer: keyof LayerVisibility) => {
-        setVisibilityState(prev => ({ ...prev, [layer]: !prev[layer] }));
-    };
+    const toggleLayer = useCallback((layer: string) => {
+        setVisibilityState(prev => {
+            if (layer === 'groupStage') {
+                return { ...prev, groupStage: !prev.groupStage };
+            }
 
-    const setAllLayers = (visible: boolean) => {
-        setVisibilityState({
-            groupStage: visible,
-            firstPlace: visible,
-            secondPlace: visible,
-            thirdPlace: visible,
+            return {
+                ...prev,
+                scenarios: {
+                    ...prev.scenarios,
+                    [layer]: !(prev.scenarios[layer] ?? false),
+                },
+            };
         });
-    };
+    }, []);
 
-    const setVisibility = (newVisibility: Partial<LayerVisibility>) => {
-        setVisibilityState(prev => ({ ...prev, ...newVisibility }));
-    };
-
-    const selectKnockoutPath = (pathIndex: number) => {
-        setSelectedKnockoutPath(pathIndex);
-        setFitBoundsTrigger(prev => prev + 1); // Trigger bounds fit
-    };
-
-    // Reset to default state: Group Stage + 1st Place Path only, Q-1st active
-    const resetToFirstPath = () => {
-        setVisibilityState({
-            groupStage: true,
-            firstPlace: true,
-            secondPlace: false,
-            thirdPlace: false,
+    const setAllLayers = useCallback((visible: boolean, scenarioIds?: string[]) => {
+        setVisibilityState(prev => {
+            const ids = scenarioIds || Object.keys(prev.scenarios);
+            return {
+                groupStage: visible,
+                scenarios: Object.fromEntries(ids.map(id => [id, visible])),
+            };
         });
-        setSelectedKnockoutPath(0);
-    };
+    }, []);
+
+    const setVisibility = useCallback((newVisibility: Partial<LayerVisibility>) => {
+        setVisibilityState(prev => ({
+            groupStage: newVisibility.groupStage ?? prev.groupStage,
+            scenarios: newVisibility.scenarios
+                ? { ...newVisibility.scenarios }
+                : prev.scenarios,
+        }));
+    }, []);
+
+    const selectKnockoutPath = useCallback((scenarioId: string) => {
+        setSelectedKnockoutPath(scenarioId);
+        setFitBoundsTrigger(prev => prev + 1);
+    }, []);
+
+    const resetToFirstPath = useCallback(() => {
+        setVisibilityState(defaultVisibility);
+        setSelectedKnockoutPath(FIRST_SCENARIO_ID);
+    }, []);
 
     return (
         <LayerVisibilityContext.Provider value={{

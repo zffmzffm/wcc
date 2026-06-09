@@ -3,7 +3,6 @@ import { useMemo, useState, useEffect, useRef } from 'react';
 import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useKnockoutPaths } from '@/hooks/useKnockoutPaths';
-import { formatDateTimeWithTimezone } from '@/utils/formatters';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
@@ -28,14 +27,22 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
 
     // Reset to Q-1st when team changes
     useEffect(() => {
+        let resetTimer: number | undefined;
         if (team && team.code !== prevTeamCodeRef.current) {
             resetToFirstPath();
-            setSelectedPathIndex(0);
+            resetTimer = window.setTimeout(() => {
+                setSelectedPathIndex(0);
+            }, 0);
             prevTeamCodeRef.current = team.code;
         }
         if (!team) {
             prevTeamCodeRef.current = null;
         }
+        return () => {
+            if (resetTimer !== undefined) {
+                window.clearTimeout(resetTimer);
+            }
+        };
     }, [team, resetToFirstPath]);
 
     // Handle Escape key to close
@@ -51,21 +58,6 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [team, onClose]);
-
-    // Handle tab click: set visibility, update selected index, and trigger map bounds fit
-    const handleTabClick = (index: number) => {
-        setSelectedPathIndex(index);
-        // Set initial visibility based on selected tab
-        // After this, user can still toggle via legend checkboxes
-        setVisibility({
-            groupStage: true, // Always show group stage
-            firstPlace: index === 0,
-            secondPlace: index === 1,
-            thirdPlace: index === 2,
-        });
-        // Trigger map to fit bounds for this path
-        selectKnockoutPath(index);
-    };
 
     // Memoize sorted matches to avoid re-sorting on every render
     const sortedMatches = useMemo(() => {
@@ -85,6 +77,21 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
 
     // Get the currently selected path
     const selectedPath = knockoutPaths[selectedPathIndex] || knockoutPaths[0];
+
+    // Handle tab click: set visibility, update selected index, and trigger map bounds fit
+    const handleTabClick = (index: number) => {
+        const clickedPath = knockoutPaths[index];
+        if (!clickedPath) return;
+
+        setSelectedPathIndex(index);
+        setVisibility({
+            groupStage: true,
+            scenarios: Object.fromEntries(
+                knockoutPaths.map(path => [path.scenarioId, path.scenarioId === clickedPath.scenarioId])
+            ),
+        });
+        selectKnockoutPath(clickedPath.scenarioId);
+    };
 
     return (
         <SidebarLayout
@@ -134,24 +141,28 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                             <h3 className="schedule-section-title knockout-title">Knockout Stage (Scenarios)</h3>
 
                             {/* Tab Buttons - Index Card Style */}
-                            <div className="knockout-tabs" role="tablist">
-                                {knockoutPaths.map((path, index) => {
-                                    const tabLabel = `Q-${path.position === 1 ? '1st' : path.position === 2 ? '2nd' : '3rd'}`;
-                                    return (
-                                        <button
-                                            key={path.position}
-                                            role="tab"
-                                            aria-selected={selectedPathIndex === index}
-                                            className={`knockout-tab ${selectedPathIndex === index ? 'active' : ''}`}
-                                            onClick={() => handleTabClick(index)}
-                                            style={{
-                                                '--tab-color': path.color,
-                                            } as React.CSSProperties}
-                                        >
-                                            <span className="knockout-tab-label">{tabLabel}</span>
-                                        </button>
-                                    );
-                                })}
+                            <div
+                                className="knockout-tabs"
+                                role="tablist"
+                                data-tab-count={knockoutPaths.length}
+                                style={{
+                                    '--tab-count': knockoutPaths.length,
+                                } as React.CSSProperties}
+                            >
+                                {knockoutPaths.map((path, index) => (
+                                    <button
+                                        key={path.id}
+                                        role="tab"
+                                        aria-selected={selectedPathIndex === index}
+                                        className={`knockout-tab ${selectedPathIndex === index ? 'active' : ''}`}
+                                        onClick={() => handleTabClick(index)}
+                                        style={{
+                                            '--tab-color': path.color,
+                                        } as React.CSSProperties}
+                                    >
+                                        <span className="knockout-tab-label">{path.label}</span>
+                                    </button>
+                                ))}
                             </div>
 
                             {/* Selected Path Content */}
@@ -167,8 +178,14 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
 
                                             if (idx === 0) {
                                                 // First match (R32): check group position marker
-                                                const positionMarker = `${selectedPath.position}${team.group}`;
-                                                isHome = leftSide.includes(positionMarker);
+                                                const leftSideMarker = leftSide.trim();
+                                                if (selectedPath.position === 3) {
+                                                    const thirdPlaceMarker = leftSideMarker.match(/^3([A-L]+)$/);
+                                                    isHome = !!thirdPlaceMarker?.[1].includes(team.group);
+                                                } else {
+                                                    const positionMarker = `${selectedPath.position}${team.group}`;
+                                                    isHome = leftSideMarker === positionMarker;
+                                                }
                                             } else {
                                                 // Subsequent matches: check if previous match winner is on left side
                                                 const prevMatchId = selectedPath.matches[idx - 1].match.id.toString();
@@ -190,7 +207,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
 
                                             return (
                                                 <MatchItem
-                                                    key={`${selectedPath.position}-${idx}`}
+                                                    key={`${selectedPath.id}-${idx}`}
                                                     match={knockoutMatch}
                                                     teams={teams}
                                                     timezone={timezone}

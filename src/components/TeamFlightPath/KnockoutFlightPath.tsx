@@ -1,13 +1,13 @@
 'use client';
-import { useMemo, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
-import { City, Team, MatchWithCoords } from '@/types';
+import { City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useKnockoutPaths, KnockoutPath } from '@/hooks/useKnockoutPaths';
 import { useMapRefresh } from '@/hooks/useMapRefresh';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG } from '@/constants';
-import { generateArcPath, generateLoopPath, generateChevronPath, generateLoopChevronPath } from '@/utils/pathGenerators';
+import { generateArcPath, generateChevronPath } from '@/utils/pathGenerators';
 
 interface KnockoutFlightPathProps {
     groupId: string;
@@ -34,7 +34,7 @@ export default function KnockoutFlightPath({
 }: KnockoutFlightPathProps) {
     const map = useMap();
     const [isVisible, setIsVisible] = useState(false);
-    const { visibility } = useLayerVisibility();
+    const { visibility, selectedKnockoutPath } = useLayerVisibility();
 
     // Force re-render on map move/zoom for SVG path updates
     useMapRefresh();
@@ -43,12 +43,8 @@ export default function KnockoutFlightPath({
     const knockoutPaths = useKnockoutPaths(groupId, knockoutVenues, cities);
 
     // Filter paths based on visibility
-    const visiblePaths = knockoutPaths.filter(path => {
-        if (path.position === 1) return visibility.firstPlace;
-        if (path.position === 2) return visibility.secondPlace;
-        if (path.position === 3) return visibility.thirdPlace;
-        return true;
-    });
+    const visiblePaths = knockoutPaths.filter(path => visibility.scenarios[path.scenarioId] ?? false);
+    const activeLabelPath = visiblePaths.find(path => path.scenarioId === selectedKnockoutPath);
 
     // Coordinate conversion function
     const latLngToPixel = useCallback((coords: [number, number]): { x: number; y: number } => {
@@ -74,13 +70,6 @@ export default function KnockoutFlightPath({
 
     const mapSize = map.getSize();
 
-    // Colors for each position's chevron marker
-    const positionColors: { [key: number]: string } = {
-        1: '#D4AF37',  // 1st place - gold
-        2: '#A0B8A0',  // 2nd place - sage
-        3: '#D08080',  // 3rd place - coral
-    };
-
     return (
         <>
             {/* Paths layer - above group stage but below labels */}
@@ -96,12 +85,12 @@ export default function KnockoutFlightPath({
                     zIndex: SVG_CONFIG.knockoutPathZIndex  // Above group stage paths
                 }}
             >
-                {/* Define chevron markers for each position */}
+                {/* Define chevron markers for each visible path */}
                 <defs>
-                    {[1, 2, 3].map(pos => (
+                    {visiblePaths.map(path => (
                         <marker
-                            key={`chevron-marker-pos${pos}`}
-                            id={`chevron-marker-pos${pos}`}
+                            key={`chevron-marker-${path.id}`}
+                            id={`chevron-marker-${path.id}`}
                             markerWidth="8"
                             markerHeight="8"
                             refX="4"
@@ -112,7 +101,7 @@ export default function KnockoutFlightPath({
                             <path
                                 d="M 1 1 L 6 4 L 1 7"
                                 fill="none"
-                                stroke={positionColors[pos]}
+                                stroke={path.color}
                                 strokeWidth="2"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -124,7 +113,7 @@ export default function KnockoutFlightPath({
                 {/* Render each visible knockout path - PATHS ONLY */}
                 {visiblePaths.map((path) => (
                     <KnockoutPathLine
-                        key={`knockout-path-${path.position}`}
+                        key={`knockout-path-${path.id}`}
                         path={path}
                         lastGroupMatchCoords={lastGroupMatchCoords}
                         latLngToPixel={latLngToPixel}
@@ -147,17 +136,17 @@ export default function KnockoutFlightPath({
                     zIndex: SVG_CONFIG.knockoutLabelZIndex  // Below group stage labels
                 }}
             >
-                {/* Render each visible knockout path - LABELS ONLY */}
-                {visiblePaths.map((path) => (
+                {/* Render labels only for the active scenario to reduce map overlap */}
+                {activeLabelPath && (
                     <KnockoutPathLine
-                        key={`knockout-labels-${path.position}`}
-                        path={path}
+                        key={`knockout-labels-${activeLabelPath.id}`}
+                        path={activeLabelPath}
                         lastGroupMatchCoords={lastGroupMatchCoords}
                         latLngToPixel={latLngToPixel}
                         groupStageCityIds={groupStageCityIds}
                         renderMode="labels"
                     />
-                ))}
+                )}
             </svg>
         </>
     );
@@ -175,7 +164,7 @@ interface KnockoutPathLineProps {
  * Renders a single knockout path as a dashed line
  */
 function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStageCityIds, renderMode }: KnockoutPathLineProps) {
-    const { matches, color, position } = path;
+    const { matches, color } = path;
 
     if (matches.length === 0) return null;
 
@@ -206,10 +195,10 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
     }
 
     // Use chevron markers for this position
-    const markerId = `url(#chevron-marker-pos${position})`;
+    const markerId = `url(#chevron-marker-${path.id})`;
 
     return (
-        <g className={`knockout-path knockout-path-${position}`}>
+        <g className={`knockout-path knockout-path-${path.id}`}>
             {/* Path segments - only render in paths mode */}
             {renderMode === 'paths' && segments.map((segment, idx) => {
                 // Same city: skip rendering (numbered labels now indicate consecutive matches)
@@ -227,7 +216,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                 );
 
                 return (
-                    <g key={`segment-${position}-${idx}`}>
+                    <g key={`segment-${path.id}-${idx}`}>
                         {/* Glow effect */}
                         <path
                             d={glowPathD}
@@ -278,7 +267,6 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
 
                 return matches.map((matchInfo, idx) => {
                     const pixel = latLngToPixel(matchInfo.coords);
-                    const stage = matchInfo.match.stage;
                     const cityId = matchInfo.city?.id;
                     const cityName = matchInfo.city?.name;
 
@@ -292,7 +280,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                     const matchNumbersPrefix = cityId ? (cityMatchNumbers.get(cityId) || []).join('') : '';
 
                     return (
-                        <g key={`marker-${position}-${idx}`}>
+                        <g key={`marker-${path.id}-${idx}`}>
                             {/* City name label with match numbers - offset in different direction if group stage already labeled */}
                             {shouldShowLabel && cityName && (() => {
                                 // If this city was already labeled by group stage, offset to a different direction
