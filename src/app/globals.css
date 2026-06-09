@@ -21,3 +21,6 @@
 
 /* Responsive design, dark mode, reduced motion */
 @import "../styles/responsive.css";
+
+/* Landing pages (city & team SEO pages) */
+@import "../styles/landing.css";

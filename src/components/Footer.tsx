@@ -49,7 +49,7 @@ const Footer = memo(function Footer() {
                     </div>
                     <div className="footer-row footer-row-legal">
                         <span className="footer-copyright">
-                            © 2026 Cup26Map
+                            Presented by <a href="https://duoyj.ca" target="_blank" rel="noopener noreferrer" className="footer-credit-link">duoyj.ca</a> | © 2026 Cup26Map
                         </span>
                         <span className="footer-separator">·</span>
                         <button

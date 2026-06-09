@@ -1,0 +1,389 @@
+/* ============================================
+   Landing Pages - Shared Styles for SEO Pages
+   City & Team landing pages
+   ============================================ */
+
+/* Page layout */
+.landing-page {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hero section */
+.landing-hero {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.landing-hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.landing-breadcrumb {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1rem;
+}
+
+.landing-breadcrumb a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.landing-breadcrumb a:hover {
+    color: white;
+}
+
+.landing-breadcrumb span {
+    margin: 0 0.4rem;
+}
+
+.landing-flag {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+}
+
+.landing-hero h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+}
+
+.landing-hero-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.5;
+}
+
+.landing-hero-meta {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.landing-hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.landing-hero-meta-icon {
+    font-size: 1rem;
+}
+
+/* CTA Button */
+.landing-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.85rem 2rem;
+    background: white;
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.landing-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    background: #f0f0f0;
+}
+
+.landing-cta-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+}
+
+.landing-cta:hover .landing-cta-arrow {
+    transform: translateX(3px);
+}
+
+/* Content section */
+.landing-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.landing-section {
+    margin-bottom: 2.5rem;
+}
+
+.landing-section h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+.landing-section-desc {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0 0 1.25rem 0;
+}
+
+/* Match cards */
+.landing-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.landing-match-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.landing-match-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-light);
+}
+
+.landing-match-date {
+    text-align: center;
+    min-width: 56px;
+    flex-shrink: 0;
+}
+
+.landing-match-date-month {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+}
+
+.landing-match-date-day {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    line-height: 1.1;
+}
+
+.landing-match-divider {
+    width: 2px;
+    height: 40px;
+    background: var(--border-light);
+    border-radius: 1px;
+    flex-shrink: 0;
+}
+
+.landing-match-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.landing-match-teams {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.landing-match-vs {
+    color: var(--text-muted);
+    font-weight: 400;
+    margin: 0 0.3rem;
+}
+
+.landing-match-detail {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.landing-match-group {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    background: var(--accent);
+    color: var(--primary-dark);
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* Venue info card */
+.landing-venue-card {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.landing-venue-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.landing-venue-info h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.35rem 0;
+}
+
+.landing-venue-info p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin: 0 0 0.2rem 0;
+    line-height: 1.5;
+}
+
+/* Team travel cities list */
+.landing-cities-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.landing-city-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.85rem;
+    background: var(--sidebar-bg);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.landing-city-tag:hover {
+    background: var(--accent);
+    border-color: var(--primary-light);
+}
+
+/* Bottom CTA section */
+.landing-bottom-cta {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: var(--sidebar-bg);
+    border-top: 1px solid var(--border-light);
+}
+
+.landing-bottom-cta h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.landing-bottom-cta p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.25rem 0;
+}
+
+.landing-bottom-cta .landing-cta {
+    background: var(--primary);
+    color: white;
+}
+
+.landing-bottom-cta .landing-cta:hover {
+    background: var(--primary-dark);
+}
+
+/* Footer on landing pages */
+.landing-footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-light);
+}
+
+.landing-footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+.landing-footer a:hover {
+    color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .landing-hero {
+        padding: 2rem 1.25rem 2rem;
+    }
+
+    .landing-hero h1 {
+        font-size: 1.35rem;
+    }
+
+    .landing-hero-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .landing-hero-meta {
+        gap: 0.75rem;
+        font-size: 0.82rem;
+    }
+
+    .landing-content {
+        padding: 1.5rem 1rem 2rem;
+    }
+
+    .landing-match-card {
+        padding: 0.85rem 1rem;
+        gap: 0.75rem;
+    }
+
+    .landing-venue-card {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
