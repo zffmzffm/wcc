@@ -1,9 +1,10 @@
 'use client';
-import { useMemo, memo } from 'react';
+import { useMemo } from 'react';
 import { Match } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getMatchDay } from '@/utils/dateUtils';
 import { TOURNAMENT_START } from '@/constants';
+import DropdownSelect from './DropdownSelect';
 
 interface MatchDaySelectorProps {
     matches: Match[];
@@ -59,7 +60,7 @@ export default function MatchDaySelector({
             }));
     }, [matches, knockoutVenues]);
 
-    // Group by month for optgroups
+    // Group by month for menu sections
     const groupedByMonth = useMemo(() => {
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'];
@@ -73,44 +74,40 @@ export default function MatchDaySelector({
         return groups;
     }, [matchDays]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        onSelect(value === '' ? null : value);
-    };
-
     // Get selected day display info
     const selectedDayInfo = selectedDay
         ? matchDays.find(d => d.value === selectedDay)
         : null;
+    const dropdownGroups = useMemo(() => (
+        Object.entries(groupedByMonth).map(([month, days]) => ({
+            label: month,
+            items: days.map(day => ({
+                value: day.value,
+                label: day.display,
+            })),
+        }))
+    ), [groupedByMonth]);
 
     return (
         <div className="matchday-selector" role="search">
             <label htmlFor="matchday-select" className="visually-hidden">
                 Select match day
             </label>
-            <div className="matchday-select-wrapper">
-                <span className="select-icon" aria-hidden="true">
-                    {selectedDayInfo ? '📅' : '📆'}
-                </span>
-                <select
-                    id="matchday-select"
-                    value={selectedDay || ''}
-                    onChange={handleChange}
-                    className="matchday-select"
-                    aria-expanded={!!selectedDay}
-                >
-                    <option value="">DAY</option>
-                    {Object.entries(groupedByMonth).map(([month, days]) => (
-                        <optgroup key={month} label={month}>
-                            {days.map(day => (
-                                <option key={day.value} value={day.value}>
-                                    {day.display}
-                                </option>
-                            ))}
-                        </optgroup>
-                    ))}
-                </select>
-            </div>
+            <DropdownSelect
+                id="matchday-select"
+                ariaLabel="Select match day"
+                wrapperClassName="matchday-select-wrapper"
+                selectClassName="matchday-select"
+                placeholder="DAY"
+                selectedValue={selectedDay}
+                groups={dropdownGroups}
+                icon={(
+                    <span className="select-icon" aria-hidden="true">
+                        {selectedDayInfo ? '📅' : '🗓️'}
+                    </span>
+                )}
+                onSelect={onSelect}
+            />
         </div>
     );
 }

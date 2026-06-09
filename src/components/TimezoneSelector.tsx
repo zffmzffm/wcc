@@ -1,6 +1,7 @@
 'use client';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import DropdownSelect from './DropdownSelect';
 
 interface TimezoneSelectorProps {
     selectedTimezone: string | null;
@@ -36,71 +37,63 @@ const timezones = [
 
 const TimezoneSelector = memo(function TimezoneSelector({ selectedTimezone, onSelect }: TimezoneSelectorProps) {
     const isMobile = useIsMobile();
-
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        onSelect(value === '' ? null : value);
-    };
+    const dropdownGroups = useMemo(() => [
+        {
+            label: 'North America',
+            items: timezones
+                .filter(tz =>
+                    tz.value.startsWith('America/') &&
+                    !tz.value.includes('Sao_Paulo') &&
+                    !tz.value.includes('Buenos_Aires')
+                )
+                .map(tz => ({ value: tz.value, label: tz.label })),
+        },
+        {
+            label: 'South America',
+            items: timezones
+                .filter(tz =>
+                    tz.value.includes('Sao_Paulo') ||
+                    tz.value.includes('Buenos_Aires')
+                )
+                .map(tz => ({ value: tz.value, label: tz.label })),
+        },
+        {
+            label: 'Europe',
+            items: timezones
+                .filter(tz => tz.value.startsWith('Europe/'))
+                .map(tz => ({ value: tz.value, label: tz.label })),
+        },
+        {
+            label: 'Asia',
+            items: timezones
+                .filter(tz => tz.value.startsWith('Asia/'))
+                .map(tz => ({ value: tz.value, label: tz.label })),
+        },
+        {
+            label: 'Oceania',
+            items: timezones
+                .filter(tz => tz.value.startsWith('Australia/') || tz.value.startsWith('Pacific/'))
+                .map(tz => ({ value: tz.value, label: tz.label })),
+        },
+    ], []);
+    const placeholder = isMobile ? 'TIME' : 'TIME ZONE';
 
     return (
         <div className="timezone-selector" role="search">
             <label htmlFor="timezone-select" className="visually-hidden">
                 Select timezone
             </label>
-            <div className="timezone-select-wrapper">
-                <span className="select-icon" aria-hidden="true">🕐</span>
-                <select
-                    id="timezone-select"
-                    value={selectedTimezone || ''}
-                    onChange={handleChange}
-                    className="timezone-select"
-                    aria-label="Select timezone"
-                >
-                    <option value="">{isMobile ? 'TIME' : 'TIME ZONE'}</option>
-                    <optgroup label="North America">
-                        {timezones.filter(tz =>
-                            tz.value.startsWith('America/') &&
-                            !tz.value.includes('Sao_Paulo') &&
-                            !tz.value.includes('Buenos_Aires')
-                        ).map(tz => (
-                            <option key={tz.value} value={tz.value}>
-                                {tz.label}
-                            </option>
-                        ))}
-                    </optgroup>
-                    <optgroup label="South America">
-                        {timezones.filter(tz =>
-                            tz.value.includes('Sao_Paulo') ||
-                            tz.value.includes('Buenos_Aires')
-                        ).map(tz => (
-                            <option key={tz.value} value={tz.value}>
-                                {tz.label}
-                            </option>
-                        ))}
-                    </optgroup>
-                    <optgroup label="Europe">
-                        {timezones.filter(tz => tz.value.startsWith('Europe/')).map(tz => (
-                            <option key={tz.value} value={tz.value}>
-                                {tz.label}
-                            </option>
-                        ))}
-                    </optgroup>
-                    <optgroup label="Asia">
-                        {timezones.filter(tz => tz.value.startsWith('Asia/')).map(tz => (
-                            <option key={tz.value} value={tz.value}>
-                                {tz.label}
-                            </option>
-                        ))}
-                    </optgroup>
-                    <optgroup label="Oceania">
-                        {timezones.filter(tz => tz.value.startsWith('Australia/') || tz.value.startsWith('Pacific/')).map(tz => (
-                            <option key={tz.value} value={tz.value}>
-                                {tz.label}
-                            </option>
-                        ))}
-                    </optgroup>
-                </select>
-            </div>
+            <DropdownSelect
+                id="timezone-select"
+                ariaLabel="Select timezone"
+                wrapperClassName="timezone-select-wrapper"
+                selectClassName="timezone-select"
+                placeholder={placeholder}
+                selectedValue={selectedTimezone}
+                groups={dropdownGroups}
+                icon={<span className="select-icon" aria-hidden="true">🕐</span>}
+                onSelect={onSelect}
+            />
         </div>
     );
 });

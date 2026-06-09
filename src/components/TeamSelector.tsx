@@ -1,7 +1,8 @@
 'use client';
-import { Fragment, useMemo, memo } from 'react';
+import { useMemo, memo } from 'react';
 import { Team } from '@/types';
 import FlagIcon from './FlagIcon';
+import DropdownSelect from './DropdownSelect';
 
 interface TeamSelectorProps {
     teams: Team[];
@@ -24,11 +25,15 @@ const groupBy = <T, K extends keyof T>(array: T[], key: K): Record<string, T[]> 
 const TeamSelector = memo(function TeamSelector({ teams, selectedTeam, onSelect }: TeamSelectorProps) {
     const groupedTeams = useMemo(() => groupBy(teams, 'group'), [teams]);
     const sortedGroups = useMemo(() => Object.keys(groupedTeams).sort(), [groupedTeams]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        onSelect(value === '' ? null : value);
-    };
+    const dropdownGroups = useMemo(() => (
+        sortedGroups.map(group => ({
+            label: `Group ${group}`,
+            items: groupedTeams[group].map(team => ({
+                value: team.code,
+                label: team.name,
+            })),
+        }))
+    ), [groupedTeams, sortedGroups]);
 
     // Get current selected team info
     const selectedTeamInfo = selectedTeam ? teams.find(t => t.code === selectedTeam) : null;
@@ -38,36 +43,23 @@ const TeamSelector = memo(function TeamSelector({ teams, selectedTeam, onSelect 
             <label htmlFor="team-select" className="visually-hidden">
                 Select team
             </label>
-            <div className="team-select-wrapper">
-                {selectedTeamInfo ? (
+            <DropdownSelect
+                id="team-select"
+                ariaLabel="Select team"
+                wrapperClassName="team-select-wrapper"
+                selectClassName="team-select"
+                placeholder="TEAM"
+                selectedValue={selectedTeam}
+                groups={dropdownGroups}
+                icon={selectedTeamInfo ? (
                     <span className="select-flag" aria-hidden="true">
                         <FlagIcon code={selectedTeamInfo.code} size={18} />
                     </span>
                 ) : (
                     <span className="select-icon" aria-hidden="true">⚽</span>
                 )}
-                <select
-                    id="team-select"
-                    value={selectedTeam || ''}
-                    onChange={handleChange}
-                    className="team-select"
-                    aria-expanded={!!selectedTeam}
-                >
-                    <option value="">TEAM</option>
-                    {sortedGroups.map(group => (
-                        <Fragment key={group}>
-                            <option className="team-group-option" value={`group-${group}`} disabled>
-                                {`Group ${group}`}
-                            </option>
-                            {groupedTeams[group].map(team => (
-                                <option key={team.code} value={team.code}>
-                                    {team.name}
-                                </option>
-                            ))}
-                        </Fragment>
-                    ))}
-                </select>
-            </div>
+                onSelect={onSelect}
+            />
         </div>
     );
 });

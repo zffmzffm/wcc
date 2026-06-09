@@ -2,6 +2,7 @@
 import { useMemo, memo } from 'react';
 import { City } from '@/types';
 import FlagIcon from './FlagIcon';
+import DropdownSelect from './DropdownSelect';
 
 interface CitySelectorProps {
     cities: City[];
@@ -27,15 +28,26 @@ const countryOrder = ['USA', 'Canada', 'Mexico'];
 const CitySelector = memo(function CitySelector({ cities, selectedCity, onSelect }: CitySelectorProps) {
     const groupedCities = useMemo(() => groupByCountry(cities), [cities]);
     const sortedCountries = useMemo(() => countryOrder.filter(c => groupedCities[c]), [groupedCities]);
+    const dropdownGroups = useMemo(() => (
+        sortedCountries.map(country => ({
+            label: country,
+            items: [...groupedCities[country]]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(city => ({
+                    value: city.id,
+                    label: city.name,
+                })),
+        }))
+    ), [groupedCities, sortedCountries]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        if (value === '') {
+    const handleSelect = (value: string | null) => {
+        if (value === null) {
             onSelect(null);
-        } else {
-            const city = cities.find(c => c.id === value);
-            onSelect(city || null);
+            return;
         }
+
+        const city = cities.find(c => c.id === value);
+        onSelect(city || null);
     };
 
     return (
@@ -43,35 +55,23 @@ const CitySelector = memo(function CitySelector({ cities, selectedCity, onSelect
             <label htmlFor="city-select" className="visually-hidden">
                 Select city
             </label>
-            <div className="city-select-wrapper">
-                {selectedCity ? (
+            <DropdownSelect
+                id="city-select"
+                ariaLabel="Select city"
+                wrapperClassName="city-select-wrapper"
+                selectClassName="city-select"
+                placeholder="CITY"
+                selectedValue={selectedCity?.id || null}
+                groups={dropdownGroups}
+                icon={selectedCity ? (
                     <span className="select-flag" aria-hidden="true">
                         <FlagIcon code={selectedCity.countryCode} size={18} />
                     </span>
                 ) : (
                     <span className="select-icon" aria-hidden="true">🏟️</span>
                 )}
-                <select
-                    id="city-select"
-                    value={selectedCity?.id || ''}
-                    onChange={handleChange}
-                    className="city-select"
-                    aria-expanded={!!selectedCity}
-                >
-                    <option value="">CITY</option>
-                    {sortedCountries.map(country => (
-                        <optgroup key={country} label={country}>
-                            {groupedCities[country]
-                                .sort((a, b) => a.name.localeCompare(b.name))
-                                .map(city => (
-                                    <option key={city.id} value={city.id}>
-                                        {city.name}
-                                    </option>
-                                ))}
-                        </optgroup>
-                    ))}
-                </select>
-            </div>
+                onSelect={handleSelect}
+            />
         </div>
     );
 });
