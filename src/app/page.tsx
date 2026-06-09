@@ -50,6 +50,7 @@ export default function Home() {
     handleCitySelect,
     handleDaySelect,
     handleTimezoneSelect,
+    resetSelections,
     canGoBack,
     handleBack,
   } = useUrlState({ cities, isMobile });
@@ -119,10 +120,8 @@ export default function Home() {
 
   // Reset all selections
   const handleReset = useCallback(() => {
-    setSelectedCity(null);
-    setSelectedTeam(null);
-    setSelectedDay(null);
-  }, [setSelectedCity, setSelectedTeam, setSelectedDay]);
+    resetSelections();
+  }, [resetSelections]);
 
   return (
     <LayerVisibilityProvider>

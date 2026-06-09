@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { City } from '@/types';
+import { DEFAULT_TIMEZONE } from '@/constants';
 
 /**
  * URL parameter keys used for state synchronization
@@ -12,6 +13,10 @@ const URL_PARAMS = {
     day: 'day',
     timezone: 'tz',
 } as const;
+
+const INITIAL_TEAM_CODE = 'CAN';
+const INITIAL_CITY_ID = 'toronto';
+const SERVER_SEARCH_SNAPSHOT = '__SERVER_SEARCH_SNAPSHOT__';
 
 interface UrlState {
     selectedTeam: string | null;
@@ -24,6 +29,13 @@ interface UseUrlStateOptions {
     cities: City[];
     isMobile: boolean;
 }
+
+const EMPTY_URL_STATE: UrlState = {
+    selectedTeam: null,
+    selectedCity: null,
+    selectedDay: null,
+    selectedTimezone: null,
+};
 
 /** Build URL search string from state */
 const buildUrlSearchString = (state: UrlState): string => {
@@ -42,11 +54,26 @@ const emitUrlChange = () => {
     urlChangeListeners.forEach(listener => listener());
 };
 
-const getServerSearchSnapshot = () => '';
+const getServerSearchSnapshot = () => SERVER_SEARCH_SNAPSHOT;
+
+const getInitialUrlState = (cities: City[]): UrlState => ({
+    selectedTeam: INITIAL_TEAM_CODE,
+    selectedCity: cities.find(c => c.id === INITIAL_CITY_ID) || null,
+    selectedDay: null,
+    selectedTimezone: DEFAULT_TIMEZONE,
+});
 
 /** Parse URL search params into state values */
-const parseUrlState = (cities: City[], search: string): UrlState => {
+const parseUrlState = (cities: City[], search: string, useInitialDefaults: boolean): UrlState => {
+    if (search === SERVER_SEARCH_SNAPSHOT) {
+        return EMPTY_URL_STATE;
+    }
+
     const params = new URLSearchParams(search);
+    if (useInitialDefaults && Array.from(params.keys()).length === 0) {
+        return getInitialUrlState(cities);
+    }
+
     const teamCode = params.get(URL_PARAMS.team);
     const cityId = params.get(URL_PARAMS.city);
     const day = params.get(URL_PARAMS.day);
@@ -73,6 +100,9 @@ export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
     // Track how many history entries we've pushed (for canGoBack)
     const historyDepthRef = useRef(0);
     const searchSnapshotRef = useRef<string | null>(null);
+    const [useInitialDefaults, setUseInitialDefaults] = useState(
+        () => typeof window !== 'undefined' && window.location.search === ''
+    );
     const [canGoBack, setCanGoBack] = useState(false);
 
     const getSearchSnapshot = useCallback(() => {
@@ -114,12 +144,19 @@ export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
         selectedCity,
         selectedDay,
         selectedTimezone,
-    } = useMemo(() => parseUrlState(cities, currentSearch), [cities, currentSearch]);
+    } = useMemo(
+        () => parseUrlState(cities, currentSearch, useInitialDefaults),
+        [cities, currentSearch, useInitialDefaults]
+    );
 
     const pushUrlState = useCallback((state: UrlState) => {
         if (typeof window === 'undefined') return;
 
         const newSearch = buildUrlSearchString(state);
+        if (!newSearch) {
+            setUseInitialDefaults(false);
+        }
+
         if (newSearch === currentSearch) return;
 
         const newUrl = window.location.pathname + newSearch;
@@ -199,6 +236,11 @@ export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
         });
     }, [pushUrlState, selectedTeam, selectedCity, selectedDay]);
 
+    const resetSelections = useCallback(() => {
+        setUseInitialDefaults(false);
+        pushUrlState(EMPTY_URL_STATE);
+    }, [pushUrlState]);
+
     const handleBack = useCallback(() => {
         window.history.back();
     }, []);
@@ -220,6 +262,7 @@ export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
         handleCitySelect,
         handleDaySelect,
         handleTimezoneSelect,
+        resetSelections,
 
         // Navigation
         canGoBack,
