@@ -192,6 +192,7 @@ function MapContent({
             {/* Team flight path */}
             {selectedTeam && (
                 <TeamFlightPath
+                    key={selectedTeam}
                     teamCode={selectedTeam}
                     matches={matches}
                     cities={cities}

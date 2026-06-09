@@ -8,7 +8,7 @@ import { generateArcPath, generateChevronPath, generateLoopPath, generateLoopChe
 interface FlightSegmentProps {
     segment: FlightSegment;
     isNew: boolean;
-    animationKey: number;
+    animationKey: string;
     index: number;
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { FlightSegment, MatchWithCoords } from '@/types';
 import { ANIMATION_CONFIG } from '@/constants';
 
@@ -10,7 +10,7 @@ interface RenderedSegment {
 interface UseFlightAnimationReturn {
     renderedSegments: RenderedSegment[];
     renderedMarkers: number[];
-    animationKey: number;
+    animationKey: string;
 }
 
 /**
@@ -25,15 +25,7 @@ export function useFlightAnimation(
     const [visibleCount, setVisibleCount] = useState(0);
     const [renderedSegments, setRenderedSegments] = useState<RenderedSegment[]>([]);
     const [renderedMarkers, setRenderedMarkers] = useState<number[]>([]);
-    const animationKeyRef = useRef(0);
-
-    // Reset animation when team changes
-    useEffect(() => {
-        animationKeyRef.current += 1;
-        setRenderedSegments([]);
-        setRenderedMarkers([]);
-        setVisibleCount(0);
-    }, [teamCode]);
+    const animationKey = teamCode;
 
     // Animation reveal - cumulative addition
     useEffect(() => {
@@ -70,6 +62,6 @@ export function useFlightAnimation(
     return {
         renderedSegments,
         renderedMarkers,
-        animationKey: animationKeyRef.current
+        animationKey
     };
 }

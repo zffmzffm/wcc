@@ -15,7 +15,7 @@ interface MatchMarkerProps {
     teams: Team[];
     markerIndex: number;
     isLatest: boolean;
-    animationKey: number;
+    animationKey: string;
     timezone: string;
 }
 

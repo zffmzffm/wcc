@@ -1,7 +1,11 @@
+import React from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useUrlState } from '@/hooks/useUrlState';
 import { City } from '@/types';
+
+type HistoryStateMethod = typeof window.history.pushState;
 
 // Mock cities data for tests
 const mockCities: City[] = [
@@ -16,8 +20,8 @@ describe('useUrlState', () => {
     const originalReplaceState = window.history.replaceState;
     
     // Spies
-    let pushStateSpy: any;
-    let replaceStateSpy: any;
+    let pushStateSpy: ReturnType<typeof vi.fn<HistoryStateMethod>>;
+    let replaceStateSpy: ReturnType<typeof vi.fn<HistoryStateMethod>>;
 
     beforeEach(() => {
         // Reset URL to base
@@ -61,6 +65,20 @@ describe('useUrlState', () => {
         expect(result.current.selectedCity?.id).toBe('new_york');
         expect(result.current.selectedDay).toBe('2026-06-11');
         expect(result.current.selectedTimezone).toBe('America/New_York');
+    });
+
+    it('should not read browser URL params during server render', () => {
+        window.location.search = '?tz=Pacific/Auckland';
+
+        function TimezoneLabel() {
+            const { selectedTimezone } = useUrlState({ cities: mockCities, isMobile: false });
+            return React.createElement('span', null, selectedTimezone ?? 'TIME ZONE');
+        }
+
+        const html = renderToString(React.createElement(TimezoneLabel));
+
+        expect(html).toContain('TIME ZONE');
+        expect(html).not.toContain('Pacific/Auckland');
     });
 
     it('should ignore invalid city param', () => {

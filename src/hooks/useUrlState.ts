@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { City } from '@/types';
 
 /**
@@ -25,6 +25,41 @@ interface UseUrlStateOptions {
     isMobile: boolean;
 }
 
+/** Build URL search string from state */
+const buildUrlSearchString = (state: UrlState): string => {
+    const params = new URLSearchParams();
+    if (state.selectedTeam) params.set(URL_PARAMS.team, state.selectedTeam);
+    if (state.selectedCity) params.set(URL_PARAMS.city, state.selectedCity.id);
+    if (state.selectedDay) params.set(URL_PARAMS.day, state.selectedDay);
+    if (state.selectedTimezone) params.set(URL_PARAMS.timezone, state.selectedTimezone);
+    const str = params.toString();
+    return str ? `?${str}` : '';
+};
+
+const urlChangeListeners = new Set<() => void>();
+
+const emitUrlChange = () => {
+    urlChangeListeners.forEach(listener => listener());
+};
+
+const getServerSearchSnapshot = () => '';
+
+/** Parse URL search params into state values */
+const parseUrlState = (cities: City[], search: string): UrlState => {
+    const params = new URLSearchParams(search);
+    const teamCode = params.get(URL_PARAMS.team);
+    const cityId = params.get(URL_PARAMS.city);
+    const day = params.get(URL_PARAMS.day);
+    const tz = params.get(URL_PARAMS.timezone);
+
+    return {
+        selectedTeam: teamCode || null,
+        selectedCity: cityId ? cities.find(c => c.id === cityId) || null : null,
+        selectedDay: day || null,
+        selectedTimezone: tz || null,
+    };
+};
+
 /**
  * Custom hook that synchronizes app selection state with URL search params.
  *
@@ -35,144 +70,134 @@ interface UseUrlStateOptions {
  * - Shareable URLs: e.g. ?team=BRA&city=miami&day=2026-06-14&tz=Asia/Tokyo
  */
 export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
-    // Track whether we're currently handling a popstate event
-    const isPopstateRef = useRef(false);
-    // Track whether initial URL has been read
-    const initializedRef = useRef(false);
-    // Track previous URL string to avoid duplicate pushState calls
-    const lastUrlRef = useRef('');
     // Track how many history entries we've pushed (for canGoBack)
     const historyDepthRef = useRef(0);
-
-    // Reactive canGoBack state (updates when historyDepth changes)
+    const searchSnapshotRef = useRef<string | null>(null);
     const [canGoBack, setCanGoBack] = useState(false);
 
-    // --- State ---
-    const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
-    const [selectedCity, setSelectedCity] = useState<City | null>(null);
-    const [selectedDay, setSelectedDay] = useState<string | null>(null);
-    const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
-
-    // --- Helpers ---
-
-    /** Build URL search string from state */
-    const buildSearchString = useCallback((state: UrlState): string => {
-        const params = new URLSearchParams();
-        if (state.selectedTeam) params.set(URL_PARAMS.team, state.selectedTeam);
-        if (state.selectedCity) params.set(URL_PARAMS.city, state.selectedCity.id);
-        if (state.selectedDay) params.set(URL_PARAMS.day, state.selectedDay);
-        if (state.selectedTimezone) params.set(URL_PARAMS.timezone, state.selectedTimezone);
-        const str = params.toString();
-        return str ? `?${str}` : '';
-    }, []);
-
-    /** Parse URL search params into state values */
-    const parseUrl = useCallback((): UrlState => {
-        const params = new URLSearchParams(window.location.search);
-        const teamCode = params.get(URL_PARAMS.team);
-        const cityId = params.get(URL_PARAMS.city);
-        const day = params.get(URL_PARAMS.day);
-        const tz = params.get(URL_PARAMS.timezone);
-
-        return {
-            selectedTeam: teamCode || null,
-            selectedCity: cityId ? cities.find(c => c.id === cityId) || null : null,
-            selectedDay: day || null,
-            selectedTimezone: tz || null,
-        };
-    }, [cities]);
-
-    /** Apply a parsed state to all state setters */
-    const applyState = useCallback((state: UrlState) => {
-        setSelectedTeam(state.selectedTeam);
-        setSelectedCity(state.selectedCity);
-        setSelectedDay(state.selectedDay);
-        setSelectedTimezone(state.selectedTimezone);
-    }, []);
-
-    // --- Initialize from URL on mount ---
-    useEffect(() => {
-        if (initializedRef.current) return;
-        initializedRef.current = true;
-
-        const state = parseUrl();
-        applyState(state);
-        lastUrlRef.current = buildSearchString(state);
-    }, [parseUrl, applyState, buildSearchString]);
-
-    // --- Push URL when state changes ---
-    useEffect(() => {
-        // Skip during initialization and popstate handling
-        if (!initializedRef.current || isPopstateRef.current) return;
-
-        const state: UrlState = { selectedTeam, selectedCity, selectedDay, selectedTimezone };
-        const newSearch = buildSearchString(state);
-
-        // Only push if URL actually changed
-        if (newSearch !== lastUrlRef.current) {
-            const newUrl = window.location.pathname + newSearch;
-            window.history.pushState(null, '', newUrl);
-            lastUrlRef.current = newSearch;
-            historyDepthRef.current++;
-            setCanGoBack(true);
+    const getSearchSnapshot = useCallback(() => {
+        if (searchSnapshotRef.current !== null) {
+            return searchSnapshotRef.current;
         }
-    }, [selectedTeam, selectedCity, selectedDay, selectedTimezone, buildSearchString]);
+        return typeof window === 'undefined' ? '' : window.location.search;
+    }, []);
 
-    // --- Listen for popstate (browser back/forward) ---
-    useEffect(() => {
+    const subscribeToUrlChanges = useCallback((onStoreChange: () => void) => {
+        if (typeof window === 'undefined') {
+            return () => {};
+        }
+
         const handlePopstate = () => {
-            isPopstateRef.current = true;
-            const state = parseUrl();
-            applyState(state);
-            lastUrlRef.current = buildSearchString(state);
-
-            // Update depth tracking
+            searchSnapshotRef.current = null;
             historyDepthRef.current = Math.max(0, historyDepthRef.current - 1);
             setCanGoBack(historyDepthRef.current > 0);
-
-            // Reset the flag after React processes the state updates
-            requestAnimationFrame(() => {
-                isPopstateRef.current = false;
-            });
+            onStoreChange();
         };
 
+        urlChangeListeners.add(onStoreChange);
         window.addEventListener('popstate', handlePopstate);
-        return () => window.removeEventListener('popstate', handlePopstate);
-    }, [parseUrl, applyState, buildSearchString]);
 
-    // --- Selection handlers with mutual exclusion logic ---
+        return () => {
+            urlChangeListeners.delete(onStoreChange);
+            window.removeEventListener('popstate', handlePopstate);
+        };
+    }, []);
+
+    const currentSearch = useSyncExternalStore(
+        subscribeToUrlChanges,
+        getSearchSnapshot,
+        getServerSearchSnapshot
+    );
+
+    const {
+        selectedTeam,
+        selectedCity,
+        selectedDay,
+        selectedTimezone,
+    } = useMemo(() => parseUrlState(cities, currentSearch), [cities, currentSearch]);
+
+    const pushUrlState = useCallback((state: UrlState) => {
+        if (typeof window === 'undefined') return;
+
+        const newSearch = buildUrlSearchString(state);
+        if (newSearch === currentSearch) return;
+
+        const newUrl = window.location.pathname + newSearch;
+        window.history.pushState(null, '', newUrl);
+        searchSnapshotRef.current = newSearch;
+        historyDepthRef.current++;
+        setCanGoBack(true);
+        emitUrlChange();
+    }, [currentSearch]);
+
+    const setSelectedTeam = useCallback((teamCode: string | null) => {
+        pushUrlState({
+            selectedTeam: teamCode,
+            selectedCity,
+            selectedDay,
+            selectedTimezone,
+        });
+    }, [pushUrlState, selectedCity, selectedDay, selectedTimezone]);
+
+    const setSelectedCity = useCallback((city: City | null) => {
+        pushUrlState({
+            selectedTeam,
+            selectedCity: city,
+            selectedDay,
+            selectedTimezone,
+        });
+    }, [pushUrlState, selectedTeam, selectedDay, selectedTimezone]);
+
+    const setSelectedDay = useCallback((day: string | null) => {
+        pushUrlState({
+            selectedTeam,
+            selectedCity,
+            selectedDay: day,
+            selectedTimezone,
+        });
+    }, [pushUrlState, selectedTeam, selectedCity, selectedTimezone]);
 
     const handleTeamSelect = useCallback((teamCode: string | null) => {
-        setSelectedTeam(teamCode);
-        if (isMobile && teamCode) {
-            setSelectedCity(null);
-            setSelectedDay(null);
-        }
-    }, [isMobile]);
+        const nextCity = isMobile && teamCode ? null : selectedCity;
+        const nextDay = isMobile && teamCode ? null : selectedDay;
+
+        pushUrlState({
+            selectedTeam: teamCode,
+            selectedCity: nextCity,
+            selectedDay: nextDay,
+            selectedTimezone,
+        });
+    }, [isMobile, pushUrlState, selectedCity, selectedDay, selectedTimezone]);
 
     const handleCitySelect = useCallback((city: City | null) => {
-        setSelectedCity(city);
-        if (city) {
-            setSelectedDay(null); // City and day are mutually exclusive
-            if (isMobile) {
-                setSelectedTeam(null);
-            }
-        }
-    }, [isMobile]);
+        const nextTeam = city && isMobile ? null : selectedTeam;
+        const nextDay = city ? null : selectedDay;
+
+        pushUrlState({
+            selectedTeam: nextTeam,
+            selectedCity: city,
+            selectedDay: nextDay,
+            selectedTimezone,
+        });
+    }, [isMobile, pushUrlState, selectedTeam, selectedDay, selectedTimezone]);
 
     const handleDaySelect = useCallback((day: string | null) => {
-        setSelectedDay(day);
-        if (day) {
-            setSelectedCity(null);  // Day and city are mutually exclusive
-            setSelectedTeam(null);  // Day and team are mutually exclusive
-        }
-    }, []);
+        pushUrlState({
+            selectedTeam: day ? null : selectedTeam,
+            selectedCity: day ? null : selectedCity,
+            selectedDay: day,
+            selectedTimezone,
+        });
+    }, [pushUrlState, selectedTeam, selectedCity, selectedTimezone]);
 
     const handleTimezoneSelect = useCallback((tz: string | null) => {
-        setSelectedTimezone(tz);
-    }, []);
-
-    // canGoBack is already reactive state (updated when history depth changes)
+        pushUrlState({
+            selectedTeam,
+            selectedCity,
+            selectedDay,
+            selectedTimezone: tz,
+        });
+    }, [pushUrlState, selectedTeam, selectedCity, selectedDay]);
 
     const handleBack = useCallback(() => {
         window.history.back();

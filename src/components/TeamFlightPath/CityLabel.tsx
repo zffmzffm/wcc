@@ -8,7 +8,7 @@ interface CityLabelProps {
     matchInfo: MatchWithCoords;
     markerIndex: number;
     teamMatches: MatchWithCoords[];
-    animationKey: number;
+    animationKey: string;
 }
 
 /**

@@ -1,7 +1,15 @@
 // Calculate flight distances for all 48 teams during group stage
-const cities = require('../src/data/cities.json');
-const matches = require('../src/data/matches.json');
-const teams = require('../src/data/teams.json');
+async function main() {
+const { readFileSync, writeFileSync } = await import('node:fs');
+const { join } = await import('node:path');
+
+const readJson = (relativePath) => JSON.parse(
+    readFileSync(join(__dirname, relativePath), 'utf8')
+);
+
+const cities = readJson('../src/data/cities.json');
+const matches = readJson('../src/data/matches.json');
+const teams = readJson('../src/data/teams.json');
 
 // Haversine formula to calculate distance between two coordinates
 function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -75,8 +83,6 @@ const results = teams.map(team => calculateTeamDistance(team.code));
 // Sort by distance (descending)
 results.sort((a, b) => b.distance - a.distance);
 
-const fs = require('fs');
-
 // Build markdown output
 let output = '# 2026世界杯小组赛各队飞行里程\n\n';
 output += '| 排名 | 球队 | 小组 | 飞行里程 (km) | 行程路线 |\n';
@@ -95,8 +101,14 @@ output += `- **最短飞行里程**: ${Math.min(...results.map(r => r.distance))
 output += `- **平均飞行里程**: ${Math.round(results.reduce((sum, r) => sum + r.distance, 0) / results.length).toLocaleString()} km\n`;
 
 // Write to file
-fs.writeFileSync('flight-distances-report.md', output, 'utf8');
+writeFileSync('flight-distances-report.md', output, 'utf8');
 console.log('Report saved to flight-distances-report.md');
 
 // Also output to console
 console.log('\n' + output);
+}
+
+main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});

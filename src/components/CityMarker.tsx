@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { Marker, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 import { City } from '@/types';
@@ -32,21 +32,9 @@ export default function CityMarker({ city, onClick, isDimmed = false, isSelected
     const color = getCountryColor(city.country);
     const opacity = isDimmed ? 0.25 : 1;
 
-    // Flash animation state - triggers when isSelected becomes true
-    const [isFlashing, setIsFlashing] = useState(false);
-
-    useEffect(() => {
-        if (isSelected) {
-            setIsFlashing(true);
-            // Reset flash after animation completes
-            const timer = setTimeout(() => setIsFlashing(false), 1500);
-            return () => clearTimeout(timer);
-        }
-    }, [isSelected]);
-
     // Memoize icon creation to avoid recreating on every render
     const customIcon = useMemo(() => {
-        const flashClass = isFlashing ? 'marker-flashing' : '';
+        const flashClass = isSelected ? 'marker-flashing' : '';
 
         return L.divIcon({
             className: 'custom-marker',
@@ -66,7 +54,7 @@ export default function CityMarker({ city, onClick, isDimmed = false, isSelected
             iconSize: [24, 24],
             iconAnchor: [12, 12],
         });
-    }, [color, opacity, isFlashing]);
+    }, [color, opacity, isSelected]);
 
     return (
         <Marker
