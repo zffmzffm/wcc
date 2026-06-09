@@ -8,6 +8,7 @@ import CityMarker from './CityMarker';
 import TeamFlightPath from './TeamFlightPath';
 import MapLegendControl from './MapLegendControl';
 import MatchDayLabels from './MatchDayLabels';
+import LiveMatchStack from './LiveMatchStack';
 import { useMapViewControl } from '@/hooks/useMapViewControl';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { useKnockoutPaths } from '@/hooks/useKnockoutPaths';
@@ -102,6 +103,7 @@ function MapContent({
     isMobile,
     teamCityIds,
     dayCityIds,
+    allKnockoutVenues,
     timezone,
     isFullscreen
 }: {
@@ -115,6 +117,7 @@ function MapContent({
     isMobile: boolean;
     teamCityIds: Set<string>;
     dayCityIds: Set<string>;
+    allKnockoutVenues: KnockoutVenue[];
     timezone: string;
     isFullscreen: boolean;
 }) {
@@ -123,7 +126,6 @@ function MapContent({
 
     // Get layer visibility
     const { visibility } = useLayerVisibility();
-    const allKnockoutVenues = useMemo(() => matchRepository.getKnockoutVenues(), []);
     const knockoutPaths = useKnockoutPaths(currentTeam?.group || '', allKnockoutVenues, cities);
 
     // Calculate knockout path cities based on visible layers
@@ -271,6 +273,9 @@ export default function WorldCupMap({
         }
     }, [isIOS]);
 
+    // Shared knockout venue schedule for paths and the match status stack
+    const allKnockoutVenues = useMemo(() => matchRepository.getKnockoutVenues(), []);
+
     // Calculate which cities are relevant for the selected team
     const teamCityIds = useMemo(() => {
         if (!selectedTeam) return new Set<string>();
@@ -331,10 +336,19 @@ export default function WorldCupMap({
                     isMobile={isMobile}
                     teamCityIds={teamCityIds}
                     dayCityIds={dayCityIds}
+                    allKnockoutVenues={allKnockoutVenues}
                     timezone={timezone}
                     isFullscreen={isFullscreen}
                 />
             </MapContainer>
+            <LiveMatchStack
+                matches={matches}
+                knockoutVenues={allKnockoutVenues}
+                cities={cities}
+                teams={teams}
+                timezone={timezone}
+                onCitySelect={handleCitySelect}
+            />
             {/* Back button overlay */}
             {canGoBack && onBack && (
                 <button

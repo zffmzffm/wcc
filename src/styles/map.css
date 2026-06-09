@@ -24,6 +24,297 @@
 }
 
 /* ============================================
+   Live / Upcoming Match Stack
+   ============================================ */
+.live-match-stack {
+    position: absolute;
+    top: 10px;
+    left: 54px;
+    z-index: 1000;
+    width: min(320px, calc(100% - 68px));
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: auto;
+}
+
+.live-match-stack-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    gap: 10px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(45, 90, 61, 0.14);
+    box-shadow: 0 4px 12px rgba(45, 90, 61, 0.12);
+    color: var(--text-secondary);
+    line-height: 1;
+}
+
+.live-match-stack-title {
+    color: var(--primary-dark);
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0;
+}
+
+.live-match-stack-count {
+    color: var(--text-muted);
+    font-size: 0.62rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.live-match-stack-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.live-match-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "main status"
+        "place status";
+    align-items: center;
+    gap: 3px 10px;
+    min-height: 52px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 7px 8px 7px 10px;
+    border: 1px solid rgba(45, 90, 61, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 8px 24px rgba(45, 90, 61, 0.14),
+        0 2px 7px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    color: var(--text-primary);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+}
+
+.live-match-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(45, 90, 61, 0.3);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow:
+        0 10px 26px rgba(45, 90, 61, 0.18),
+        0 3px 9px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
+.live-match-main {
+    grid-area: main;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.live-match-teams {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.live-match-vs {
+    flex-shrink: 0;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: rgba(45, 90, 61, 0.08);
+    color: var(--text-muted);
+    font-size: 0.55rem;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.live-match-meta,
+.live-match-place {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-weight: 650;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.live-match-meta span,
+.live-match-place span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.live-match-place {
+    grid-area: place;
+    color: var(--text-muted);
+    font-size: 0.6rem;
+}
+
+.live-match-place span:first-child {
+    flex-shrink: 0;
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.live-match-dot {
+    width: 3px;
+    height: 3px;
+    flex: 0 0 3px;
+    border-radius: 50%;
+    background: rgba(45, 90, 61, 0.35);
+}
+
+.live-match-status {
+    grid-area: status;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 74px;
+    max-width: 96px;
+    min-height: 27px;
+    box-sizing: border-box;
+    padding: 4px 7px;
+    border-radius: 7px;
+    font-size: 0.64rem;
+    font-weight: 900;
+    line-height: 1.05;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.live-match-status.is-live {
+    position: relative;
+    min-width: 58px;
+    padding-left: 17px;
+    background: #dc2626;
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.28);
+}
+
+.live-match-status.is-live::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
+    animation: liveStatusPulse 1.4s ease-out infinite;
+}
+
+.live-match-status.is-upcoming {
+    background: rgba(45, 90, 61, 0.1);
+    color: var(--primary-dark);
+    border: 1px solid rgba(45, 90, 61, 0.14);
+}
+
+@keyframes liveStatusPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+@media (max-width: 600px) {
+    .live-match-stack {
+        top: 8px;
+        left: 50px;
+        width: min(248px, calc(100% - 58px));
+        gap: 4px;
+    }
+
+    .live-match-stack-header {
+        display: none;
+    }
+
+    .live-match-stack-list {
+        gap: 4px;
+    }
+
+    .live-match-card {
+        min-height: 40px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 1px 6px;
+        padding: 5px 6px 5px 7px;
+        border-radius: 7px;
+    }
+
+    .live-match-teams {
+        gap: 4px;
+        font-size: 0.66rem;
+    }
+
+    .live-match-vs {
+        padding: 0 3px;
+        font-size: 0.48rem;
+    }
+
+    .live-match-meta {
+        gap: 4px;
+        font-size: 0.55rem;
+    }
+
+    .live-match-place {
+        display: none;
+    }
+
+    .live-match-status {
+        min-width: 56px;
+        max-width: 74px;
+        min-height: 24px;
+        padding: 3px 5px;
+        border-radius: 6px;
+        font-size: 0.52rem;
+    }
+
+    .live-match-status.is-live {
+        min-width: 50px;
+        padding-left: 15px;
+    }
+
+    .live-match-status.is-live::before {
+        left: 6px;
+        width: 5px;
+        height: 5px;
+    }
+}
+
+/* ============================================
    Custom Marker Styles
    ============================================ */
 .custom-marker {
@@ -427,7 +718,8 @@
 
 /* Ensure buttons are visible in CSS fullscreen */
 .map-css-fullscreen .map-back-button,
-.map-css-fullscreen .map-fullscreen-button {
+.map-css-fullscreen .map-fullscreen-button,
+.map-css-fullscreen .live-match-stack {
     z-index: 10000 !important;
 }
 
