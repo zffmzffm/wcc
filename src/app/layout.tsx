@@ -132,7 +132,7 @@ export default function RootLayout({
     location: [
       // USA Venues
       { '@type': 'Place', name: 'MetLife Stadium', address: { '@type': 'PostalAddress', addressLocality: 'New York/New Jersey', addressCountry: 'USA' } },
-      { '@type': 'Place', name: 'Rose Bowl Stadium', address: { '@type': 'PostalAddress', addressLocality: 'Los Angeles', addressCountry: 'USA' } },
+      { '@type': 'Place', name: 'SoFi Stadium', address: { '@type': 'PostalAddress', addressLocality: 'Los Angeles', addressCountry: 'USA' } },
       { '@type': 'Place', name: 'AT&T Stadium', address: { '@type': 'PostalAddress', addressLocality: 'Dallas', addressCountry: 'USA' } },
       { '@type': 'Place', name: 'NRG Stadium', address: { '@type': 'PostalAddress', addressLocality: 'Houston', addressCountry: 'USA' } },
       { '@type': 'Place', name: 'Hard Rock Stadium', address: { '@type': 'PostalAddress', addressLocality: 'Miami', addressCountry: 'USA' } },
@@ -149,84 +149,6 @@ export default function RootLayout({
       // Canada Venues
       { '@type': 'Place', name: 'BC Place', address: { '@type': 'PostalAddress', addressLocality: 'Vancouver', addressCountry: 'Canada' } },
       { '@type': 'Place', name: 'BMO Field', address: { '@type': 'PostalAddress', addressLocality: 'Toronto', addressCountry: 'Canada' } },
-    ],
-  };
-
-  // Structured data for SEO - FAQPage
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'When does the 2026 World Cup start?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The 2026 World Cup starts on June 11, 2026, and ends on July 19, 2026. The tournament spans 39 days with 104 matches played across 16 host cities.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'What is the full World Cup 2026 schedule?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The World Cup 2026 schedule includes 104 matches: 48 group stage matches per round (144 total in groups), followed by the Round of 32, Round of 16, Quarter-finals, Semi-finals, Third-place playoff, and the Final on July 19, 2026 at MetLife Stadium. Cup26Map provides an interactive map to browse the complete schedule by city, team, or date.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Which countries are hosting the 2026 World Cup?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The 2026 World Cup will be jointly hosted by the United States (11 cities), Mexico (3 cities), and Canada (2 cities), featuring 16 host cities across the three countries.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'How many teams will participate in the 2026 World Cup?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The 2026 World Cup features an expanded format with 48 teams divided into 12 groups of 4, up from the previous 32-team format.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'What are the host cities for the 2026 World Cup?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The 16 host cities are: USA – New York/New Jersey (MetLife Stadium), Los Angeles (Rose Bowl), Dallas (AT&T Stadium), Houston (NRG Stadium), Miami (Hard Rock Stadium), Atlanta (Mercedes-Benz Stadium), Philadelphia (Lincoln Financial Field), Seattle (Lumen Field), San Francisco (Levi\'s Stadium), Boston (Gillette Stadium), Kansas City (Arrowhead Stadium); Mexico – Mexico City (Estadio Azteca), Monterrey (Estadio BBVA), Guadalajara (Estadio Akron); Canada – Vancouver (BC Place), Toronto (BMO Field).',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Is there an interactive map for the 2026 World Cup schedule?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes! Cup26Map.com provides a free interactive map showing all 16 World Cup 2026 host cities with complete match schedules. You can filter by team, city, or match day, convert kickoff times to your timezone, and view team travel paths across North America.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Where is the 2026 World Cup Final?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The 2026 World Cup Final will be held on July 19, 2026, at MetLife Stadium in East Rutherford, New Jersey (New York/New Jersey metro area), with a capacity of 82,500 spectators.',
-        },
-      },
-    ],
-  };
-
-  // Structured data for SEO - BreadcrumbList
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'World Cup 2026 Schedule & Map',
-        item: 'https://cup26map.com',
-      },
     ],
   };
 
@@ -250,14 +172,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(sportsEventJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       </head>
       <body

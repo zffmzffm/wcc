@@ -1,21 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cities, matches, teams } from '@/data';
+import { cityIdToSlug, teamNameToSlug } from '@/utils/slugs';
 import '@/styles/landing.css';
-
-/**
- * Helper: convert team name to URL slug
- * e.g. "United States" → "united-states", "Côte d'Ivoire" → "cote-divoire"
- */
-function teamNameToSlug(name: string): string {
-    return name
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')   // strip diacritics
-        .replace(/['']/g, '')               // remove apostrophes
-        .replace(/\s+/g, '-')              // spaces to hyphens
-        .replace(/[^a-z0-9-]/g, '');       // remove non-alphanumeric
-}
 
 /**
  * Generate static params for all 48 teams
@@ -134,13 +121,6 @@ function getCityName(cityId: string): string {
 function getVenueName(cityId: string): string {
     const city = cities.find((c) => c.id === cityId);
     return city ? city.venue : '';
-}
-
-/**
- * Convert city ID to slug for linking
- */
-function cityIdToSlug(id: string): string {
-    return id.replace(/_/g, '-');
 }
 
 export default async function TeamLandingPage({ params }: { params: Promise<{ slug: string }> }) {

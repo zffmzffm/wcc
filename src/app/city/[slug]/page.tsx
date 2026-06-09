@@ -1,22 +1,61 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cities, matches, teams } from '@/data';
+import knockoutVenuesData from '@/data/knockoutVenues.json';
+import type { Match } from '@/types';
+import type { KnockoutVenue } from '@/repositories/types';
+import { cityIdToSlug, slugToCityId, teamNameToSlug } from '@/utils/slugs';
 import '@/styles/landing.css';
 
-/**
- * Helper: convert city ID to URL slug
- * e.g. "new_york" → "new-york", "mexico_city" → "mexico-city"
- */
-function cityIdToSlug(id: string): string {
-    return id.replace(/_/g, '-');
+const knockoutVenues = Object.values(knockoutVenuesData).flat() as KnockoutVenue[];
+
+type CityScheduleEvent =
+    | { kind: 'group'; id: string; datetime: string; match: Match }
+    | { kind: 'knockout'; id: string; datetime: string; venue: KnockoutVenue };
+
+const stageLabels: Record<KnockoutVenue['stage'], string> = {
+    R32: 'Round of 32',
+    R16: 'Round of 16',
+    QF: 'Quarter-final',
+    SF: 'Semi-final',
+    F: 'Final',
+    '3P': 'Third-place playoff',
+};
+
+function getKnockoutStageLabel(stage: KnockoutVenue['stage']): string {
+    return stageLabels[stage];
 }
 
-/**
- * Helper: convert URL slug back to city ID
- * e.g. "new-york" → "new_york"
- */
-function slugToCityId(slug: string): string {
-    return slug.replace(/-/g, '_');
+function getCityScheduleEvents(cityId: string): CityScheduleEvent[] {
+    const groupEvents: CityScheduleEvent[] = matches
+        .filter((m) => m.cityId === cityId)
+        .map((match) => ({
+            kind: 'group',
+            id: `group-${match.id}`,
+            datetime: match.datetime,
+            match,
+        }));
+
+    const knockoutEvents: CityScheduleEvent[] = knockoutVenues
+        .filter((venue) => venue.cityId === cityId)
+        .map((venue) => ({
+            kind: 'knockout',
+            id: `knockout-${venue.matchId}`,
+            datetime: venue.datetime,
+            venue,
+        }));
+
+    return [...groupEvents, ...knockoutEvents]
+        .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
+}
+
+function formatCityMatchSummary(groupMatchCount: number, knockoutMatchCount: number): string {
+    if (knockoutMatchCount === 0) {
+        return `${groupMatchCount} group stage matches`;
+    }
+
+    const totalMatchCount = groupMatchCount + knockoutMatchCount;
+    return `${totalMatchCount} matches (${groupMatchCount} group stage, ${knockoutMatchCount} knockout)`;
 }
 
 /**
@@ -40,11 +79,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         return { title: 'City Not Found | Cup26Map' };
     }
 
-    const cityMatches = matches.filter((m) => m.cityId === city.id);
-    const matchCount = cityMatches.length;
+    const groupMatchCount = matches.filter((m) => m.cityId === city.id).length;
+    const knockoutMatchCount = knockoutVenues.filter((v) => v.cityId === city.id).length;
+    const matchCount = groupMatchCount + knockoutMatchCount;
+    const matchSummary = formatCityMatchSummary(groupMatchCount, knockoutMatchCount);
 
     const title = `World Cup 2026 in ${city.name} – ${matchCount} Matches at ${city.venue} | Cup26Map`;
-    const description = `View all ${matchCount} World Cup 2026 matches at ${city.venue} in ${city.name}, ${city.country}. Group stage schedule, kickoff times, teams, and interactive map on Cup26Map.`;
+    const description = `View all ${matchCount} World Cup 2026 matches at ${city.venue} in ${city.name}, ${city.country}: ${matchSummary}. Kickoff times, teams, bracket placeholders, and interactive map on Cup26Map.`;
 
     return {
         title,
@@ -145,41 +186,59 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
         );
     }
 
-    const cityMatches = matches
+    const cityGroupMatches = matches
         .filter((m) => m.cityId === city.id)
         .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
+    const cityKnockoutVenues = knockoutVenues
+        .filter((v) => v.cityId === city.id)
+        .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
+    const cityScheduleEvents = getCityScheduleEvents(city.id);
+    const matchSummary = formatCityMatchSummary(cityGroupMatches.length, cityKnockoutVenues.length);
 
     // Unique teams playing in this city
     const teamCodes = new Set<string>();
-    cityMatches.forEach((m) => {
+    cityGroupMatches.forEach((m) => {
         teamCodes.add(m.team1);
         teamCodes.add(m.team2);
     });
 
     // Unique groups
-    const groupSet = new Set(cityMatches.map((m) => m.group));
+    const groupSet = new Set(cityGroupMatches.map((m) => m.group));
 
     // Structured data: SportsEvent for each match
-    const eventsJsonLd = cityMatches.map((m) => ({
-        '@context': 'https://schema.org',
-        '@type': 'SportsEvent',
-        name: `${getTeamName(m.team1)} vs ${getTeamName(m.team2)} – World Cup 2026`,
-        startDate: m.datetime,
-        location: {
-            '@type': 'Place',
-            name: city.venue,
-            address: {
-                '@type': 'PostalAddress',
-                addressLocality: city.name,
-                addressCountry: city.country,
+    const eventsJsonLd = cityScheduleEvents.map((event) => {
+        const baseEvent = {
+            '@context': 'https://schema.org',
+            '@type': 'SportsEvent',
+            startDate: event.datetime,
+            location: {
+                '@type': 'Place',
+                name: city.venue,
+                address: {
+                    '@type': 'PostalAddress',
+                    addressLocality: city.name,
+                    addressCountry: city.country,
+                },
             },
-        },
-        homeTeam: { '@type': 'SportsTeam', name: getTeamName(m.team1) },
-        awayTeam: { '@type': 'SportsTeam', name: getTeamName(m.team2) },
-        eventStatus: 'https://schema.org/EventScheduled',
-        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-        organizer: { '@type': 'Organization', name: 'FIFA', url: 'https://www.fifa.com' },
-    }));
+            eventStatus: 'https://schema.org/EventScheduled',
+            eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+            organizer: { '@type': 'Organization', name: 'FIFA', url: 'https://www.fifa.com' },
+        };
+
+        if (event.kind === 'group') {
+            return {
+                ...baseEvent,
+                name: `${getTeamName(event.match.team1)} vs ${getTeamName(event.match.team2)} – World Cup 2026`,
+                homeTeam: { '@type': 'SportsTeam', name: getTeamName(event.match.team1) },
+                awayTeam: { '@type': 'SportsTeam', name: getTeamName(event.match.team2) },
+            };
+        }
+
+        return {
+            ...baseEvent,
+            name: `${getKnockoutStageLabel(event.venue.stage)}: ${event.venue.matchup || 'TBD'} – World Cup 2026`,
+        };
+    });
 
     const breadcrumbJsonLd = {
         '@context': 'https://schema.org',
@@ -217,7 +276,8 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                     </span>
                     <h1>World Cup 2026 in {city.name}</h1>
                     <p className="landing-hero-subtitle">
-                        {cityMatches.length} group stage matches at {city.venue} — featuring {teamCodes.size} national teams across {groupSet.size} groups
+                        {matchSummary} at {city.venue}
+                        {teamCodes.size > 0 && ` — featuring ${teamCodes.size} national teams across ${groupSet.size} groups`}
                     </p>
                     <div className="landing-hero-meta">
                         <span className="landing-hero-meta-item">
@@ -245,14 +305,14 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                 <section className="landing-section">
                     <h2>Match Schedule at {city.venue}</h2>
                     <p className="landing-section-desc">
-                        All {cityMatches.length} World Cup 2026 group stage matches scheduled at {city.venue} in {city.name}.
+                        All {cityScheduleEvents.length} World Cup 2026 matches scheduled at {city.venue} in {city.name}, including group stage and knockout fixtures where assigned.
                         Times shown in Eastern Time (ET).
                     </p>
                     <div className="landing-matches">
-                        {cityMatches.map((m) => {
-                            const date = formatMatchDate(m.datetime);
+                        {cityScheduleEvents.map((event) => {
+                            const date = formatMatchDate(event.datetime);
                             return (
-                                <article key={m.id} className="landing-match-card">
+                                <article key={event.id} className="landing-match-card">
                                     <div className="landing-match-date">
                                         <div className="landing-match-date-month">{date.month}</div>
                                         <div className="landing-match-date-day">{date.day}</div>
@@ -260,15 +320,27 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                                     <div className="landing-match-divider" />
                                     <div className="landing-match-info">
                                         <div className="landing-match-teams">
-                                            {getTeamFlag(m.team1)} {getTeamName(m.team1)}
-                                            <span className="landing-match-vs">vs</span>
-                                            {getTeamFlag(m.team2)} {getTeamName(m.team2)}
+                                            {event.kind === 'group' ? (
+                                                <>
+                                                    {getTeamFlag(event.match.team1)} {getTeamName(event.match.team1)}
+                                                    <span className="landing-match-vs">vs</span>
+                                                    {getTeamFlag(event.match.team2)} {getTeamName(event.match.team2)}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {getKnockoutStageLabel(event.venue.stage)}
+                                                    <span className="landing-match-vs">·</span>
+                                                    {event.venue.matchup || 'TBD'}
+                                                </>
+                                            )}
                                         </div>
                                         <div className="landing-match-detail">
                                             {date.time} ET · {date.fullDate}
                                         </div>
                                     </div>
-                                    <span className="landing-match-group">Group {m.group}</span>
+                                    <span className="landing-match-group">
+                                        {event.kind === 'group' ? `Group ${event.match.group}` : event.venue.stage}
+                                    </span>
                                 </article>
                             );
                         })}
@@ -284,7 +356,7 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                             <h3>{city.venue}</h3>
                             <p>{city.name}, {city.country}</p>
                             <p>Capacity: {city.capacity.toLocaleString()} spectators</p>
-                            <p>Hosting {cityMatches.length} World Cup 2026 group stage matches</p>
+                            <p>Hosting {cityScheduleEvents.length} World Cup 2026 matches</p>
                         </div>
                     </div>
                 </section>
@@ -293,13 +365,13 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                 <section className="landing-section">
                     <h2>Teams Playing in {city.name}</h2>
                     <p className="landing-section-desc">
-                        {teamCodes.size} national teams have group stage matches scheduled at {city.venue}.
+                        {teamCodes.size} national teams have confirmed group stage matches scheduled at {city.venue}. Knockout round participants will be determined during the tournament.
                     </p>
                     <div className="landing-cities-list">
                         {Array.from(teamCodes).map((code) => (
                             <Link
                                 key={code}
-                                href={`/team/${getTeamName(code).toLowerCase().replace(/[\s']/g, '-').replace(/[^a-z0-9-]/g, '')}`}
+                                href={`/team/${teamNameToSlug(getTeamName(code))}`}
                                 className="landing-city-tag"
                             >
                                 {getTeamFlag(code)} {getTeamName(code)}
