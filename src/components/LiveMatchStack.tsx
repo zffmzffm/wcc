@@ -22,6 +22,7 @@ type MatchStackEvent = {
     team1: string;
     team2: string;
     stageLabel: string;
+    stageBadgeLabel: string;
     status: MatchTimingStatus;
 };
 
@@ -39,6 +40,17 @@ function getStageLabel(event: Match | KnockoutVenue): string {
     }
 
     return event.stage === '3P' ? 'Third Place' : event.stage;
+}
+
+function getStageBadgeLabel(event: Match | KnockoutVenue): string {
+    if ('group' in event) {
+        return event.group;
+    }
+
+    if (event.stage === 'R32') return '32';
+    if (event.stage === 'R16') return '16';
+
+    return event.stage;
 }
 
 export default function LiveMatchStack({
@@ -70,6 +82,7 @@ export default function LiveMatchStack({
             team1: getTeamDisplay(match.team1, teams).code,
             team2: getTeamDisplay(match.team2, teams).code,
             stageLabel: getStageLabel(match),
+            stageBadgeLabel: getStageBadgeLabel(match),
         }));
         const knockoutEvents = knockoutVenues.map(venue => {
             const [team1, team2] = splitMatchup(venue.matchup);
@@ -81,6 +94,7 @@ export default function LiveMatchStack({
                 team1,
                 team2,
                 stageLabel: getStageLabel(venue),
+                stageBadgeLabel: getStageBadgeLabel(venue),
             };
         });
 
@@ -127,8 +141,11 @@ export default function LiveMatchStack({
                             className="live-match-card"
                             type="button"
                             onClick={() => onCitySelect?.(event.city)}
-                            aria-label={`${event.team1} vs ${event.team2} in ${event.city.name}`}
+                            aria-label={`${event.stageLabel}: ${event.team1} vs ${event.team2} in ${event.city.name}`}
                         >
+                            <span className="live-match-stage-badge" aria-hidden="true">
+                                {event.stageBadgeLabel}
+                            </span>
                             <span className={`live-match-status ${isLive ? 'is-live' : 'is-upcoming'}`}>
                                 {event.status.label}
                             </span>
@@ -143,10 +160,6 @@ export default function LiveMatchStack({
                                     <span className="live-match-dot" aria-hidden="true" />
                                     <span>{event.city.name}</span>
                                 </span>
-                            </span>
-                            <span className="live-match-place">
-                                <span>{event.stageLabel}</span>
-                                <span>{event.city.venue}</span>
                             </span>
                         </button>
                     );

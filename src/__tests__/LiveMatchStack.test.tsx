@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import LiveMatchStack from '@/components/LiveMatchStack';
 import { City, Match, Team } from '@/types';
+import { KnockoutVenue } from '@/repositories/types';
 
 const cities: City[] = [
     { id: 'mexico_city', name: 'Mexico City', country: 'Mexico', countryCode: 'MEX', lat: 19.3029, lng: -99.1505, venue: 'Estadio Azteca', capacity: 87523 },
@@ -42,7 +43,7 @@ describe('LiveMatchStack', () => {
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2026-06-11T15:30:00-04:00'));
 
-        render(
+        const { container } = render(
             <LiveMatchStack
                 matches={matches}
                 knockoutVenues={[]}
@@ -59,6 +60,33 @@ describe('LiveMatchStack', () => {
         expect(screen.getByText('MEX')).toBeInTheDocument();
         expect(screen.getByText('RSA')).toBeInTheDocument();
         expect(screen.queryByText('BRA')).not.toBeInTheDocument();
+        expect(screen.queryByText('Group A')).not.toBeInTheDocument();
+        expect(screen.queryByText('Estadio Azteca')).not.toBeInTheDocument();
+        expect([...container.querySelectorAll('.live-match-stage-badge')].map(badge => badge.textContent)).toEqual(['A', 'A', 'B', 'D']);
+    });
+
+    it('renders compact knockout stage badges', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-06-28T12:00:00-04:00'));
+        const knockoutVenues: KnockoutVenue[] = [
+            { matchId: 'R32_73', stage: 'R32', cityId: 'los_angeles', datetime: '2026-06-28T15:00:00-04:00', matchup: '2A vs 2B' },
+            { matchId: 'R16_89', stage: 'R16', cityId: 'toronto', datetime: '2026-07-04T15:00:00-04:00', matchup: 'W73 vs W74' },
+            { matchId: 'QF_97', stage: 'QF', cityId: 'mexico_city', datetime: '2026-07-09T15:00:00-04:00', matchup: 'W89 vs W90' },
+            { matchId: 'SF_101', stage: 'SF', cityId: 'guadalajara', datetime: '2026-07-14T20:00:00-04:00', matchup: 'W97 vs W98' },
+            { matchId: 'F_104', stage: 'F', cityId: 'los_angeles', datetime: '2026-07-19T15:00:00-04:00', matchup: 'W101 vs W102' },
+        ];
+
+        const { container } = render(
+            <LiveMatchStack
+                matches={[]}
+                knockoutVenues={knockoutVenues}
+                cities={cities}
+                teams={teams}
+                timezone="America/Toronto"
+            />
+        );
+
+        expect([...container.querySelectorAll('.live-match-stage-badge')].map(badge => badge.textContent)).toEqual(['32', '16', 'QF', 'SF']);
     });
 
     it('selects the event city when a match card is clicked', () => {

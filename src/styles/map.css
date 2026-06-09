@@ -29,9 +29,9 @@
 .live-match-stack {
     position: absolute;
     top: 10px;
-    left: 54px;
+    left: 10px;
     z-index: 1000;
-    width: min(320px, calc(100% - 68px));
+    width: min(292px, calc(100% - 20px));
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -77,16 +77,14 @@
 
 .live-match-card {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-        "main status"
-        "place status";
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "badge main status";
     align-items: center;
-    gap: 3px 10px;
-    min-height: 52px;
+    gap: 8px;
+    min-height: 44px;
     width: 100%;
     box-sizing: border-box;
-    padding: 7px 8px 7px 10px;
+    padding: 6px 7px;
     border: 1px solid rgba(45, 90, 61, 0.14);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.95);
@@ -125,6 +123,26 @@
     gap: 2px;
 }
 
+.live-match-stage-badge {
+    grid-area: badge;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: #2D6F4E;
+    color: white;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 3px 8px rgba(45, 90, 61, 0.18);
+    font-size: 0.66rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
 .live-match-teams {
     min-width: 0;
     display: flex;
@@ -150,8 +168,7 @@
     line-height: 1.2;
 }
 
-.live-match-meta,
-.live-match-place {
+.live-match-meta {
     min-width: 0;
     display: flex;
     align-items: center;
@@ -163,23 +180,10 @@
     white-space: nowrap;
 }
 
-.live-match-meta span,
-.live-match-place span {
+.live-match-meta span {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.live-match-place {
-    grid-area: place;
-    color: var(--text-muted);
-    font-size: 0.6rem;
-}
-
-.live-match-place span:first-child {
-    flex-shrink: 0;
-    color: var(--primary);
-    font-weight: 800;
 }
 
 .live-match-dot {
@@ -196,11 +200,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 74px;
-    max-width: 96px;
+    min-width: 0;
+    max-width: none;
     min-height: 27px;
     box-sizing: border-box;
-    padding: 4px 7px;
+    padding: 4px 6px;
     border-radius: 7px;
     font-size: 0.64rem;
     font-weight: 900;
@@ -211,8 +215,8 @@
 
 .live-match-status.is-live {
     position: relative;
-    min-width: 58px;
-    padding-left: 17px;
+    min-width: 48px;
+    padding-left: 16px;
     background: #dc2626;
     color: white;
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.28);
@@ -253,8 +257,8 @@
 @media (max-width: 600px) {
     .live-match-stack {
         top: 8px;
-        left: 50px;
-        width: min(248px, calc(100% - 58px));
+        left: 8px;
+        width: min(268px, calc(100% - 16px));
         gap: 4px;
     }
 
@@ -267,11 +271,17 @@
     }
 
     .live-match-card {
-        min-height: 40px;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 1px 6px;
-        padding: 5px 6px 5px 7px;
+        min-height: 38px;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 5px;
+        padding: 5px;
         border-radius: 7px;
+    }
+
+    .live-match-stage-badge {
+        width: 24px;
+        height: 24px;
+        font-size: 0.56rem;
     }
 
     .live-match-teams {
@@ -289,15 +299,11 @@
         font-size: 0.55rem;
     }
 
-    .live-match-place {
-        display: none;
-    }
-
     .live-match-status {
-        min-width: 56px;
-        max-width: 74px;
+        min-width: 0;
+        max-width: none;
         min-height: 24px;
-        padding: 3px 5px;
+        padding: 3px 4px;
         border-radius: 6px;
         font-size: 0.52rem;
     }
