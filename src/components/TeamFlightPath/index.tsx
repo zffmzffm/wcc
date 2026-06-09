@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
@@ -7,12 +7,12 @@ import { useTeamMatches, useFlightSegments } from '@/hooks/useTeamMatches';
 import { useMapRefresh } from '@/hooks/useMapRefresh';
 import { useFlightAnimation } from './useFlightAnimation';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
+import { useKnockoutPaths } from '@/hooks/useKnockoutPaths';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG, PADDING_CONFIG } from '@/constants';
 import FlightSegment from './FlightSegment';
 import CityLabel from './CityLabel';
 import MatchMarker from './MatchMarker';
 import KnockoutFlightPath from './KnockoutFlightPath';
-import { knockoutPathTemplates, thirdPlacePathTemplates } from '@/data/knockoutBracket';
 
 interface TeamFlightPathProps {
     teamCode: string;
@@ -34,7 +34,7 @@ interface TeamFlightPathProps {
 export default function TeamFlightPath({ teamCode, matches, cities, teams, knockoutVenues = [], timezone }: TeamFlightPathProps) {
     const svgRef = useRef<SVGSVGElement>(null);
     const map = useMap();
-    const { visibility } = useLayerVisibility();
+    const { visibility, fitBoundsTrigger, selectedKnockoutPath } = useLayerVisibility();
 
     // Force re-render on map move/zoom for SVG path updates
     useMapRefresh();
@@ -59,55 +59,27 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
     );
 
     // Get knockout path selection for bounds fitting
-    const { fitBoundsTrigger, selectedKnockoutPath } = useLayerVisibility();
+    const knockoutPaths = useKnockoutPaths(currentTeam?.group || '', knockoutVenues, cities);
 
-    // Coordinate conversion function
-    const latLngToPixel = useCallback((coords: [number, number]): { x: number; y: number } => {
-        const point = map.latLngToContainerPoint(coords);
-        return { x: point.x, y: point.y };
-    }, [map]);
+    // Calculate group stage city IDs for knockout path label offset
+    const groupStageCityIds = useMemo(() => {
+        return new Set(teamMatches.map(m => m.city.id));
+    }, [teamMatches]);
 
     // Note: Map view adjustment for team selection is handled by useMapViewControl hook
     // Do not add fitBounds here to avoid conflicts
-
-    // Calculate knockout paths for bounds fitting
-    const knockoutPaths = useMemo(() => {
-        if (!currentTeam) return [];
-
-        // Get templates for this group
-        const mainTemplates = knockoutPathTemplates.filter(t => t.groupId === currentTeam.group);
-        const thirdTemplate = thirdPlacePathTemplates.find(t => t.groupId === currentTeam.group);
-        const allTemplates = thirdTemplate ? [...mainTemplates, thirdTemplate] : mainTemplates;
-
-        // Create venue map
-        const venueMap = new Map(knockoutVenues.map(v => [v.matchId, v]));
-        const cityMap = new Map(cities.map(c => [c.id, c]));
-
-        return allTemplates.map((template: { path: string[]; position: 1 | 2 | 3 }) => {
-            const coords: [number, number][] = template.path
-                .map((matchId: string) => {
-                    const venue = venueMap.get(matchId);
-                    if (!venue) return null;
-                    const city = cityMap.get(venue.cityId);
-                    if (!city) return null;
-                    return [city.lat, city.lng] as [number, number];
-                })
-                .filter((c: [number, number] | null): c is [number, number] => c !== null);
-            return { position: template.position, coords };
-        });
-    }, [currentTeam, knockoutVenues, cities]);
 
     // Fit bounds when knockout tab is clicked
     useEffect(() => {
         if (fitBoundsTrigger === 0 || selectedKnockoutPath === null) return;
 
-        const selectedPath = knockoutPaths[selectedKnockoutPath];
+        const selectedPath = knockoutPaths.find(path => path.scenarioId === selectedKnockoutPath);
         if (!selectedPath) return;
 
         // Collect all coordinates: group stage + selected knockout path
         const allCoords: [number, number][] = [
             ...teamMatches.map(m => m.coords),
-            ...selectedPath.coords
+            ...selectedPath.matches.map(match => match.coords)
         ];
 
         if (allCoords.length > 0) {
@@ -140,11 +112,6 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
             return true;
         });
     })();
-
-    // Calculate group stage city IDs for knockout path label offset
-    const groupStageCityIds = useMemo(() => {
-        return new Set(teamMatches.map(m => m.city.id));
-    }, [teamMatches]);
 
     return (
         <>
