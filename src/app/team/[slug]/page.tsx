@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cities, matches, teams } from '@/data';
+import FlagIcon from '@/components/FlagIcon';
 import { cityIdToSlug, teamNameToSlug } from '@/utils/slugs';
 import '@/styles/landing.css';
 
@@ -99,12 +100,13 @@ function getTeamName(code: string): string {
     return team ? team.name : code;
 }
 
-/**
- * Get team flag from code
- */
-function getTeamFlag(code: string): string {
-    const team = teams.find((t) => t.code === code);
-    return team ? team.flag : '';
+function TeamFlagLabel({ code, name, size = 18 }: { code: string; name?: string; size?: number }) {
+    return (
+        <span className="landing-team-label">
+            <FlagIcon code={code} size={size} />
+            <span>{name ?? getTeamName(code)}</span>
+        </span>
+    );
 }
 
 /**
@@ -206,8 +208,8 @@ export default async function TeamLandingPage({ params }: { params: Promise<{ sl
                         <span>›</span>
                         <span>{team.name}</span>
                     </nav>
-                    <span className="landing-flag" role="img" aria-label={`${team.name} flag`}>
-                        {team.flag}
+                    <span className="landing-flag" aria-label={`${team.name} flag`}>
+                        <FlagIcon code={team.code} size={64} />
                     </span>
                     <h1>{team.name} – World Cup 2026 Schedule</h1>
                     <p className="landing-hero-subtitle">
@@ -258,15 +260,15 @@ export default async function TeamLandingPage({ params }: { params: Promise<{ sl
                                         <div className="landing-match-teams">
                                             {isHome ? (
                                                 <>
-                                                    {team.flag} {team.name}
+                                                    <TeamFlagLabel code={team.code} name={team.name} />
                                                     <span className="landing-match-vs">vs</span>
-                                                    {getTeamFlag(opponent)} {getTeamName(opponent)}
+                                                    <TeamFlagLabel code={opponent} />
                                                 </>
                                             ) : (
                                                 <>
-                                                    {getTeamFlag(m.team1)} {getTeamName(m.team1)}
+                                                    <TeamFlagLabel code={m.team1} />
                                                     <span className="landing-match-vs">vs</span>
-                                                    {team.flag} {team.name}
+                                                    <TeamFlagLabel code={team.code} name={team.name} />
                                                 </>
                                             )}
                                         </div>
@@ -313,7 +315,8 @@ export default async function TeamLandingPage({ params }: { params: Promise<{ sl
                                 href={`/team/${teamNameToSlug(t.name)}`}
                                 className="landing-city-tag"
                             >
-                                {t.flag} {t.name}
+                                <FlagIcon code={t.code} size={18} />
+                                <span>{t.name}</span>
                             </Link>
                         ))}
                     </div>

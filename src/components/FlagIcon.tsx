@@ -3,86 +3,80 @@ import Image from 'next/image';
 import { useState, memo, useEffect } from 'react';
 
 interface FlagIconProps {
-    code: string; // ISO 3166-1 alpha-2 country code (e.g., "US", "MX", "CA")
-    size?: number; // Size in pixels (width)
+    code: string;
+    size?: number;
     className?: string;
 }
 
-// Convert 3-letter or special codes to 2-letter ISO codes
+// Convert FIFA/team codes and host-country codes to flagcdn-compatible codes.
 const codeToISO2: Record<string, string> = {
-    // North America (host countries - most common)
+    // North America hosts
     'USA': 'us',
     'MEX': 'mx',
     'CAN': 'ca',
-    // Participating countries
-    'RSA': 'za', // South Africa
-    'KOR': 'kr', // Korea Republic
-    'BRA': 'br', // Brazil
-    'MAR': 'ma', // Morocco
-    'SCO': 'gb-sct', // Scotland
-    'HAI': 'ht', // Haiti
-    'PAR': 'py', // Paraguay
-    'AUS': 'au', // Australia
-    'GER': 'de', // Germany
-    'ECU': 'ec', // Ecuador
-    'CIV': 'ci', // Côte d'Ivoire
-    'CUW': 'cw', // Curaçao
-    'NED': 'nl', // Netherlands
-    'JPN': 'jp', // Japan
-    'TUN': 'tn', // Tunisia
-    'BEL': 'be', // Belgium
-    'IRN': 'ir', // IR Iran
-    'EGY': 'eg', // Egypt
-    'NZL': 'nz', // New Zealand
-    'ESP': 'es', // Spain
-    'URU': 'uy', // Uruguay
-    'KSA': 'sa', // Saudi Arabia
-    'CPV': 'cv', // Cabo Verde
-    'FRA': 'fr', // France
-    'SEN': 'sn', // Senegal
-    'NOR': 'no', // Norway
-    'ARG': 'ar', // Argentina
-    'ALG': 'dz', // Algeria
-    'AUT': 'at', // Austria
-    'JOR': 'jo', // Jordan
-    'POR': 'pt', // Portugal
-    'UZB': 'uz', // Uzbekistan
-    'COL': 'co', // Colombia
-    'ENG': 'gb-eng', // England
-    'CRO': 'hr', // Croatia
-    'GHA': 'gh', // Ghana
-    'PAN': 'pa', // Panama
-    'QAT': 'qa', // Qatar
-    'SUI': 'ch', // Switzerland
-    // Qualified through playoffs
-    'BIH': 'ba', // Bosnia and Herzegovina (UEFA Path A)
-    'SWE': 'se', // Sweden (UEFA Path B)
-    'TUR': 'tr', // Türkiye (UEFA Path C)
-    'CZE': 'cz', // Czechia (UEFA Path D)
-    'COD': 'cd', // Congo DR (FIFA Pathway 1)
-    'IRQ': 'iq', // Iraq (FIFA Pathway 2)
-    // TBD placeholder for knockout matches
-    'TBD': 'xx', // Will fallback to emoji
+
+    // Qualified teams
+    'RSA': 'za',
+    'KOR': 'kr',
+    'BRA': 'br',
+    'MAR': 'ma',
+    'SCO': 'gb-sct',
+    'HAI': 'ht',
+    'PAR': 'py',
+    'AUS': 'au',
+    'GER': 'de',
+    'ECU': 'ec',
+    'CIV': 'ci',
+    'CUW': 'cw',
+    'NED': 'nl',
+    'JPN': 'jp',
+    'TUN': 'tn',
+    'BEL': 'be',
+    'IRN': 'ir',
+    'EGY': 'eg',
+    'NZL': 'nz',
+    'ESP': 'es',
+    'URU': 'uy',
+    'KSA': 'sa',
+    'CPV': 'cv',
+    'FRA': 'fr',
+    'SEN': 'sn',
+    'NOR': 'no',
+    'ARG': 'ar',
+    'ALG': 'dz',
+    'AUT': 'at',
+    'JOR': 'jo',
+    'POR': 'pt',
+    'UZB': 'uz',
+    'COL': 'co',
+    'ENG': 'gb-eng',
+    'CRO': 'hr',
+    'GHA': 'gh',
+    'PAN': 'pa',
+    'QAT': 'qa',
+    'SUI': 'ch',
+
+    // Playoff placeholders
+    'BIH': 'ba',
+    'SWE': 'se',
+    'TUR': 'tr',
+    'CZE': 'cz',
+    'COD': 'cd',
+    'IRQ': 'iq',
+    'TBD': 'xx',
 };
 
-// Cache for failed flags to avoid repeated load attempts
 const failedFlags = new Set<string>();
-
-// Preload common host country flags on module load
 const preloadedFlags: string[] = ['us', 'mx', 'ca'];
 
 export function getISO2Code(code: string): string {
-    // Check if already a 2-letter code
     if (code.length === 2) {
         return code.toLowerCase();
     }
-    // Find mapping
+
     return codeToISO2[code] || code.toLowerCase().slice(0, 2);
 }
 
-/**
- * Hook to preload flag images for common countries
- */
 export function usePreloadFlags() {
     useEffect(() => {
         preloadedFlags.forEach(code => {
@@ -92,29 +86,21 @@ export function usePreloadFlags() {
     }, []);
 }
 
-/**
- * Memoized FlagIcon component to prevent unnecessary re-renders
- * Uses flagcdn.com CDN for flag images with fallback to emoji
- */
 const FlagIcon = memo(function FlagIcon({ code, size = 20, className = '' }: FlagIconProps) {
     const [hasError, setHasError] = useState(false);
     const iso2 = getISO2Code(code);
-
-    // Check cache for previously failed flags
     const wasPreviouslyFailed = failedFlags.has(iso2);
-
-    // Use flagcdn.com CDN to get flag images
     const flagUrl = `https://flagcdn.com/w40/${iso2}.png`;
     const height = Math.round(size * 0.75);
 
-    // Handle error and cache it
     const handleError = () => {
         failedFlags.add(iso2);
         setHasError(true);
     };
 
-    // Fallback to emoji if image fails to load or was previously failed
     if (hasError || wasPreviouslyFailed) {
+        const fallbackLabel = code.toUpperCase();
+
         return (
             <span
                 className={`flag-icon flag-fallback ${className}`}
@@ -122,15 +108,18 @@ const FlagIcon = memo(function FlagIcon({ code, size = 20, className = '' }: Fla
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: size,
+                    minWidth: size,
                     height: height,
-                    fontSize: size * 0.8,
+                    padding: '0 2px',
+                    fontSize: size * 0.45,
+                    fontWeight: 700,
+                    lineHeight: 1,
                     borderRadius: '2px',
                     backgroundColor: '#f3f4f6',
                 }}
                 aria-label={`${code} flag`}
             >
-                🏳️
+                {fallbackLabel}
             </span>
         );
     }
@@ -148,7 +137,7 @@ const FlagIcon = memo(function FlagIcon({ code, size = 20, className = '' }: Fla
                 borderRadius: '2px',
             }}
             loading="lazy"
-            unoptimized // CDN images don't need Next.js optimization
+            unoptimized
             onError={handleError}
         />
     );

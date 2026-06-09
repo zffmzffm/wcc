@@ -58,9 +58,10 @@
 }
 
 .landing-flag {
-    font-size: 3rem;
     margin-bottom: 0.5rem;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
 }
 
@@ -220,16 +221,26 @@
 }
 
 .landing-match-teams {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.25rem;
 }
 
+.landing-team-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+}
+
 .landing-match-vs {
     color: var(--text-muted);
     font-weight: 400;
-    margin: 0 0.3rem;
 }
 
 .landing-match-detail {
