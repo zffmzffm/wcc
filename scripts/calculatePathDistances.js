@@ -61,8 +61,6 @@ function calculateTotalDistance(citySequence) {
 }
 
 function getPathLabel(template) {
-    if (template.position === 1) return '1st Place';
-    if (template.position === 2) return '2nd Place';
     return template.label;
 }
 
@@ -75,15 +73,22 @@ for (const team of teams) {
     for (const knockoutPath of groupTemplates) {
         const knockoutCities = getKnockoutCitySequence(knockoutPath.path);
         const fullCitySequence = [...groupStageCities, ...knockoutCities];
+        const transitionCitySequence = [
+            groupStageCities[groupStageCities.length - 1],
+            knockoutCities[0],
+        ].filter(Boolean);
 
         const groupStageDistance = calculateTotalDistance(groupStageCities);
-        const knockoutDistance = calculateTotalDistance(knockoutCities);
-        const totalDistance = calculateTotalDistance(fullCitySequence);
+        const transitionDistance = calculateTotalDistance(transitionCitySequence);
+        const knockoutLegDistance = calculateTotalDistance(knockoutCities);
+        const knockoutDistance = transitionDistance + knockoutLegDistance;
+        const totalDistance = groupStageDistance + knockoutDistance;
         const cityNames = fullCitySequence.map(cityId => cityById[cityId]?.name || cityId);
 
         results.push({
             teamCode: team.code,
             teamName: team.name,
+            teamFlag: team.flag,
             group: team.group,
             position: knockoutPath.position,
             scenarioId: knockoutPath.scenarioId,
@@ -93,6 +98,8 @@ for (const team of teams) {
             totalDistance: Math.round(totalDistance),
             groupStageDistance: Math.round(groupStageDistance),
             knockoutDistance: Math.round(knockoutDistance),
+            transitionDistance: Math.round(transitionDistance),
+            knockoutLegDistance: Math.round(knockoutLegDistance),
             citySequence: cityNames.join(' -> '),
             numCities: fullCitySequence.length,
         });
@@ -102,11 +109,11 @@ for (const team of teams) {
 results.sort((a, b) => a.totalDistance - b.totalDistance);
 
 console.log('\n=== 2026 World Cup Championship Path Distances (Sorted by Distance) ===\n');
-console.log('Rank | Team | Group | Scenario | Total Distance (km) | Group Stage (km) | Knockout (km) | Path');
-console.log('-----|------|-------|----------|---------------------|------------------|---------------|-----');
+console.log('Rank | Team | Group | Scenario | Total Distance (km) | Group Stage (km) | Knockout (km) | Transition (km) | Knockout Legs (km) | Path');
+console.log('-----|------|-------|----------|---------------------|------------------|---------------|-----------------|--------------------|-----');
 
 results.forEach((result, index) => {
-    console.log(`${(index + 1).toString().padStart(4)} | ${result.teamCode.padEnd(4)} | ${result.group.padEnd(5)} | ${result.pathLabel.padEnd(8)} | ${result.totalDistance.toString().padStart(19)} | ${result.groupStageDistance.toString().padStart(16)} | ${result.knockoutDistance.toString().padStart(13)} | ${result.citySequence}`);
+    console.log(`${(index + 1).toString().padStart(4)} | ${result.teamCode.padEnd(4)} | ${result.group.padEnd(5)} | ${result.pathLabel.padEnd(8)} | ${result.totalDistance.toString().padStart(19)} | ${result.groupStageDistance.toString().padStart(16)} | ${result.knockoutDistance.toString().padStart(13)} | ${result.transitionDistance.toString().padStart(15)} | ${result.knockoutLegDistance.toString().padStart(18)} | ${result.citySequence}`);
 });
 
 const outputPath = path.join(__dirname, '../src/data/pathDistances.json');

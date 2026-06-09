@@ -160,6 +160,157 @@ interface KnockoutPathLineProps {
     renderMode: 'paths' | 'labels';
 }
 
+type TextAnchor = 'start' | 'end' | 'middle';
+
+type LabelBounds = {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+};
+
+type KnockoutLabelCandidate = {
+    dx: number;
+    dy: number;
+    anchor: TextAnchor;
+    preference: number;
+};
+
+type KnockoutLabelPlacement = {
+    x: number;
+    y: number;
+    anchor: TextAnchor;
+    bounds: LabelBounds;
+};
+
+const KNOCKOUT_LABEL_HEIGHT = 20;
+const KNOCKOUT_LABEL_VERTICAL_PAD = 5;
+
+const estimateKnockoutLabelWidth = (label: string): number => {
+    let width = 0;
+    for (const char of label) {
+        if (char.charCodeAt(0) > 255) {
+            width += 12;
+        } else if (char === ' ') {
+            width += 5;
+        } else {
+            width += 9;
+        }
+    }
+    return Math.max(42, width);
+};
+
+const createTextBounds = (
+    x: number,
+    y: number,
+    width: number,
+    anchor: TextAnchor
+): LabelBounds => {
+    let left = x;
+    let right = x + width;
+
+    if (anchor === 'end') {
+        left = x - width;
+        right = x;
+    } else if (anchor === 'middle') {
+        left = x - width / 2;
+        right = x + width / 2;
+    }
+
+    return {
+        left,
+        top: y - KNOCKOUT_LABEL_HEIGHT,
+        right,
+        bottom: y + KNOCKOUT_LABEL_VERTICAL_PAD
+    };
+};
+
+const padBounds = (bounds: LabelBounds, padding: number): LabelBounds => ({
+    left: bounds.left - padding,
+    top: bounds.top - padding,
+    right: bounds.right + padding,
+    bottom: bounds.bottom + padding
+});
+
+const getIntersectionArea = (a: LabelBounds, b: LabelBounds): number => {
+    const width = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+    const height = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+    return width * height;
+};
+
+const getKnockoutLabelCandidates = (isAlreadyLabeled: boolean): KnockoutLabelCandidate[] => {
+    if (isAlreadyLabeled) {
+        return [
+            { dx: 16, dy: 36, anchor: 'start', preference: 0 },
+            { dx: -16, dy: 36, anchor: 'end', preference: 4 },
+            { dx: 18, dy: 52, anchor: 'start', preference: 8 },
+            { dx: -18, dy: 52, anchor: 'end', preference: 12 },
+            { dx: 16, dy: -28, anchor: 'start', preference: 18 },
+            { dx: -16, dy: -28, anchor: 'end', preference: 22 }
+        ];
+    }
+
+    return [
+        { dx: 12, dy: 25, anchor: 'start', preference: 0 },
+        { dx: 14, dy: -20, anchor: 'start', preference: 4 },
+        { dx: -14, dy: 25, anchor: 'end', preference: 8 },
+        { dx: -14, dy: -20, anchor: 'end', preference: 12 },
+        { dx: 0, dy: 36, anchor: 'middle', preference: 16 },
+        { dx: 0, dy: -30, anchor: 'middle', preference: 20 }
+    ];
+};
+
+const createSameCityGroupLabelBlocker = (
+    pixel: { x: number; y: number },
+    labelWidth: number
+): LabelBounds => ({
+    left: pixel.x - Math.max(96, labelWidth + 28),
+    top: pixel.y - 42,
+    right: pixel.x + Math.max(96, labelWidth + 28),
+    bottom: pixel.y + 14
+});
+
+const chooseKnockoutLabelPlacement = ({
+    pixel,
+    label,
+    isAlreadyLabeled,
+    placedBounds
+}: {
+    pixel: { x: number; y: number };
+    label: string;
+    isAlreadyLabeled: boolean;
+    placedBounds: LabelBounds[];
+}): KnockoutLabelPlacement => {
+    const labelWidth = estimateKnockoutLabelWidth(label);
+    const groupStageBlockers = isAlreadyLabeled
+        ? [createSameCityGroupLabelBlocker(pixel, labelWidth)]
+        : [];
+
+    return getKnockoutLabelCandidates(isAlreadyLabeled)
+        .map(candidate => {
+            const x = pixel.x + candidate.dx;
+            const y = pixel.y + candidate.dy;
+            const bounds = createTextBounds(x, y, labelWidth, candidate.anchor);
+            const placedOverlap = placedBounds.reduce(
+                (score, placed) => score + getIntersectionArea(bounds, padBounds(placed, 10)),
+                0
+            );
+            const groupOverlap = groupStageBlockers.reduce(
+                (score, blocker) => score + getIntersectionArea(bounds, blocker),
+                0
+            );
+
+            return {
+                x,
+                y,
+                anchor: candidate.anchor,
+                bounds,
+                score: candidate.preference + placedOverlap * 20 + groupOverlap * 30
+            };
+        })
+        .sort((a, b) => a.score - b.score)[0];
+};
+
 /**
  * Renders a single knockout path as a dashed line
  */
@@ -264,51 +415,65 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                 });
 
                 const seenCities = new Set<string>();
-
-                return matches.map((matchInfo, idx) => {
-                    const pixel = latLngToPixel(matchInfo.coords);
+                const labelEntries = matches.reduce<{
+                    key: string;
+                    cityId: string;
+                    cityName: string;
+                    label: string;
+                    pixel: { x: number; y: number };
+                    isAlreadyLabeled: boolean;
+                }[]>((entries, matchInfo, idx) => {
                     const cityId = matchInfo.city?.id;
                     const cityName = matchInfo.city?.name;
-
-                    // Check if we've already labeled this city
-                    const shouldShowLabel = cityId && !seenCities.has(cityId);
-                    if (cityId) {
-                        seenCities.add(cityId);
+                    if (!cityId || !cityName || seenCities.has(cityId)) {
+                        return entries;
                     }
 
-                    // Get match numbers prefix for this city (using circled digits)
-                    const matchNumbersPrefix = cityId ? (cityMatchNumbers.get(cityId) || []).join('') : '';
+                    seenCities.add(cityId);
+                    const matchNumbersPrefix = (cityMatchNumbers.get(cityId) || []).join('');
+                    entries.push({
+                        key: `marker-${path.id}-${idx}`,
+                        cityId,
+                        cityName,
+                        label: `${matchNumbersPrefix}${cityName}`,
+                        pixel: latLngToPixel(matchInfo.coords),
+                        isAlreadyLabeled: groupStageCityIds.has(cityId)
+                    });
+                    return entries;
+                }, []);
 
-                    return (
-                        <g key={`marker-${path.id}-${idx}`}>
-                            {/* City name label with match numbers - offset in different direction if group stage already labeled */}
-                            {shouldShowLabel && cityName && (() => {
-                                // If this city was already labeled by group stage, offset to a different direction
-                                const isAlreadyLabeled = groupStageCityIds.has(cityId!);
-                                // When already labeled, place label closer and above marker
-                                const xOffset = isAlreadyLabeled ? 12 : 12;
-                                const yOffset = isAlreadyLabeled ? -8 : 25; // Closer above marker when already labeled
+                const placedBounds: LabelBounds[] = [];
+                const placedLabels = [...labelEntries]
+                    .sort((a, b) => Number(b.isAlreadyLabeled) - Number(a.isAlreadyLabeled))
+                    .map(entry => {
+                        const placement = chooseKnockoutLabelPlacement({
+                            pixel: entry.pixel,
+                            label: entry.label,
+                            isAlreadyLabeled: entry.isAlreadyLabeled,
+                            placedBounds
+                        });
+                        placedBounds.push(placement.bounds);
+                        return { ...entry, placement };
+                    });
 
-                                return (
-                                    <text
-                                        x={pixel.x + xOffset}
-                                        y={pixel.y + yOffset}
-                                        textAnchor="start"
-                                        fontSize="15"
-                                        fontWeight={700}
-                                        fill={color}
-                                        stroke="white"
-                                        strokeWidth="4"
-                                        paintOrder="stroke fill"
-                                        style={{ pointerEvents: 'none' }}
-                                    >
-                                        {matchNumbersPrefix}{cityName}
-                                    </text>
-                                );
-                            })()}
-                        </g>
-                    );
-                });
+                return placedLabels.map(entry => (
+                    <g key={entry.key}>
+                        <text
+                            x={entry.placement.x}
+                            y={entry.placement.y}
+                            textAnchor={entry.placement.anchor}
+                            fontSize="15"
+                            fontWeight={700}
+                            fill={color}
+                            stroke="white"
+                            strokeWidth="4"
+                            paintOrder="stroke fill"
+                            style={{ pointerEvents: 'none' }}
+                        >
+                            {entry.label}
+                        </text>
+                    </g>
+                ));
             })()}
         </g>
     );

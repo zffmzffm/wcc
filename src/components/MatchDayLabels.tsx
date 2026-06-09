@@ -8,7 +8,7 @@ import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
 import { getDayDifference } from '@/utils/dateUtils';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { STAGE_NAMES } from '@/constants';
+import { useMapRefresh } from '@/hooks/useMapRefresh';
 
 interface MatchDayLabelsProps {
     matches: Match[];
@@ -17,6 +17,215 @@ interface MatchDayLabelsProps {
     teams: Team[];
     timezone: string;
 }
+
+type LabelRect = {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+};
+
+type LabelMetrics = {
+    width: number;
+    headerHeight: number;
+    contentPaddingHeight: number;
+    rowHeight: number;
+    moreHeight: number;
+    markerRadius: number;
+    gap: number;
+    mapPadding: number;
+};
+
+type CandidatePlacement = {
+    key: string;
+    dx: number;
+    dy: number;
+    preference: number;
+};
+
+type CityLabelEntry = {
+    cityId: string;
+    city: City;
+    sortedMatches: Match[];
+    sortedKnockout: KnockoutVenue[];
+    matchCount: number;
+    width: number;
+    height: number;
+    point: L.Point;
+    nearestNeighborDistance: number;
+    placement: {
+        iconAnchor: [number, number];
+        bounds: LabelRect;
+    };
+};
+
+const LABEL_METRICS = {
+    desktop: {
+        width: 190,
+        headerHeight: 34,
+        contentPaddingHeight: 14,
+        rowHeight: 28,
+        moreHeight: 22,
+        markerRadius: 18,
+        gap: 18,
+        mapPadding: 8
+    },
+    mobile: {
+        width: 132,
+        headerHeight: 24,
+        contentPaddingHeight: 10,
+        rowHeight: 20,
+        moreHeight: 15,
+        markerRadius: 15,
+        gap: 15,
+        mapPadding: 6
+    }
+} as const satisfies Record<string, LabelMetrics>;
+
+const CITY_PLACEMENT_PREFERENCES: Record<string, string[]> = {
+    atlanta: ['right-top', 'top', 'left-top', 'right-middle', 'left-middle', 'right-bottom', 'bottom', 'left-bottom'],
+    miami: ['left-bottom', 'bottom', 'right-bottom', 'left-middle', 'left-top', 'top', 'right-middle', 'right-top'],
+    boston: ['right-top', 'right-middle', 'top', 'right-bottom', 'left-top', 'left-middle', 'bottom', 'left-bottom'],
+    new_york: ['right-bottom', 'right-middle', 'bottom', 'right-top', 'left-bottom', 'top', 'left-middle', 'left-top'],
+    philadelphia: ['right-bottom', 'bottom', 'left-bottom', 'right-middle', 'left-middle', 'right-top', 'top', 'left-top'],
+    seattle: ['right-bottom', 'right-middle', 'bottom', 'right-top', 'top', 'left-bottom', 'left-middle', 'left-top'],
+    vancouver: ['top', 'right-top', 'left-top', 'right-middle', 'left-middle', 'right-bottom', 'bottom', 'left-bottom'],
+    los_angeles: ['left-top', 'left-middle', 'left-bottom', 'top', 'bottom', 'right-top', 'right-bottom', 'right-middle'],
+    san_francisco: ['left-bottom', 'left-middle', 'left-top', 'bottom', 'top', 'right-bottom', 'right-top', 'right-middle'],
+    guadalajara: ['left-top', 'left-middle', 'top', 'left-bottom', 'bottom', 'right-top', 'right-middle', 'right-bottom'],
+    mexico_city: ['right-bottom', 'right-middle', 'bottom', 'right-top', 'top', 'left-bottom', 'left-middle', 'left-top']
+};
+
+const DEFAULT_PLACEMENT_ORDER = [
+    'right-top',
+    'right-bottom',
+    'top',
+    'bottom',
+    'left-top',
+    'left-bottom',
+    'right-middle',
+    'left-middle'
+];
+
+const getLabelHeight = (
+    renderedRows: number,
+    hasMoreRow: boolean,
+    metrics: LabelMetrics
+) => (
+    metrics.headerHeight +
+    metrics.contentPaddingHeight +
+    renderedRows * metrics.rowHeight +
+    (hasMoreRow ? metrics.moreHeight : 0)
+);
+
+const createBounds = (
+    point: L.Point,
+    width: number,
+    height: number,
+    dx: number,
+    dy: number
+): LabelRect => ({
+    left: point.x + dx,
+    top: point.y + dy,
+    right: point.x + dx + width,
+    bottom: point.y + dy + height
+});
+
+const padBounds = (rect: LabelRect, padding: number): LabelRect => ({
+    left: rect.left - padding,
+    top: rect.top - padding,
+    right: rect.right + padding,
+    bottom: rect.bottom + padding
+});
+
+const getIntersectionArea = (a: LabelRect, b: LabelRect): number => {
+    const width = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+    const height = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+    return width * height;
+};
+
+const getOverflowPenalty = (
+    rect: LabelRect,
+    mapSize: L.Point,
+    padding: number
+): number => {
+    const overflowLeft = Math.max(0, padding - rect.left);
+    const overflowTop = Math.max(0, padding - rect.top);
+    const overflowRight = Math.max(0, rect.right - (mapSize.x - padding));
+    const overflowBottom = Math.max(0, rect.bottom - (mapSize.y - padding));
+
+    return overflowLeft + overflowTop + overflowRight + overflowBottom;
+};
+
+const createMarkerBounds = (point: L.Point, radius: number): LabelRect => ({
+    left: point.x - radius,
+    top: point.y - radius,
+    right: point.x + radius,
+    bottom: point.y + radius
+});
+
+const getCandidatePlacements = (
+    cityId: string,
+    width: number,
+    height: number,
+    gap: number
+): CandidatePlacement[] => {
+    const candidates: Record<string, Omit<CandidatePlacement, 'preference'>> = {
+        'right-top': { key: 'right-top', dx: gap, dy: -height - gap },
+        'right-bottom': { key: 'right-bottom', dx: gap, dy: gap },
+        'right-middle': { key: 'right-middle', dx: gap, dy: -height / 2 },
+        top: { key: 'top', dx: -width / 2, dy: -height - gap },
+        bottom: { key: 'bottom', dx: -width / 2, dy: gap },
+        'left-top': { key: 'left-top', dx: -width - gap, dy: -height - gap },
+        'left-bottom': { key: 'left-bottom', dx: -width - gap, dy: gap },
+        'left-middle': { key: 'left-middle', dx: -width - gap, dy: -height / 2 }
+    };
+    const order = CITY_PLACEMENT_PREFERENCES[cityId] || DEFAULT_PLACEMENT_ORDER;
+
+    return Object.values(candidates)
+        .map(candidate => {
+            const orderIndex = order.indexOf(candidate.key);
+            const preference = orderIndex >= 0
+                ? orderIndex * 3
+                : DEFAULT_PLACEMENT_ORDER.indexOf(candidate.key) * 3 + 30;
+
+            return { ...candidate, preference };
+        })
+        .sort((a, b) => a.preference - b.preference);
+};
+
+const scorePlacement = ({
+    bounds,
+    candidate,
+    placedBounds,
+    markerBounds,
+    mapSize,
+    metrics
+}: {
+    bounds: LabelRect;
+    candidate: CandidatePlacement;
+    placedBounds: LabelRect[];
+    markerBounds: LabelRect[];
+    mapSize: L.Point;
+    metrics: LabelMetrics;
+}): number => {
+    const labelOverlap = placedBounds.reduce(
+        (score, placed) => score + getIntersectionArea(bounds, padBounds(placed, metrics.gap)),
+        0
+    );
+    const markerOverlap = markerBounds.reduce(
+        (score, marker) => score + getIntersectionArea(bounds, marker),
+        0
+    );
+    const overflow = getOverflowPenalty(bounds, mapSize, metrics.mapPadding);
+
+    return (
+        candidate.preference +
+        labelOverlap * 20 +
+        markerOverlap * 12 +
+        overflow * 80
+    );
+};
 
 
 
@@ -31,6 +240,7 @@ export default function MatchDayLabels({
     timezone
 }: MatchDayLabelsProps) {
     const map = useMap();
+    const mapRefreshKey = useMapRefresh();
     const { setHoveredMatchId } = useHoverMatch();
     const isMobile = useIsMobile();
 
@@ -87,27 +297,107 @@ export default function MatchDayLabels({
         return grouped;
     }, [matches, knockoutVenues]);
 
-    // Create labels for each city with matches
-    return (
-        <>
-            {Object.entries(matchesByCity).map(([cityId, cityMatches]) => {
-                const city = cities.find(c => c.id === cityId);
-                if (!city) return null;
+    const labelEntries = useMemo<CityLabelEntry[]>(() => {
+        const metrics = isMobile ? LABEL_METRICS.mobile : LABEL_METRICS.desktop;
+        const mapSize = map.getSize();
 
-                // Sort matches by time
+        const entries = Object.entries(matchesByCity)
+            .reduce<CityLabelEntry[]>((acc, [cityId, cityMatches]) => {
+                const city = cities.find(c => c.id === cityId);
+                if (!city) return acc;
+
                 const sortedMatches = [...cityMatches.matches].sort(
                     (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
                 );
                 const sortedKnockout = [...cityMatches.knockoutVenues].sort(
                     (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
                 );
-
                 const matchCount = sortedMatches.length + sortedKnockout.length;
-                
+                const renderedRows = Math.min(sortedMatches.length, 3) + Math.min(sortedKnockout.length, 2);
+                const height = getLabelHeight(renderedRows, matchCount > 3, metrics);
+                const point = map.latLngToContainerPoint([city.lat, city.lng]);
+
+                acc.push({
+                    cityId,
+                    city,
+                    sortedMatches,
+                    sortedKnockout,
+                    matchCount,
+                    width: metrics.width,
+                    height,
+                    point,
+                    nearestNeighborDistance: Number.POSITIVE_INFINITY,
+                    placement: {
+                        iconAnchor: [0, 0] as [number, number],
+                        bounds: createBounds(point, metrics.width, height, metrics.gap, -height - metrics.gap)
+                    }
+                });
+
+                return acc;
+            }, []);
+        const markerBounds = entries.map(entry => createMarkerBounds(entry.point, metrics.markerRadius));
+
+        entries.forEach(entry => {
+            entry.nearestNeighborDistance = entries.reduce((nearest, other) => {
+                if (other.cityId === entry.cityId) return nearest;
+                return Math.min(nearest, entry.point.distanceTo(other.point));
+            }, Number.POSITIVE_INFINITY);
+        });
+
+        const sortedEntries = [...entries].sort((a, b) => {
+            if (a.nearestNeighborDistance !== b.nearestNeighborDistance) {
+                return a.nearestNeighborDistance - b.nearestNeighborDistance;
+            }
+            if (a.point.y !== b.point.y) return a.point.y - b.point.y;
+            return a.point.x - b.point.x;
+        });
+
+        const placedBounds: LabelRect[] = [];
+        const placements = new Map<string, CityLabelEntry['placement']>();
+
+        sortedEntries.forEach(entry => {
+            const bestPlacement = getCandidatePlacements(entry.cityId, entry.width, entry.height, metrics.gap)
+                .map(candidate => {
+                    const bounds = createBounds(entry.point, entry.width, entry.height, candidate.dx, candidate.dy);
+                    return {
+                        candidate,
+                        bounds,
+                        score: scorePlacement({
+                            bounds,
+                            candidate,
+                            placedBounds,
+                            markerBounds,
+                            mapSize,
+                            metrics
+                        })
+                    };
+                })
+                .sort((a, b) => a.score - b.score)[0];
+
+            const placement = {
+                iconAnchor: [-bestPlacement.candidate.dx, -bestPlacement.candidate.dy] as [number, number],
+                bounds: bestPlacement.bounds
+            };
+
+            placements.set(entry.cityId, placement);
+            placedBounds.push(bestPlacement.bounds);
+        });
+
+        return entries.map(entry => ({
+            ...entry,
+            placement: placements.get(entry.cityId) || entry.placement
+        }));
+    }, [cities, isMobile, map, mapRefreshKey, matchesByCity]);
+
+    // Create labels for each city with matches
+    return (
+        <>
+            {labelEntries.map((entry) => {
+                const { cityId, city, sortedMatches, sortedKnockout, matchCount, width, height, placement } = entry;
                 const labelIcon = L.divIcon({
                     className: 'custom-match-label',
                     html: `
-                        <div class="match-day-label-container">
+                        <div class="match-day-label-container" style="width: ${width}px;">
                             <!-- Header with city name -->
                             <div class="match-day-label-header">
                                 <span>📍</span>
@@ -157,8 +447,8 @@ export default function MatchDayLabels({
                             </div>
                         </div>
                     `,
-                    iconSize: [0, 0], // CSS handles size
-                    iconAnchor: isMobile ? [-10, 35] : [-20, 50],
+                    iconSize: [width, height],
+                    iconAnchor: placement.iconAnchor,
                 });
 
                 return (
