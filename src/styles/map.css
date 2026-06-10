@@ -258,7 +258,7 @@
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1024px), ((max-width: 1400px) and (pointer: coarse)) {
     .live-match-stack {
         top: 8px;
         left: 0;
