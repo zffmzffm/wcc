@@ -132,6 +132,61 @@
 }
 
 /* ============================================
+   Tablet Portrait - Single sidebar container
+   (matches mobile behavior: only one sidebar visible)
+   ============================================ */
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
+    /* Sidebar fills available space below map */
+    .sidebar {
+        max-height: none;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* Add "or team" to the placeholder text so user knows both work */
+    .sidebar-placeholder p:first-of-type::after {
+        content: " or team";
+    }
+
+    /* Hide the right sidebar when it only shows a placeholder */
+    .sidebar-right:has(.sidebar-placeholder) {
+        display: none;
+    }
+
+    /* Hide left sidebar placeholder when team sidebar has actual content */
+    body:has(.sidebar-right .sidebar-header) .sidebar:not(.sidebar-right):has(.sidebar-placeholder) {
+        display: none;
+    }
+
+    /* Hide the right-column placeholder */
+    .right-column .sidebar-placeholder {
+        display: none;
+    }
+
+    /* Break right-column wrapper so its children flow into content-wrapper */
+    .right-column {
+        display: contents;
+    }
+
+    /* Team sidebar inherits same layout slot as city sidebar */
+    .right-column .sidebar {
+        max-height: none;
+        flex: 1 1 auto;
+        min-height: 0;
+        order: 2;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* Footer at the bottom */
+    .right-column .app-footer {
+        order: 3;
+    }
+}
+
+/* ============================================
    Responsive Design - Mobile (600px and below)
    ============================================ */
 @media (max-width: 600px) {

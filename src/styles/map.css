@@ -258,12 +258,12 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
     .live-match-stack {
         top: 8px;
         left: 0;
         --live-match-toggle-peek: 170px;
-        width: min(268px, calc(100% - 16px));
+        width: min(292px, calc(100% - 16px));
         gap: 4px;
         transform: translateX(calc(-100% + var(--live-match-toggle-peek)));
         transition: transform 0.22s ease;
@@ -339,6 +339,13 @@
         opacity: 1;
         transform: translateX(0);
         pointer-events: auto;
+    }
+}
+
+/* Mobile-only: smaller card sizing */
+@media (max-width: 600px) {
+    .live-match-stack {
+        width: min(268px, calc(100% - 16px));
     }
 
     .live-match-card {
