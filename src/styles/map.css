@@ -898,7 +898,8 @@
    ============================================ */
 /* Fixes white grid lines appearing between map tiles in Chrome due to fractional zooming */
 .leaflet-tile-container img {
-    outline: 1px solid transparent;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    width: 256.5px !important;
+    height: 256.5px !important;
+    margin-top: -0.5px;
+    margin-left: -0.5px;
 }
