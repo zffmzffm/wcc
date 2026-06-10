@@ -24,3 +24,21 @@
 
 /* Landing pages (city & team SEO pages) */
 @import "../styles/landing.css";
+
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
+    .header {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        flex-shrink: 0;
+        margin: 12px;
+    }
+
+    .content-wrapper {
+        margin-top: 0;
+        height: auto;
+        min-height: 0;
+        flex: 1;
+    }
+}

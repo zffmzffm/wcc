@@ -26,7 +26,6 @@ const Header = memo(function Header({ children, onReset }: HeaderProps) {
                     <span className="header-logo" aria-hidden="true">🏆</span>
                     <div className="header-title">
                         <h1><span className="header-brand-name">CUP26MAP</span> <span className="sr-only">– World Cup 2026 Schedule & Map</span></h1>
-                        <span className="header-tagline">16 Cities • 48 Teams • 39 Days • One Map</span>
                     </div>
                 </div>
             </div>

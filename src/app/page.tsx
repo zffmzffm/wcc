@@ -16,9 +16,9 @@ import { City } from '@/types';
 import { teams, matches, cities } from '@/data';
 import { JsonMatchRepository } from '@/repositories/JsonMatchRepository';
 import { useUrlState } from '@/hooks/useUrlState';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsCompactSelectionMode, useIsMobile } from '@/hooks/useIsMobile';
 import { getMatchDay } from '@/utils/dateUtils';
-import { BREAKPOINTS, DEFAULT_TIMEZONE } from '@/constants';
+import { DEFAULT_TIMEZONE } from '@/constants';
 
 // Get knockout venues singleton
 const matchRepository = new JsonMatchRepository();
@@ -36,6 +36,7 @@ const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
 
 export default function Home() {
   const isMobile = useIsMobile();
+  const isCompactSelectionMode = useIsCompactSelectionMode();
 
   // URL-synchronized state management
   const {
@@ -53,7 +54,7 @@ export default function Home() {
     resetSelections,
     canGoBack,
     handleBack,
-  } = useUrlState({ cities, isMobile });
+  } = useUrlState({ cities, isMobile: isCompactSelectionMode });
 
   // Get selected team info - memoized to avoid unnecessary lookups
   const selectedTeamInfo = useMemo(() =>
