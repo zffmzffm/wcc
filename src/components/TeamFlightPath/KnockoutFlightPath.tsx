@@ -391,15 +391,9 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
 
             {/* Knockout stage markers with city labels - only render in labels mode */}
             {renderMode === 'labels' && (() => {
-                // Convert number to circled digit (➊➋➌➍➎➏➐➑)
-                const toCircledDigit = (n: number): string => {
-                    const circledDigits = ['➊', '➋', '➌', '➍', '➎', '➏', '➐', '➑'];
-                    return n >= 1 && n <= 8 ? circledDigits[n - 1] : String(n);
-                };
-
                 // Track unique cities for this path to avoid duplicate labels
                 // Also track which match numbers occur at each city
-                const cityMatchNumbers = new Map<string, string[]>();
+                const cityMatchNums = new Map<string, number[]>();
 
                 // First pass: collect all match numbers for each city
                 // Knockout matches are numbered starting from 4 (after 3 group stage matches)
@@ -407,10 +401,10 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                     const cityId = matchInfo.city?.id;
                     if (cityId) {
                         const matchNumber = idx + 4; // R32=4, R16=5, QF=6, SF=7, F=8
-                        if (!cityMatchNumbers.has(cityId)) {
-                            cityMatchNumbers.set(cityId, []);
+                        if (!cityMatchNums.has(cityId)) {
+                            cityMatchNums.set(cityId, []);
                         }
-                        cityMatchNumbers.get(cityId)!.push(toCircledDigit(matchNumber));
+                        cityMatchNums.get(cityId)!.push(matchNumber);
                     }
                 });
 
@@ -420,6 +414,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                     cityId: string;
                     cityName: string;
                     label: string;
+                    matchNums: number[];
                     pixel: { x: number; y: number };
                     isAlreadyLabeled: boolean;
                 }[]>((entries, matchInfo, idx) => {
@@ -430,12 +425,16 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                     }
 
                     seenCities.add(cityId);
-                    const matchNumbersPrefix = (cityMatchNumbers.get(cityId) || []).join('');
+                    const nums = cityMatchNums.get(cityId) || [];
+                    // Estimate width for placement algorithm: badges take ~16px each + 3px gap
+                    const badgeWidthEstimate = nums.length > 0 ? nums.length * 16 + 3 : 0;
+                    const fakePrefix = 'X'.repeat(Math.ceil(badgeWidthEstimate / 12));
                     entries.push({
                         key: `marker-${path.id}-${idx}`,
                         cityId,
                         cityName,
-                        label: `${matchNumbersPrefix}${cityName}`,
+                        label: `${fakePrefix}${cityName}`,
+                        matchNums: nums,
                         pixel: latLngToPixel(matchInfo.coords),
                         isAlreadyLabeled: groupStageCityIds.has(cityId)
                     });
@@ -456,24 +455,68 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                         return { ...entry, placement };
                     });
 
-                return placedLabels.map(entry => (
-                    <g key={entry.key}>
-                        <text
-                            x={entry.placement.x}
-                            y={entry.placement.y}
-                            textAnchor={entry.placement.anchor}
-                            fontSize="15"
-                            fontWeight={700}
-                            fill={color}
-                            stroke="white"
-                            strokeWidth="4"
-                            paintOrder="stroke fill"
-                            style={{ pointerEvents: 'none' }}
-                        >
-                            {entry.label}
-                        </text>
-                    </g>
-                ));
+                const badgeRadius = 7;
+                const badgeSpacing = 16;
+                const badgeToTextGap = 3;
+
+                return placedLabels.map(entry => {
+                    const totalBadgesWidth = entry.matchNums.length * badgeSpacing;
+
+                    // Calculate badge start offset based on text anchor
+                    let badgeStartX = entry.placement.x;
+                    if (entry.placement.anchor === 'end') {
+                        badgeStartX = entry.placement.x - (entry.cityName.length * 9) - totalBadgesWidth - badgeToTextGap;
+                    } else if (entry.placement.anchor === 'middle') {
+                        badgeStartX = entry.placement.x - ((entry.cityName.length * 9) + totalBadgesWidth + badgeToTextGap) / 2;
+                    }
+
+                    const cityNameX = badgeStartX + totalBadgesWidth + badgeToTextGap;
+
+                    return (
+                        <g key={entry.key} style={{ pointerEvents: 'none' }}>
+                            {/* Match number badges */}
+                            {entry.matchNums.map((num, i) => {
+                                const cx = badgeStartX + i * badgeSpacing + badgeRadius;
+                                const cy = entry.placement.y - 5;
+                                return (
+                                    <g key={`badge-${i}`}>
+                                        <circle cx={cx} cy={cy} r={badgeRadius + 1.5} fill="white" />
+                                        <circle cx={cx} cy={cy} r={badgeRadius} fill={color} />
+                                        <text
+                                            x={cx}
+                                            y={cy}
+                                            textAnchor="middle"
+                                            dominantBaseline="central"
+                                            style={{
+                                                fill: 'white',
+                                                fontSize: '9px',
+                                                fontWeight: 800,
+                                                pointerEvents: 'none',
+                                            }}
+                                        >
+                                            {num}
+                                        </text>
+                                    </g>
+                                );
+                            })}
+                            {/* City name */}
+                            <text
+                                x={cityNameX}
+                                y={entry.placement.y}
+                                textAnchor="start"
+                                fontSize="15"
+                                fontWeight={700}
+                                fill={color}
+                                stroke="white"
+                                strokeWidth="4"
+                                paintOrder="stroke fill"
+                                style={{ pointerEvents: 'none' }}
+                            >
+                                {entry.cityName}
+                            </text>
+                        </g>
+                    );
+                });
             })()}
         </g>
     );

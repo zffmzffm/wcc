@@ -26,16 +26,19 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
         return n >= 1 && n <= 8 ? circledDigits[n - 1] : String(n);
     };
 
-    // Calculate match numbers for this city (1-indexed, using circled digits)
-    const matchNumbersPrefix = useMemo(() => {
-        const cityMatchNumbers: string[] = [];
+    // Calculate match numbers for this city (1-indexed)
+    const matchNumbers = useMemo(() => {
+        const nums: number[] = [];
         teamMatches.forEach((m, idx) => {
             if (m.city.id === city.id) {
-                cityMatchNumbers.push(toCircledDigit(idx + 1)); // 1-indexed
+                nums.push(idx + 1); // 1-indexed
             }
         });
-        return cityMatchNumbers.join('');
+        return nums;
     }, [teamMatches, city.id]);
+
+    // String prefix kept for collision detection width estimation
+    const matchNumbersPrefix = matchNumbers.map(n => toCircledDigit(n)).join('');
 
     // Convert lat/lng to pixel coordinates
     const latLngToPixel = useCallback((c: [number, number]): { x: number; y: number } => {
@@ -194,24 +197,84 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
         return { labelX, labelY, textAnchor };
     }, [pixel, markerIndex, teamMatches, latLngToPixel, otherCityPixels]);
 
+    // SVG-drawn circled numbers: each badge is a filled circle + white number
+    const badgeRadius = 7;
+    const badgeSpacing = 16; // center-to-center distance between badges
+    const badgeToTextGap = 3; // gap between last badge and city name
+    const totalBadgesWidth = matchNumbers.length * badgeSpacing;
+
+    // Calculate badge start offset based on text anchor
+    let badgeStartX = labelPosition.labelX;
+    if (labelPosition.textAnchor === 'end') {
+        badgeStartX = labelPosition.labelX - (city.name.length * 9) - totalBadgesWidth - badgeToTextGap;
+    } else if (labelPosition.textAnchor === 'middle') {
+        badgeStartX = labelPosition.labelX - ((city.name.length * 9) + totalBadgesWidth + badgeToTextGap) / 2;
+    }
+
+    // City name text starts after all badges
+    const cityNameX = badgeStartX + totalBadgesWidth + badgeToTextGap;
+
     return (
-        <text
+        <g
             key={`label-${animationKey}-${markerIndex}`}
-            x={labelPosition.labelX}
-            y={labelPosition.labelY}
-            textAnchor={labelPosition.textAnchor}
             className="city-label"
-            style={{
-                fill: CITY_LABEL_CONFIG.fillColor,
-                fontSize: '15px', // Unified city label size
-                fontWeight: CITY_LABEL_CONFIG.fontWeight,
-                stroke: CITY_LABEL_CONFIG.strokeColor,
-                strokeWidth: CITY_LABEL_CONFIG.strokeWidth,
-                paintOrder: 'stroke fill',
-                pointerEvents: 'none'
-            }}
+            style={{ pointerEvents: 'none' }}
         >
-            {matchNumbersPrefix}{city.name}
-        </text>
+            {/* Match number badges */}
+            {matchNumbers.map((num, i) => {
+                const cx = badgeStartX + i * badgeSpacing + badgeRadius;
+                const cy = labelPosition.labelY - 5; // vertically center with text
+                return (
+                    <g key={`badge-${i}`}>
+                        {/* White outline circle */}
+                        <circle
+                            cx={cx}
+                            cy={cy}
+                            r={badgeRadius + 1.5}
+                            fill="white"
+                        />
+                        {/* Filled circle */}
+                        <circle
+                            cx={cx}
+                            cy={cy}
+                            r={badgeRadius}
+                            fill={CITY_LABEL_CONFIG.fillColor}
+                        />
+                        {/* Number text */}
+                        <text
+                            x={cx}
+                            y={cy}
+                            textAnchor="middle"
+                            dominantBaseline="central"
+                            style={{
+                                fill: 'white',
+                                fontSize: '9px',
+                                fontWeight: 800,
+                                pointerEvents: 'none',
+                            }}
+                        >
+                            {num}
+                        </text>
+                    </g>
+                );
+            })}
+            {/* City name */}
+            <text
+                x={cityNameX}
+                y={labelPosition.labelY}
+                textAnchor="start"
+                style={{
+                    fill: CITY_LABEL_CONFIG.fillColor,
+                    fontSize: '15px',
+                    fontWeight: CITY_LABEL_CONFIG.fontWeight,
+                    stroke: CITY_LABEL_CONFIG.strokeColor,
+                    strokeWidth: CITY_LABEL_CONFIG.strokeWidth,
+                    paintOrder: 'stroke fill',
+                    pointerEvents: 'none',
+                }}
+            >
+                {city.name}
+            </text>
+        </g>
     );
 }
