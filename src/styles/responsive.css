@@ -77,9 +77,16 @@
         display: none;
     }
 
+    .main-container {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
     .content-wrapper {
         margin-top: 140px;
         height: calc(100vh - 140px);
+        height: calc(100dvh - 140px);
         flex-direction: column;
         overflow: hidden;
         padding: 8px;
