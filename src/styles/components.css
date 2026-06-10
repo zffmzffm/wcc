@@ -368,6 +368,39 @@
     border-radius: 999px;
 }
 
+@media (max-width: 600px) {
+    .dropdown-select-menu {
+        position: fixed;
+        top: 58px;
+        left: 8px;
+        right: 8px;
+        width: auto;
+        max-height: min(58vh, calc(100dvh - 122px));
+        border-radius: 12px;
+    }
+
+    .dropdown-select-menu-option,
+    .dropdown-select-menu-group {
+        min-height: 40px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.82rem;
+        line-height: 1.25;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .dropdown-select-option-label {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .dropdown-select-tooltip {
+        display: none;
+    }
+}
+
 /* Clear Selection Button */
 .clear-selection {
     background: var(--background);

@@ -56,22 +56,27 @@ const emitUrlChange = () => {
 
 const getServerSearchSnapshot = () => SERVER_SEARCH_SNAPSHOT;
 
-const getInitialUrlState = (cities: City[]): UrlState => ({
+const getInitialUrlState = (cities: City[], isMobile: boolean): UrlState => ({
     selectedTeam: INITIAL_TEAM_CODE,
-    selectedCity: cities.find(c => c.id === INITIAL_CITY_ID) || null,
+    selectedCity: isMobile ? null : cities.find(c => c.id === INITIAL_CITY_ID) || null,
     selectedDay: null,
-    selectedTimezone: DEFAULT_TIMEZONE,
+    selectedTimezone: isMobile ? null : DEFAULT_TIMEZONE,
 });
 
 /** Parse URL search params into state values */
-const parseUrlState = (cities: City[], search: string, useInitialDefaults: boolean): UrlState => {
+const parseUrlState = (
+    cities: City[],
+    search: string,
+    useInitialDefaults: boolean,
+    isMobile: boolean
+): UrlState => {
     if (search === SERVER_SEARCH_SNAPSHOT) {
         return EMPTY_URL_STATE;
     }
 
     const params = new URLSearchParams(search);
     if (useInitialDefaults && Array.from(params.keys()).length === 0) {
-        return getInitialUrlState(cities);
+        return getInitialUrlState(cities, isMobile);
     }
 
     const teamCode = params.get(URL_PARAMS.team);
@@ -145,8 +150,8 @@ export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
         selectedDay,
         selectedTimezone,
     } = useMemo(
-        () => parseUrlState(cities, currentSearch, useInitialDefaults),
-        [cities, currentSearch, useInitialDefaults]
+        () => parseUrlState(cities, currentSearch, useInitialDefaults, isMobile),
+        [cities, currentSearch, isMobile, useInitialDefaults]
     );
 
     const pushUrlState = useCallback((state: UrlState) => {

@@ -53,9 +53,7 @@ describe('LiveMatchStack', () => {
             />
         );
 
-        const cards = screen.getAllByRole('button');
-
-        expect(cards).toHaveLength(4);
+        expect(container.querySelectorAll('.live-match-card')).toHaveLength(4);
         expect(screen.getByText('LIVE')).toBeInTheDocument();
         expect(screen.getByText('MEX')).toBeInTheDocument();
         expect(screen.getByText('RSA')).toBeInTheDocument();
@@ -105,7 +103,7 @@ describe('LiveMatchStack', () => {
             />
         );
 
-        fireEvent.click(screen.getAllByRole('button')[0]);
+        fireEvent.click(screen.getByRole('button', { name: /Group A: MEX vs RSA/ }));
 
         expect(onCitySelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'mexico_city' }));
     });

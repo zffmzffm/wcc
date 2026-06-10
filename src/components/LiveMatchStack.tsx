@@ -62,6 +62,7 @@ export default function LiveMatchStack({
     onCitySelect,
 }: LiveMatchStackProps) {
     const [now, setNow] = useState(() => new Date());
+    const [isMatchStackOpen, setIsMatchStackOpen] = useState(false);
 
     useEffect(() => {
         const intervalId = window.setInterval(() => {
@@ -125,12 +126,29 @@ export default function LiveMatchStack({
     }
 
     return (
-        <aside className="live-match-stack" aria-label="Live and upcoming matches">
+        <aside
+            className={`live-match-stack${isMatchStackOpen ? ' is-mobile-expanded' : ''}`}
+            aria-label="Live and upcoming matches"
+        >
             <div className="live-match-stack-header">
                 <span className="live-match-stack-title">Now / Next</span>
                 <span className="live-match-stack-count">{visibleEvents.length} matches</span>
             </div>
-            <div className="live-match-stack-list">
+            <button
+                type="button"
+                className="live-match-stack-toggle"
+                aria-expanded={isMatchStackOpen}
+                aria-controls="live-match-stack-list"
+                aria-label={isMatchStackOpen ? 'Collapse next matches' : 'Expand next matches'}
+                onClick={() => setIsMatchStackOpen(open => !open)}
+            >
+                <span className="live-match-toggle-label">Next</span>
+                <span className="live-match-toggle-count">{visibleEvents.length}</span>
+                <span className="live-match-toggle-chevron" aria-hidden="true">
+                    {isMatchStackOpen ? '<' : '>'}
+                </span>
+            </button>
+            <div className="live-match-stack-list" id="live-match-stack-list">
                 {visibleEvents.map(event => {
                     const { time } = formatDateTimeWithTimezone(event.datetime, timezone);
                     const isLive = event.status.kind === 'live';

@@ -57,6 +57,18 @@ describe('useUrlState', () => {
         expect(result.current.canGoBack).toBe(false);
     });
 
+    it('should initialize with only Canada selected on mobile when URL has no params', () => {
+        window.location.search = '';
+
+        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: true }));
+
+        expect(result.current.selectedTeam).toBe('CAN');
+        expect(result.current.selectedCity).toBeNull();
+        expect(result.current.selectedDay).toBeNull();
+        expect(result.current.selectedTimezone).toBeNull();
+        expect(result.current.canGoBack).toBe(false);
+    });
+
     it('should clear initial defaults when resetSelections is called', () => {
         window.location.search = '';
 

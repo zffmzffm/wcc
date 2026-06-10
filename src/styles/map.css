@@ -69,6 +69,10 @@
     white-space: nowrap;
 }
 
+.live-match-stack-toggle {
+    display: none;
+}
+
 .live-match-stack-list {
     display: flex;
     flex-direction: column;
@@ -257,17 +261,78 @@
 @media (max-width: 600px) {
     .live-match-stack {
         top: 8px;
-        left: 8px;
+        left: 0;
         width: min(268px, calc(100% - 16px));
         gap: 4px;
+        transform: translateX(calc(-100% + 64px));
+        transition: transform 0.22s ease;
+    }
+
+    .live-match-stack.is-mobile-expanded {
+        transform: translateX(8px);
     }
 
     .live-match-stack-header {
         display: none;
     }
 
-    .live-match-stack-list {
+    .live-match-stack-toggle {
+        align-self: flex-end;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         gap: 4px;
+        width: 64px;
+        min-height: 36px;
+        box-sizing: border-box;
+        padding: 0 6px;
+        border: 1px solid rgba(45, 90, 61, 0.18);
+        border-radius: 0 8px 8px 0;
+        background: rgba(255, 255, 255, 0.96);
+        color: var(--primary-dark);
+        box-shadow:
+            0 8px 20px rgba(45, 90, 61, 0.16),
+            0 2px 6px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.82);
+        font: inherit;
+        font-size: 0.62rem;
+        font-weight: 900;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .live-match-stack.is-mobile-expanded .live-match-stack-toggle {
+        width: 100%;
+        justify-content: space-between;
+        border-radius: 8px;
+        padding: 0 9px;
+    }
+
+    .live-match-toggle-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 18px;
+        min-height: 18px;
+        border-radius: 999px;
+        background: #2D6F4E;
+        color: white;
+        font-size: 0.58rem;
+        font-weight: 900;
+    }
+
+    .live-match-toggle-chevron {
+        font-size: 0.7rem;
+        font-weight: 900;
+    }
+
+    .live-match-stack-list {
+        display: none;
+        gap: 4px;
+    }
+
+    .live-match-stack.is-mobile-expanded .live-match-stack-list {
+        display: flex;
     }
 
     .live-match-card {
