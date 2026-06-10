@@ -142,11 +142,9 @@ export default function LiveMatchStack({
                 aria-label={isMatchStackOpen ? 'Collapse next matches' : 'Expand next matches'}
                 onClick={() => setIsMatchStackOpen(open => !open)}
             >
-                <span className="live-match-toggle-label">Next</span>
-                <span className="live-match-toggle-count">{visibleEvents.length}</span>
-                <span className="live-match-toggle-chevron" aria-hidden="true">
-                    {isMatchStackOpen ? '<' : '>'}
-                </span>
+                <span className="live-match-stack-title">Now / Next</span>
+                <span className="live-match-stack-count">{visibleEvents.length} matches</span>
+                <span className="live-match-toggle-chevron" aria-hidden="true" />
             </button>
             <div className="live-match-stack-list" id="live-match-stack-list">
                 {visibleEvents.map(event => {
