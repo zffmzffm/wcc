@@ -892,14 +892,3 @@
 .main-container:has(.map-css-fullscreen) .app-footer {
     display: none !important;
 }
-
-/* ============================================
-   Chrome Tile Gap Fix
-   ============================================ */
-/* Fixes white grid lines appearing between map tiles in Chrome due to fractional zooming */
-.leaflet-tile-container img {
-    width: 256.5px !important;
-    height: 256.5px !important;
-    margin-top: -0.5px;
-    margin-left: -0.5px;
-}
