@@ -5,10 +5,10 @@ import { City, Match, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
 import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
+import { getScoreDisplay } from '@/utils/score';
 import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
-import FlagIcon from './FlagIcon';
 
 // Map city IDs to venue images (when available)
 const venueImages: Record<string, string> = {
@@ -223,12 +223,18 @@ export default function CitySidebar({
                                             <div className="match-teams">
                                                 {(() => {
                                                     const parts = venue.matchup?.split(' vs ') || ['TBD', 'TBD'];
+                                                    const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>
                                                             <span className="team">
                                                                 <span className="team-name">{parts[0]}</span>
                                                             </span>
-                                                            <span className="vs">VS</span>
+                                                            <span
+                                                                className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                                                aria-label={scoreDisplay.ariaLabel}
+                                                            >
+                                                                {scoreDisplay.label}
+                                                            </span>
                                                             <span className="team">
                                                                 <span className="team-name">{parts[1] || 'TBD'}</span>
                                                             </span>
@@ -297,12 +303,18 @@ export default function CitySidebar({
                                             <div className="match-teams">
                                                 {(() => {
                                                     const parts = venue.matchup?.split(' vs ') || ['TBD', 'TBD'];
+                                                    const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>
                                                             <span className="team">
                                                                 <span className="team-name">{parts[0]}</span>
                                                             </span>
-                                                            <span className="vs">VS</span>
+                                                            <span
+                                                                className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                                                aria-label={scoreDisplay.ariaLabel}
+                                                            >
+                                                                {scoreDisplay.label}
+                                                            </span>
                                                             <span className="team">
                                                                 <span className="team-name">{parts[1] || 'TBD'}</span>
                                                             </span>

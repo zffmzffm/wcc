@@ -4,6 +4,7 @@ import { cities, matches, teams } from '@/data';
 import knockoutVenuesData from '@/data/knockoutVenues.json';
 import type { Match } from '@/types';
 import type { KnockoutVenue } from '@/repositories/types';
+import { getScoreDisplay } from '@/utils/score';
 import { cityIdToSlug, slugToCityId, teamNameToSlug } from '@/utils/slugs';
 import '@/styles/landing.css';
 
@@ -311,6 +312,10 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                     <div className="landing-matches">
                         {cityScheduleEvents.map((event) => {
                             const date = formatMatchDate(event.datetime);
+                            const scoreDisplay = getScoreDisplay(event.kind === 'group' ? event.match.score : event.venue.score);
+                            const knockoutParts = event.kind === 'knockout'
+                                ? (event.venue.matchup || 'TBD vs TBD').split(' vs ')
+                                : null;
                             return (
                                 <article key={event.id} className="landing-match-card">
                                     <div className="landing-match-date">
@@ -323,14 +328,26 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                                             {event.kind === 'group' ? (
                                                 <>
                                                     {getTeamFlag(event.match.team1)} {getTeamName(event.match.team1)}
-                                                    <span className="landing-match-vs">vs</span>
+                                                    <span
+                                                        className={`landing-match-vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                                        aria-label={scoreDisplay.ariaLabel}
+                                                    >
+                                                        {scoreDisplay.label}
+                                                    </span>
                                                     {getTeamFlag(event.match.team2)} {getTeamName(event.match.team2)}
                                                 </>
                                             ) : (
                                                 <>
                                                     {getKnockoutStageLabel(event.venue.stage)}
                                                     <span className="landing-match-vs">·</span>
-                                                    {event.venue.matchup || 'TBD'}
+                                                    <span>{knockoutParts?.[0] || 'TBD'}</span>
+                                                    <span
+                                                        className={`landing-match-vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                                        aria-label={scoreDisplay.ariaLabel}
+                                                    >
+                                                        {scoreDisplay.label}
+                                                    </span>
+                                                    <span>{knockoutParts?.[1] || 'TBD'}</span>
                                                 </>
                                             )}
                                         </div>

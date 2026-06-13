@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cities, matches, teams } from '@/data';
 import FlagIcon from '@/components/FlagIcon';
+import { getScoreDisplay } from '@/utils/score';
 import { cityIdToSlug, teamNameToSlug } from '@/utils/slugs';
 import '@/styles/landing.css';
 
@@ -249,6 +250,7 @@ export default async function TeamLandingPage({ params }: { params: Promise<{ sl
                             const date = formatMatchDate(m.datetime);
                             const opponent = m.team1 === team.code ? m.team2 : m.team1;
                             const isHome = m.team1 === team.code;
+                            const scoreDisplay = getScoreDisplay(m.score);
                             return (
                                 <article key={m.id} className="landing-match-card">
                                     <div className="landing-match-date">
@@ -261,13 +263,23 @@ export default async function TeamLandingPage({ params }: { params: Promise<{ sl
                                             {isHome ? (
                                                 <>
                                                     <TeamFlagLabel code={team.code} name={team.name} />
-                                                    <span className="landing-match-vs">vs</span>
+                                                    <span
+                                                        className={`landing-match-vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                                        aria-label={scoreDisplay.ariaLabel}
+                                                    >
+                                                        {scoreDisplay.label}
+                                                    </span>
                                                     <TeamFlagLabel code={opponent} />
                                                 </>
                                             ) : (
                                                 <>
                                                     <TeamFlagLabel code={m.team1} />
-                                                    <span className="landing-match-vs">vs</span>
+                                                    <span
+                                                        className={`landing-match-vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                                        aria-label={scoreDisplay.ariaLabel}
+                                                    >
+                                                        {scoreDisplay.label}
+                                                    </span>
                                                     <TeamFlagLabel code={team.code} name={team.name} />
                                                 </>
                                             )}

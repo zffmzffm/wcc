@@ -62,6 +62,7 @@ export function useKnockoutPaths(
                         datetime: venue.datetime,
                         stage: venue.stage,
                         matchup: venue.matchup,
+                        score: venue.score,
                     };
 
                     return {

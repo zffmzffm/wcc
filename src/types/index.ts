@@ -11,6 +11,11 @@ export interface City {
     capacity: number;
 }
 
+export interface ScoreLine {
+    left: number;
+    right: number;
+}
+
 export interface Match {
     id: number;
     group: string;
@@ -20,6 +25,7 @@ export interface Match {
     datetime: string;
     stage: string;
     matchup?: string;  // For knockout matches, e.g., "1A vs 3CEFHI"
+    score?: ScoreLine;
 }
 
 export interface Team {

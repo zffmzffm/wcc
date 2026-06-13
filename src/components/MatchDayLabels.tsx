@@ -6,6 +6,7 @@ import { Match, City, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
 import { getDayDifference } from '@/utils/dateUtils';
+import { getScoreDisplay } from '@/utils/score';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMapRefresh } from '@/hooks/useMapRefresh';
@@ -412,12 +413,14 @@ export default function MatchDayLabels({
                         const { time } = formatDateTimeWithTimezone(m.datetime, timezone);
                         const dayDiff = getDayDifference(m.datetime, timezone);
                         const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
+                        const scoreDisplay = getScoreDisplay(m.score);
+                        const scoreClassName = `match-day-label-vs${scoreDisplay.isScored ? ' is-scored' : ''}`;
                         return `
                                     <div data-match-id="${m.id}" class="match-day-label-row">
                                         <span class="match-day-label-time">${timeDisplay}</span>
                                         <span class="match-day-label-teams">
                                             <span class="match-day-label-team-code">${team1.code}</span>
-                                            <span class="match-day-label-vs">VS</span>
+                                            <span class="${scoreClassName}" aria-label="${scoreDisplay.ariaLabel}">${scoreDisplay.label}</span>
                                             <span class="match-day-label-team-code">${team2.code}</span>
                                         </span>
                                     </div>
@@ -428,12 +431,14 @@ export default function MatchDayLabels({
                         const dayDiff = getDayDifference(v.datetime, timezone);
                         const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
                         const matchupParts = (v.matchup || 'TBD vs TBD').split(' vs ');
+                        const scoreDisplay = getScoreDisplay(v.score);
+                        const scoreClassName = `match-day-label-vs${scoreDisplay.isScored ? ' is-scored' : ''}`;
                         return `
                                     <div class="match-day-label-row">
                                         <span class="match-day-label-time">${timeDisplay}</span>
                                         <span class="match-day-label-teams">
                                             <span class="match-day-label-team-code">${matchupParts[0] || 'TBD'}</span>
-                                            <span class="match-day-label-vs">VS</span>
+                                            <span class="${scoreClassName}" aria-label="${scoreDisplay.ariaLabel}">${scoreDisplay.label}</span>
                                             <span class="match-day-label-team-code">${matchupParts[1] || 'TBD'}</span>
                                         </span>
                                     </div>

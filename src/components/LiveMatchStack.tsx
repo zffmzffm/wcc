@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { City, Match, Team } from '@/types';
+import { City, Match, ScoreLine, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
 import { getMatchTimingStatus, MatchTimingStatus } from '@/utils/matchStatus';
+import { getScoreDisplay } from '@/utils/score';
 
 interface LiveMatchStackProps {
     matches: Match[];
@@ -23,6 +24,7 @@ type MatchStackEvent = {
     team2: string;
     stageLabel: string;
     stageBadgeLabel: string;
+    score?: ScoreLine;
     status: MatchTimingStatus;
 };
 
@@ -84,6 +86,7 @@ export default function LiveMatchStack({
             team2: getTeamDisplay(match.team2, teams).code,
             stageLabel: getStageLabel(match),
             stageBadgeLabel: getStageBadgeLabel(match),
+            score: match.score,
         }));
         const knockoutEvents = knockoutVenues.map(venue => {
             const [team1, team2] = splitMatchup(venue.matchup);
@@ -96,6 +99,7 @@ export default function LiveMatchStack({
                 team2,
                 stageLabel: getStageLabel(venue),
                 stageBadgeLabel: getStageBadgeLabel(venue),
+                score: venue.score,
             };
         });
 
@@ -150,6 +154,8 @@ export default function LiveMatchStack({
                 {visibleEvents.map(event => {
                     const { time } = formatDateTimeWithTimezone(event.datetime, timezone);
                     const isLive = event.status.kind === 'live';
+                    const scoreDisplay = getScoreDisplay(event.score);
+                    const matchupAriaLabel = `${event.team1} ${scoreDisplay.ariaLabel} ${event.team2}`;
 
                     return (
                         <button
@@ -157,7 +163,7 @@ export default function LiveMatchStack({
                             className="live-match-card"
                             type="button"
                             onClick={() => onCitySelect?.(event.city)}
-                            aria-label={`${event.stageLabel}: ${event.team1} vs ${event.team2} in ${event.city.name}`}
+                            aria-label={`${event.stageLabel}: ${matchupAriaLabel} in ${event.city.name}`}
                         >
                             <span className="live-match-stage-badge" aria-hidden="true">
                                 {event.stageBadgeLabel}
@@ -168,7 +174,12 @@ export default function LiveMatchStack({
                             <span className="live-match-main">
                                 <span className="live-match-teams">
                                     <span>{event.team1}</span>
-                                    <span className="live-match-vs">VS</span>
+                                    <span
+                                        className={`live-match-vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                        aria-label={scoreDisplay.ariaLabel}
+                                    >
+                                        {scoreDisplay.label}
+                                    </span>
                                     <span>{event.team2}</span>
                                 </span>
                                 <span className="live-match-meta">

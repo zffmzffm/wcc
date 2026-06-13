@@ -172,6 +172,14 @@
     line-height: 1.2;
 }
 
+.live-match-vs.is-scored {
+    min-width: 26px;
+    color: var(--primary-dark);
+    background: rgba(45, 90, 61, 0.14);
+    font-size: 0.62rem;
+    text-align: center;
+}
+
 .live-match-meta {
     min-width: 0;
     display: flex;
@@ -370,6 +378,11 @@
     .live-match-vs {
         padding: 0 3px;
         font-size: 0.48rem;
+    }
+
+    .live-match-vs.is-scored {
+        min-width: 22px;
+        font-size: 0.54rem;
     }
 
     .live-match-meta {
@@ -629,6 +642,12 @@
     background: var(--border-light);
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
+}
+
+.flight-popup-teams .vs.is-scored {
+    color: var(--primary-dark);
+    background: rgba(45, 90, 61, 0.12);
+    font-weight: 900;
 }
 
 .flight-popup-datetime {

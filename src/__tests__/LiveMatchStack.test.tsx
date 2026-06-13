@@ -87,6 +87,29 @@ describe('LiveMatchStack', () => {
         expect([...container.querySelectorAll('.live-match-stage-badge')].map(badge => badge.textContent)).toEqual(['32', '16', 'QF', 'SF']);
     });
 
+    it('renders score separators and score-aware labels when a score exists', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-06-11T15:30:00-04:00'));
+        const scoredMatches = matches.map(match => (
+            match.id === 1
+                ? { ...match, score: { left: 2, right: 1 } }
+                : match
+        ));
+
+        render(
+            <LiveMatchStack
+                matches={scoredMatches}
+                knockoutVenues={[]}
+                cities={cities}
+                teams={teams}
+                timezone="America/Toronto"
+            />
+        );
+
+        expect(screen.getByText('2-1')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Group A: MEX 2 to 1 RSA in Mexico City/ })).toBeInTheDocument();
+    });
+
     it('selects the event city when a match card is clicked', () => {
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2026-06-11T14:00:00-04:00'));
@@ -103,7 +126,7 @@ describe('LiveMatchStack', () => {
             />
         );
 
-        fireEvent.click(screen.getByRole('button', { name: /Group A: MEX vs RSA/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Group A: MEX versus RSA/ }));
 
         expect(onCitySelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'mexico_city' }));
     });

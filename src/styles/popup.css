@@ -199,6 +199,22 @@
     border-radius: 4px;
 }
 
+.vs.is-scored {
+    min-width: 2.2rem;
+    color: var(--primary-dark);
+    background: rgba(45, 90, 61, 0.12);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .vs.is-scored {
+        min-width: 1.9rem;
+        font-size: 0.62rem;
+    }
+}
+
 .match-datetime {
     display: flex;
     justify-content: center;

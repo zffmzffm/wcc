@@ -6,7 +6,8 @@
         "team2": "RSA",
         "cityId": "mexico_city",
         "datetime": "2026-06-11T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 0 }
     },
     {
         "id": 2,
@@ -15,7 +16,8 @@
         "team2": "CZE",
         "cityId": "guadalajara",
         "datetime": "2026-06-11T22:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 1 }
     },
     {
         "id": 25,
@@ -60,7 +62,8 @@
         "team2": "BIH",
         "cityId": "toronto",
         "datetime": "2026-06-12T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 8,
@@ -168,6 +171,7 @@
         "team2": "PAR",
         "cityId": "los_angeles",
         "datetime": "2026-06-12T21:00:00-04:00",
+        "score": { "left": 4, "right": 1 },
         "stage": "group"
     },
     {

@@ -1,8 +1,9 @@
 'use client';
 import { CircleMarker, Popup } from 'react-leaflet';
 import { Match, Team, City } from '@/types';
-import { formatDateTimeWithTimezone, getCountryColor } from '@/utils/formatters';
+import { formatDateTimeWithTimezone } from '@/utils/formatters';
 import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
+import { flipScore, getScoreDisplay } from '@/utils/score';
 import { FLIGHT_PATH_CONFIG } from '@/constants';
 import FlagIcon from '../FlagIcon';
 
@@ -48,7 +49,8 @@ export default function MatchMarker({
     const dayDiff = getDayDifference(match.datetime, timezone);
     const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
     const date = dayDiff !== 0 ? formatMatchDayDate(match.datetime) : tzDate;
-    const countryColor = getCountryColor(city.country);
+    const displayScore = match.team1 === teamCode ? match.score : flipScore(match.score);
+    const scoreDisplay = getScoreDisplay(displayScore);
 
     return (
         <CircleMarker
@@ -76,7 +78,12 @@ export default function MatchMarker({
                             <FlagIcon code={currentTeam?.code || teamCode} size={18} />
                             <span className="team-name">{currentTeam?.name}</span>
                         </span>
-                        <span className="vs">VS</span>
+                        <span
+                            className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                            aria-label={scoreDisplay.ariaLabel}
+                        >
+                            {scoreDisplay.label}
+                        </span>
                         <span className="team-info">
                             <FlagIcon code={opponent.code} size={18} />
                             <span className="team-name">{opponent.name}</span>

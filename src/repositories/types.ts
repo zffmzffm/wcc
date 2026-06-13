@@ -2,7 +2,7 @@
  * Repository Interface Definitions
  * Defines the data access abstraction layer for future API/database implementations.
  */
-import { Match, City, Team } from '@/types';
+import { Match, City, Team, ScoreLine } from '@/types';
 
 /**
  * Knockout venue information.
@@ -14,6 +14,7 @@ export interface KnockoutVenue {
     cityId: string;
     datetime: string;
     matchup?: string;  // e.g., "1A vs 3CEFHI" - indicates home/away positions
+    score?: ScoreLine;
 }
 
 /**

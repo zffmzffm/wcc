@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { Match, Team } from '@/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
 import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
+import { getScoreDisplay } from '@/utils/score';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
 import FlagIcon from './FlagIcon';
 
@@ -44,6 +45,7 @@ const MatchItem = memo(function MatchItem({
     // so that the (+1/-1) suffix correctly indicates the shift from the displayed date.
     // Otherwise show the timezone-local date (which is the same as the match day).
     const date = dayDiff !== 0 ? formatMatchDayDate(match.datetime) : tzDate;
+    const scoreDisplay = getScoreDisplay(match.score);
 
     
     const isTeam1Highlighted = highlightTeamCode === match.team1;
@@ -109,7 +111,12 @@ const MatchItem = memo(function MatchItem({
                         <FlagIcon code={team1.code} size={18} />
                         <span className="team-name">{team1.name}</span>
                     </span>
-                    <span className="vs">VS</span>
+                    <span
+                        className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                        aria-label={scoreDisplay.ariaLabel}
+                    >
+                        {scoreDisplay.label}
+                    </span>
                     <span
                         className={`team ${isTeam2Highlighted ? 'highlight-team' : ''} ${isTeamClickable ? 'team-clickable' : ''}`}
                         onClick={handleTeam2Click}
@@ -159,7 +166,12 @@ const MatchItem = memo(function MatchItem({
                     <FlagIcon code={team1.code} size={20} />
                     <span className="team-name">{team1.name}</span>
                 </span>
-                <span className="vs">VS</span>
+                <span
+                    className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                    aria-label={scoreDisplay.ariaLabel}
+                >
+                    {scoreDisplay.label}
+                </span>
                 <span
                     className={`team ${isTeamClickable ? 'team-clickable' : ''}`}
                     onClick={handleTeam2Click}

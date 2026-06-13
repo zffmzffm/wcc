@@ -91,6 +91,14 @@
     border-radius: 3px;
 }
 
+.match-day-label-vs.is-scored {
+    min-width: 20px;
+    color: #1E4530;
+    background: rgba(45,90,61,0.12);
+    font-weight: 900;
+    text-align: center;
+}
+
 /* Match day labels mobile responsive */
 @media (max-width: 600px) {
     .match-day-label-container {
@@ -127,5 +135,8 @@
     .match-day-label-vs {
         font-size: 7px;
         padding: 0 2px;
+    }
+    .match-day-label-vs.is-scored {
+        min-width: 16px;
     }
 }
