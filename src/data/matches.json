@@ -72,7 +72,8 @@
         "team2": "SUI",
         "cityId": "san_francisco",
         "datetime": "2026-06-13T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 26,
