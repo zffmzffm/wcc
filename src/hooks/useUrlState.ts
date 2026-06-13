@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { City } from '@/types';
 import { DEFAULT_TIMEZONE } from '@/constants';
+import { getDefaultInitialMatchDay, MatchScheduleEvent } from '@/utils/defaultSelection';
 
 /**
  * URL parameter keys used for state synchronization
@@ -28,6 +29,7 @@ interface UrlState {
 interface UseUrlStateOptions {
     cities: City[];
     isMobile: boolean;
+    scheduleEvents?: MatchScheduleEvent[];
 }
 
 const EMPTY_URL_STATE: UrlState = {
@@ -56,19 +58,39 @@ const emitUrlChange = () => {
 
 const getServerSearchSnapshot = () => SERVER_SEARCH_SNAPSHOT;
 
-const getInitialUrlState = (cities: City[], isMobile: boolean): UrlState => ({
-    selectedTeam: INITIAL_TEAM_CODE,
-    selectedCity: isMobile ? null : cities.find(c => c.id === INITIAL_CITY_ID) || null,
-    selectedDay: null,
-    selectedTimezone: isMobile ? null : DEFAULT_TIMEZONE,
-});
+const getInitialUrlState = (
+    cities: City[],
+    isMobile: boolean,
+    scheduleEvents: MatchScheduleEvent[],
+    now: Date
+): UrlState => {
+    const selectedDay = getDefaultInitialMatchDay(scheduleEvents, now);
+
+    if (selectedDay) {
+        return {
+            selectedTeam: null,
+            selectedCity: null,
+            selectedDay,
+            selectedTimezone: isMobile ? null : DEFAULT_TIMEZONE,
+        };
+    }
+
+    return {
+        selectedTeam: INITIAL_TEAM_CODE,
+        selectedCity: isMobile ? null : cities.find(c => c.id === INITIAL_CITY_ID) || null,
+        selectedDay: null,
+        selectedTimezone: isMobile ? null : DEFAULT_TIMEZONE,
+    };
+};
 
 /** Parse URL search params into state values */
 const parseUrlState = (
     cities: City[],
     search: string,
     useInitialDefaults: boolean,
-    isMobile: boolean
+    isMobile: boolean,
+    scheduleEvents: MatchScheduleEvent[],
+    now: Date
 ): UrlState => {
     if (search === SERVER_SEARCH_SNAPSHOT) {
         return EMPTY_URL_STATE;
@@ -76,7 +98,7 @@ const parseUrlState = (
 
     const params = new URLSearchParams(search);
     if (useInitialDefaults && Array.from(params.keys()).length === 0) {
-        return getInitialUrlState(cities, isMobile);
+        return getInitialUrlState(cities, isMobile, scheduleEvents, now);
     }
 
     const teamCode = params.get(URL_PARAMS.team);
@@ -101,13 +123,14 @@ const parseUrlState = (
  * - On popstate: restores state from URL (browser back/forward)
  * - Shareable URLs: e.g. ?team=BRA&city=miami&day=2026-06-14&tz=Asia/Tokyo
  */
-export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
+export function useUrlState({ cities, isMobile, scheduleEvents = [] }: UseUrlStateOptions) {
     // Track how many history entries we've pushed (for canGoBack)
     const historyDepthRef = useRef(0);
     const searchSnapshotRef = useRef<string | null>(null);
     const [useInitialDefaults, setUseInitialDefaults] = useState(
         () => typeof window !== 'undefined' && window.location.search === ''
     );
+    const [defaultSelectionNow, setDefaultSelectionNow] = useState(() => new Date());
     const [canGoBack, setCanGoBack] = useState(false);
 
     const getSearchSnapshot = useCallback(() => {
@@ -144,14 +167,33 @@ export function useUrlState({ cities, isMobile }: UseUrlStateOptions) {
         getServerSearchSnapshot
     );
 
+    useEffect(() => {
+        if (!useInitialDefaults || currentSearch !== '') return;
+
+        const intervalId = window.setInterval(() => {
+            setDefaultSelectionNow(new Date());
+        }, 60 * 1000);
+
+        return () => {
+            window.clearInterval(intervalId);
+        };
+    }, [currentSearch, useInitialDefaults]);
+
     const {
         selectedTeam,
         selectedCity,
         selectedDay,
         selectedTimezone,
     } = useMemo(
-        () => parseUrlState(cities, currentSearch, useInitialDefaults, isMobile),
-        [cities, currentSearch, isMobile, useInitialDefaults]
+        () => parseUrlState(
+            cities,
+            currentSearch,
+            useInitialDefaults,
+            isMobile,
+            scheduleEvents,
+            defaultSelectionNow
+        ),
+        [cities, currentSearch, defaultSelectionNow, isMobile, scheduleEvents, useInitialDefaults]
     );
 
     const pushUrlState = useCallback((state: UrlState) => {

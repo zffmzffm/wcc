@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import TeamSelector from '@/components/TeamSelector';
@@ -12,7 +12,6 @@ import Footer from '@/components/Footer';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { LayerVisibilityProvider } from '@/contexts/LayerVisibilityContext';
 import { HoverMatchProvider } from '@/contexts/HoverMatchContext';
-import { City } from '@/types';
 import { teams, matches, cities } from '@/data';
 import { JsonMatchRepository } from '@/repositories/JsonMatchRepository';
 import { useUrlState } from '@/hooks/useUrlState';
@@ -23,6 +22,7 @@ import { DEFAULT_TIMEZONE } from '@/constants';
 // Get knockout venues singleton
 const matchRepository = new JsonMatchRepository();
 const knockoutVenues = matchRepository.getKnockoutVenues();
+const defaultScheduleEvents = [...matches, ...knockoutVenues];
 
 const WorldCupMap = dynamic(() => import('@/components/WorldCupMap'), {
   ssr: false, // Leaflet doesn't support SSR
@@ -54,7 +54,11 @@ export default function Home() {
     resetSelections,
     canGoBack,
     handleBack,
-  } = useUrlState({ cities, isMobile: isCompactSelectionMode });
+  } = useUrlState({
+    cities,
+    isMobile: isCompactSelectionMode,
+    scheduleEvents: defaultScheduleEvents,
+  });
 
   // Get selected team info - memoized to avoid unnecessary lookups
   const selectedTeamInfo = useMemo(() =>

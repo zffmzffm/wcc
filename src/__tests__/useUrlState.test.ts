@@ -5,6 +5,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useUrlState } from '@/hooks/useUrlState';
 import { City } from '@/types';
 import { DEFAULT_TIMEZONE } from '@/constants';
+import { MatchScheduleEvent } from '@/utils/defaultSelection';
 
 type HistoryStateMethod = typeof window.history.pushState;
 
@@ -13,6 +14,12 @@ const mockCities: City[] = [
     { id: 'new_york', name: 'New York/New Jersey', country: 'USA', countryCode: 'USA', lat: 40.8136, lng: -74.0744, venue: 'MetLife Stadium', capacity: 82500 },
     { id: 'los_angeles', name: 'Los Angeles', country: 'USA', countryCode: 'USA', lat: 33.9534, lng: -118.3387, venue: 'SoFi Stadium', capacity: 70240 },
     { id: 'toronto', name: 'Toronto', country: 'Canada', countryCode: 'CAN', lat: 43.6332, lng: -79.4186, venue: 'BMO Field', capacity: 45736 },
+];
+
+const mockScheduleEvents: MatchScheduleEvent[] = [
+    { datetime: '2026-06-11T15:00:00-04:00' },
+    { datetime: '2026-06-13T15:00:00-04:00' },
+    { datetime: '2026-07-19T15:00:00-04:00' },
 ];
 
 describe('useUrlState', () => {
@@ -25,6 +32,9 @@ describe('useUrlState', () => {
     let replaceStateSpy: ReturnType<typeof vi.fn<HistoryStateMethod>>;
 
     beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-06-13T12:00:00-04:00'));
+
         // Reset URL to base
         Object.defineProperty(window, 'location', {
             value: new URL('http://localhost:3000/'),
@@ -42,40 +52,70 @@ describe('useUrlState', () => {
         // Restore
         window.history.pushState = originalPushState;
         window.history.replaceState = originalReplaceState;
+        vi.useRealTimers();
         vi.restoreAllMocks();
     });
 
-    it('should initialize with Toronto, Canada, and Toronto timezone when URL has no params', () => {
+    it('should initialize with the current match day and Toronto timezone when URL has no params', () => {
         window.location.search = '';
         
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
+
+        expect(result.current.selectedTeam).toBeNull();
+        expect(result.current.selectedCity).toBeNull();
+        expect(result.current.selectedDay).toBe('2026-06-13');
+        expect(result.current.selectedTimezone).toBe(DEFAULT_TIMEZONE);
+        expect(result.current.canGoBack).toBe(false);
+    });
+
+    it('should initialize with only the current match day on mobile when URL has no params', () => {
+        window.location.search = '';
+
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: true,
+            scheduleEvents: mockScheduleEvents,
+        }));
+
+        expect(result.current.selectedTeam).toBeNull();
+        expect(result.current.selectedCity).toBeNull();
+        expect(result.current.selectedDay).toBe('2026-06-13');
+        expect(result.current.selectedTimezone).toBeNull();
+        expect(result.current.canGoBack).toBe(false);
+    });
+
+    it('should restore Toronto and Canada defaults after the final has ended', () => {
+        vi.setSystemTime(new Date('2026-07-19T17:00:00-04:00'));
+        window.location.search = '';
+
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         expect(result.current.selectedTeam).toBe('CAN');
         expect(result.current.selectedCity?.id).toBe('toronto');
         expect(result.current.selectedDay).toBeNull();
         expect(result.current.selectedTimezone).toBe(DEFAULT_TIMEZONE);
-        expect(result.current.canGoBack).toBe(false);
-    });
-
-    it('should initialize with only Canada selected on mobile when URL has no params', () => {
-        window.location.search = '';
-
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: true }));
-
-        expect(result.current.selectedTeam).toBe('CAN');
-        expect(result.current.selectedCity).toBeNull();
-        expect(result.current.selectedDay).toBeNull();
-        expect(result.current.selectedTimezone).toBeNull();
-        expect(result.current.canGoBack).toBe(false);
     });
 
     it('should clear initial defaults when resetSelections is called', () => {
         window.location.search = '';
 
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
-        expect(result.current.selectedTeam).toBe('CAN');
-        expect(result.current.selectedCity?.id).toBe('toronto');
+        expect(result.current.selectedTeam).toBeNull();
+        expect(result.current.selectedCity).toBeNull();
+        expect(result.current.selectedDay).toBe('2026-06-13');
         expect(result.current.selectedTimezone).toBe(DEFAULT_TIMEZONE);
 
         act(() => {
@@ -91,7 +131,11 @@ describe('useUrlState', () => {
     it('should initialize correctly from URL with valid params', () => {
         window.location.search = '?team=USA&city=new_york&day=2026-06-11&tz=America/New_York';
         
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         expect(result.current.selectedTeam).toBe('USA');
         expect(result.current.selectedCity?.id).toBe('new_york');
@@ -103,7 +147,11 @@ describe('useUrlState', () => {
         window.location.search = '?tz=Pacific/Auckland';
 
         function TimezoneLabel() {
-            const { selectedTimezone } = useUrlState({ cities: mockCities, isMobile: false });
+            const { selectedTimezone } = useUrlState({
+                cities: mockCities,
+                isMobile: false,
+                scheduleEvents: mockScheduleEvents,
+            });
             return React.createElement('span', null, selectedTimezone ?? 'TIME ZONE');
         }
 
@@ -116,7 +164,11 @@ describe('useUrlState', () => {
     it('should ignore invalid city param', () => {
         window.location.search = '?city=atlantis';
         
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         expect(result.current.selectedCity).toBeNull();
     });
@@ -124,7 +176,11 @@ describe('useUrlState', () => {
     it('should push state to URL when updates happen', () => {
         window.location.search = '';
         
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         act(() => {
             result.current.handleTeamSelect('BRA');
@@ -142,7 +198,11 @@ describe('useUrlState', () => {
     it('should handle clearing a param (setting to null)', () => {
         window.location.search = '?team=FRA&city=toronto';
         
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         expect(result.current.selectedTeam).toBe('FRA');
         expect(result.current.selectedCity?.id).toBe('toronto');
@@ -162,7 +222,11 @@ describe('useUrlState', () => {
     it('should clear team, city, day, and timezone together when resetSelections is called', () => {
         window.location.search = '?team=CAN&city=toronto&day=2026-06-11&tz=America/Toronto';
 
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         act(() => {
             result.current.resetSelections();
@@ -180,7 +244,11 @@ describe('useUrlState', () => {
     it('should handle popstate events (browser back/forward)', () => {
         window.location.search = '?team=ARG';
         
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         expect(result.current.selectedTeam).toBe('ARG');
 
@@ -198,7 +266,11 @@ describe('useUrlState', () => {
     it('should restore initial defaults when navigating back to the initial empty URL', () => {
         window.location.search = '';
 
-        const { result } = renderHook(() => useUrlState({ cities: mockCities, isMobile: false }));
+        const { result } = renderHook(() => useUrlState({
+            cities: mockCities,
+            isMobile: false,
+            scheduleEvents: mockScheduleEvents,
+        }));
 
         act(() => {
             result.current.handleTeamSelect('BRA');
@@ -212,8 +284,9 @@ describe('useUrlState', () => {
             window.dispatchEvent(event);
         });
 
-        expect(result.current.selectedTeam).toBe('CAN');
-        expect(result.current.selectedCity?.id).toBe('toronto');
+        expect(result.current.selectedTeam).toBeNull();
+        expect(result.current.selectedCity).toBeNull();
+        expect(result.current.selectedDay).toBe('2026-06-13');
         expect(result.current.selectedTimezone).toBe(DEFAULT_TIMEZONE);
     });
 });
