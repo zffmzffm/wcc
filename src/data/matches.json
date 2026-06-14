@@ -118,7 +118,8 @@
         "team2": "MAR",
         "cityId": "new_york",
         "datetime": "2026-06-13T18:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 5,
