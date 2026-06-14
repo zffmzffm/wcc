@@ -184,7 +184,8 @@
         "team2": "TUR",
         "cityId": "vancouver",
         "datetime": "2026-06-14T00:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 0 }
     },
     {
         "id": 32,
