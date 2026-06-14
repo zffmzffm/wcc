@@ -128,7 +128,8 @@
         "team2": "SCO",
         "cityId": "boston",
         "datetime": "2026-06-13T21:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 1 }
     },
     {
         "id": 30,
