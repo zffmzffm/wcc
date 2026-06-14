@@ -285,7 +285,8 @@
         "team2": "JPN",
         "cityId": "dallas",
         "datetime": "2026-06-14T16:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 2 }
     },
     {
         "id": 12,

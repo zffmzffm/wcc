@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "score": "node scripts/update-match-score.mjs",
+    "score:update": "node scripts/update-match-score.mjs",
+    "data:validate": "node scripts/update-match-score.mjs --validate-only",
     "test": "vitest",
     "test:coverage": "vitest --coverage"
   },

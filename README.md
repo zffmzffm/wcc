@@ -55,6 +55,25 @@ npm run build
 npm run start
 ```
 
+### Score Updates
+
+Daily score updates should usually be one short command.
+
+```bash
+# 1. Find the match IDs for the day
+npm run score -- 2026-06-14
+
+# 2. Update one match
+npm run score -- 9 2-1
+
+# 3. Or update multiple matches from that day
+npm run score -- 2026-06-14 9=2-1 11=0-0
+```
+
+Scores are stored as `{ "left": homeSideGoals, "right": awaySideGoals }`, where
+`left` matches `team1` and `right` matches `team2`. To check the data without
+editing it, run `npm run score -- check`.
+
 ### Testing
 
 ```bash
