@@ -240,7 +240,8 @@
         "team2": "ECU",
         "cityId": "philadelphia",
         "datetime": "2026-06-14T19:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 0 }
     },
     {
         "id": 33,
