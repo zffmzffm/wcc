@@ -296,7 +296,8 @@
         "team2": "TUN",
         "cityId": "monterrey",
         "datetime": "2026-06-14T22:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 5, "right": 1 }
     },
     {
         "id": 35,
