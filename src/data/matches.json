@@ -342,7 +342,8 @@
         "team2": "EGY",
         "cityId": "seattle",
         "datetime": "2026-06-15T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 15,
