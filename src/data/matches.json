@@ -407,7 +407,8 @@
         "team2": "URU",
         "cityId": "miami",
         "datetime": "2026-06-15T18:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 38,
