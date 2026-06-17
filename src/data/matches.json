@@ -566,7 +566,8 @@
         "team2": "COD",
         "cityId": "houston",
         "datetime": "2026-06-17T13:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 24,
