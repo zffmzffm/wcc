@@ -621,7 +621,8 @@
         "team2": "CRO",
         "cityId": "dallas",
         "datetime": "2026-06-17T16:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 4, "right": 2 }
     },
     {
         "id": 21,
