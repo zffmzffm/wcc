@@ -26,7 +26,8 @@
         "team2": "RSA",
         "cityId": "atlanta",
         "datetime": "2026-06-18T12:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 28,
