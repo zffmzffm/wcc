@@ -83,7 +83,8 @@
         "team2": "BIH",
         "cityId": "los_angeles",
         "datetime": "2026-06-18T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 4, "right": 1 }
     },
     {
         "id": 27,
