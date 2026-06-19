@@ -198,7 +198,8 @@
         "team2": "AUS",
         "cityId": "seattle",
         "datetime": "2026-06-19T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 0 }
     },
     {
         "id": 31,
