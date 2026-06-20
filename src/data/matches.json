@@ -152,7 +152,8 @@
         "team2": "HAI",
         "cityId": "philadelphia",
         "datetime": "2026-06-19T20:30:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 3, "right": 0 }
     },
     {
         "id": 49,
