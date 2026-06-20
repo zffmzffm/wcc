@@ -258,7 +258,8 @@
         "team2": "CIV",
         "cityId": "toronto",
         "datetime": "2026-06-20T16:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 1 }
     },
     {
         "id": 34,
