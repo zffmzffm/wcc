@@ -314,7 +314,8 @@
         "team2": "SWE",
         "cityId": "houston",
         "datetime": "2026-06-20T13:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 5, "right": 1 }
     },
     {
         "id": 36,
