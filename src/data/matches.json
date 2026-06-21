@@ -326,7 +326,8 @@
         "team2": "JPN",
         "cityId": "monterrey",
         "datetime": "2026-06-21T00:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 4 }
     },
     {
         "id": 57,
