@@ -268,7 +268,8 @@
         "team2": "CUW",
         "cityId": "kansas_city",
         "datetime": "2026-06-20T20:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 0 }
     },
     {
         "id": 56,
