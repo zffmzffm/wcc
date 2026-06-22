@@ -374,7 +374,8 @@
         "team2": "IRN",
         "cityId": "los_angeles",
         "datetime": "2026-06-21T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 0 }
     },
     {
         "id": 40,
@@ -383,7 +384,8 @@
         "team2": "EGY",
         "cityId": "vancouver",
         "datetime": "2026-06-21T21:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 3 }
     },
     {
         "id": 64,
@@ -430,7 +432,8 @@
         "team2": "KSA",
         "cityId": "atlanta",
         "datetime": "2026-06-21T12:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 4, "right": 0 }
     },
     {
         "id": 37,
@@ -439,7 +442,8 @@
         "team2": "CPV",
         "cityId": "miami",
         "datetime": "2026-06-21T18:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 2 }
     },
     {
         "id": 66,
