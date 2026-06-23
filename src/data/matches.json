@@ -490,7 +490,8 @@
         "team2": "IRQ",
         "cityId": "philadelphia",
         "datetime": "2026-06-22T17:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 3, "right": 0 }
     },
     {
         "id": 41,
