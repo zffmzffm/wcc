@@ -558,7 +558,8 @@
         "team2": "ALG",
         "cityId": "san_francisco",
         "datetime": "2026-06-22T23:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 2 }
     },
     {
         "id": 69,
