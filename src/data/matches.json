@@ -500,7 +500,8 @@
         "team2": "SEN",
         "cityId": "new_york",
         "datetime": "2026-06-22T20:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 3, "right": 2 }
     },
     {
         "id": 61,
