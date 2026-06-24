@@ -722,6 +722,14 @@
     transition: opacity 0.2s ease;
 }
 
+.map-legend-content .legend-item.is-impossible .legend-text,
+.map-legend-content .legend-item.is-eliminated .legend-text {
+    color: #7d8490;
+    text-decoration-line: line-through;
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: currentColor;
+}
+
 /* Old path-legend styles (deprecated, kept for backwards compatibility) */
 .path-legend {
     display: none;

@@ -4,6 +4,7 @@ import { Match, Team, City } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { useKnockoutPaths } from '@/hooks/useKnockoutPaths';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
+import { isGrayKnockoutPathState } from '@/utils/knockoutResults';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
 
@@ -23,27 +24,43 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
     const prevTeamCodeRef = useRef<string | null>(null);
 
     // Get layer visibility controls
-    const { setVisibility, selectKnockoutPath, resetToFirstPath } = useLayerVisibility();
+    const { setVisibility, selectKnockoutPath } = useLayerVisibility();
 
-    // Reset to Q-1st when team changes
+    // Get knockout paths for the team's group
+    const knockoutPaths = useKnockoutPaths(team?.group || '', knockoutVenues, cities, team?.code);
+
+    // Reset to the actual path when known, while keeping gray alternatives visible.
     useEffect(() => {
-        let resetTimer: number | undefined;
-        if (team && team.code !== prevTeamCodeRef.current) {
-            resetToFirstPath();
-            resetTimer = window.setTimeout(() => {
-                setSelectedPathIndex(0);
-            }, 0);
-            prevTeamCodeRef.current = team.code;
-        }
         if (!team) {
             prevTeamCodeRef.current = null;
+            return;
         }
+
+        if (knockoutPaths.length === 0) {
+            return;
+        }
+
+        const actualIndex = knockoutPaths.findIndex(path => path.displayState === 'actual');
+        const pendingIndex = knockoutPaths.findIndex(path => path.displayState === 'pending');
+        const nextIndex = actualIndex >= 0 ? actualIndex : pendingIndex >= 0 ? pendingIndex : 0;
+        const hasResolvedState = knockoutPaths.some(path => path.displayState !== 'open');
+
+        const resetTimer = window.setTimeout(() => {
+            setSelectedPathIndex(nextIndex);
+        }, 0);
+        setVisibility({
+            groupStage: true,
+            scenarios: Object.fromEntries(
+                knockoutPaths.map(path => [path.scenarioId, hasResolvedState || path.scenarioId === knockoutPaths[nextIndex].scenarioId])
+            ),
+        });
+        selectKnockoutPath(knockoutPaths[nextIndex].scenarioId);
+        prevTeamCodeRef.current = team.code;
+
         return () => {
-            if (resetTimer !== undefined) {
-                window.clearTimeout(resetTimer);
-            }
+            window.clearTimeout(resetTimer);
         };
-    }, [team, resetToFirstPath]);
+    }, [team, knockoutPaths, selectKnockoutPath, setVisibility]);
 
     // Handle Escape key to close
     useEffect(() => {
@@ -72,9 +89,6 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
     }, [cities]);
 
 
-    // Get knockout paths for the team's group
-    const knockoutPaths = useKnockoutPaths(team?.group || '', knockoutVenues, cities);
-
     // Get the currently selected path
     const selectedPath = knockoutPaths[selectedPathIndex] || knockoutPaths[0];
 
@@ -84,10 +98,12 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
         if (!clickedPath) return;
 
         setSelectedPathIndex(index);
+        const hasResolvedState = knockoutPaths.some(path => path.displayState !== 'open');
+
         setVisibility({
             groupStage: true,
             scenarios: Object.fromEntries(
-                knockoutPaths.map(path => [path.scenarioId, path.scenarioId === clickedPath.scenarioId])
+                knockoutPaths.map(path => [path.scenarioId, hasResolvedState || path.scenarioId === clickedPath.scenarioId])
             ),
         });
         selectKnockoutPath(clickedPath.scenarioId);
@@ -154,7 +170,11 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                                         key={path.id}
                                         role="tab"
                                         aria-selected={selectedPathIndex === index}
-                                        className={`knockout-tab ${selectedPathIndex === index ? 'active' : ''}`}
+                                        className={[
+                                            'knockout-tab',
+                                            selectedPathIndex === index ? 'active' : '',
+                                            path.displayState !== 'open' ? `is-${path.displayState}` : '',
+                                        ].filter(Boolean).join(' ')}
                                         onClick={() => handleTabClick(index)}
                                         style={{
                                             '--tab-color': path.color,
@@ -167,7 +187,13 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
 
                             {/* Selected Path Content */}
                             {selectedPath && (
-                                <div className="knockout-path-content" role="tabpanel">
+                                <div
+                                    className={[
+                                        'knockout-path-content',
+                                        isGrayKnockoutPathState(selectedPath.displayState) ? `is-${selectedPath.displayState}` : '',
+                                    ].filter(Boolean).join(' ')}
+                                    role="tabpanel"
+                                >
                                     <ul className="match-list knockout-match-list" role="list">
                                         {selectedPath.matches.map((matchInfo, idx) => {
                                             // Determine if selected team is home or away based on matchup
@@ -194,8 +220,9 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                                             }
 
                                             // Get opponent descriptor from matchup
-                                            const matchupParts = matchup.split(' vs ');
-                                            const opponentLabel = isHome ? (matchupParts[1] || 'TBD') : (matchupParts[0] || 'TBD');
+                                            const opponentLabel = isHome
+                                                ? (matchInfo.match.team2 || 'TBD')
+                                                : (matchInfo.match.team1 || 'TBD');
 
                                             const knockoutMatch: Match = {
                                                 ...matchInfo.match,

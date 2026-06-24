@@ -7,6 +7,7 @@ import { KnockoutVenue } from '@/repositories/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
 import { getDayDifference } from '@/utils/dateUtils';
 import { getScoreDisplay } from '@/utils/score';
+import { resolveKnockoutMatchup } from '@/utils/knockoutResults';
 import { useHoverMatch } from '@/contexts/HoverMatchContext';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMapRefresh } from '@/hooks/useMapRefresh';
@@ -430,7 +431,7 @@ export default function MatchDayLabels({
                         const { time } = formatDateTimeWithTimezone(v.datetime, timezone);
                         const dayDiff = getDayDifference(v.datetime, timezone);
                         const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
-                        const matchupParts = (v.matchup || 'TBD vs TBD').split(' vs ');
+                        const matchupParts = resolveKnockoutMatchup(v.matchId, v.matchup);
                         const scoreDisplay = getScoreDisplay(v.score);
                         const scoreClassName = `match-day-label-vs${scoreDisplay.isScored ? ' is-scored' : ''}`;
                         return `

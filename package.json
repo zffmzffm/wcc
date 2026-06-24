@@ -10,6 +10,7 @@
     "score": "node scripts/update-match-score.mjs",
     "score:update": "node scripts/update-match-score.mjs",
     "data:validate": "node scripts/update-match-score.mjs --validate-only",
+    "knockout": "node scripts/update-knockout-results.mjs",
     "test": "vitest",
     "test:coverage": "vitest --coverage"
   },

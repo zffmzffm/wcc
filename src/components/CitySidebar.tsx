@@ -6,6 +6,7 @@ import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
 import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
 import { getScoreDisplay } from '@/utils/score';
+import { resolveKnockoutMatchup } from '@/utils/knockoutResults';
 import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
@@ -222,7 +223,7 @@ export default function CitySidebar({
                                             </div>
                                             <div className="match-teams">
                                                 {(() => {
-                                                    const parts = venue.matchup?.split(' vs ') || ['TBD', 'TBD'];
+                                                    const parts = resolveKnockoutMatchup(venue.matchId, venue.matchup);
                                                     const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>
@@ -302,7 +303,7 @@ export default function CitySidebar({
                                             </div>
                                             <div className="match-teams">
                                                 {(() => {
-                                                    const parts = venue.matchup?.split(' vs ') || ['TBD', 'TBD'];
+                                                    const parts = resolveKnockoutMatchup(venue.matchId, venue.matchup);
                                                     const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>

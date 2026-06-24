@@ -8,13 +8,25 @@ import { useMapRefresh } from '@/hooks/useMapRefresh';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG } from '@/constants';
 import { generateArcPath, generateChevronPath } from '@/utils/pathGenerators';
+import { isGrayKnockoutPathState } from '@/utils/knockoutResults';
 
 interface KnockoutFlightPathProps {
     groupId: string;
+    teamCode: string;
     knockoutVenues: KnockoutVenue[];
     cities: City[];
     lastGroupMatchCoords: [number, number] | null;
     groupStageCityIds?: Set<string>; // Cities already labeled by group stage
+}
+
+function getKnockoutPathStrokeStyle(displayState: KnockoutPath['displayState']) {
+    const isGray = isGrayKnockoutPathState(displayState);
+
+    return {
+        chevronOpacity: isGray ? 0.42 : 1,
+        chevronStrokeWidth: isGray ? 1.6 : 2,
+        glowOpacity: isGray ? 0.04 : 0.15,
+    };
 }
 
 /**
@@ -27,6 +39,7 @@ interface KnockoutFlightPathProps {
  */
 export default function KnockoutFlightPath({
     groupId,
+    teamCode,
     knockoutVenues,
     cities,
     lastGroupMatchCoords,
@@ -40,11 +53,15 @@ export default function KnockoutFlightPath({
     useMapRefresh();
 
     // Get knockout paths for this group
-    const knockoutPaths = useKnockoutPaths(groupId, knockoutVenues, cities);
+    const knockoutPaths = useKnockoutPaths(groupId, knockoutVenues, cities, teamCode);
 
     // Filter paths based on visibility
     const visiblePaths = knockoutPaths.filter(path => visibility.scenarios[path.scenarioId] ?? false);
     const activeLabelPath = visiblePaths.find(path => path.scenarioId === selectedKnockoutPath);
+    const visiblePathRenderOrder = [...visiblePaths].sort((a, b) =>
+        Number(isGrayKnockoutPathState(b.displayState))
+        - Number(isGrayKnockoutPathState(a.displayState))
+    );
 
     // Coordinate conversion function
     const latLngToPixel = useCallback((coords: [number, number]): { x: number; y: number } => {
@@ -87,31 +104,36 @@ export default function KnockoutFlightPath({
             >
                 {/* Define chevron markers for each visible path */}
                 <defs>
-                    {visiblePaths.map(path => (
-                        <marker
-                            key={`chevron-marker-${path.id}`}
-                            id={`chevron-marker-${path.id}`}
-                            markerWidth="8"
-                            markerHeight="8"
-                            refX="4"
-                            refY="4"
-                            orient="auto"
-                            markerUnits="userSpaceOnUse"
-                        >
-                            <path
-                                d="M 1 1 L 6 4 L 1 7"
-                                fill="none"
-                                stroke={path.color}
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </marker>
-                    ))}
+                    {visiblePathRenderOrder.map(path => {
+                        const strokeStyle = getKnockoutPathStrokeStyle(path.displayState);
+
+                        return (
+                            <marker
+                                key={`chevron-marker-${path.id}`}
+                                id={`chevron-marker-${path.id}`}
+                                markerWidth="8"
+                                markerHeight="8"
+                                refX="4"
+                                refY="4"
+                                orient="auto"
+                                markerUnits="userSpaceOnUse"
+                            >
+                                <path
+                                    d="M 1 1 L 6 4 L 1 7"
+                                    fill="none"
+                                    stroke={path.color}
+                                    strokeWidth={strokeStyle.chevronStrokeWidth}
+                                    strokeOpacity={strokeStyle.chevronOpacity}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </marker>
+                        );
+                    })}
                 </defs>
 
                 {/* Render each visible knockout path - PATHS ONLY */}
-                {visiblePaths.map((path) => (
+                {visiblePathRenderOrder.map((path) => (
                     <KnockoutPathLine
                         key={`knockout-path-${path.id}`}
                         path={path}
@@ -315,7 +337,8 @@ const chooseKnockoutLabelPlacement = ({
  * Renders a single knockout path as a dashed line
  */
 function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStageCityIds, renderMode }: KnockoutPathLineProps) {
-    const { matches, color } = path;
+    const { matches, color, displayState } = path;
+    const strokeStyle = getKnockoutPathStrokeStyle(displayState);
 
     if (matches.length === 0) return null;
 
@@ -374,7 +397,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                             fill="none"
                             stroke={color}
                             strokeWidth={8}
-                            strokeOpacity={0.15}
+                            strokeOpacity={strokeStyle.glowOpacity}
                             strokeLinecap="round"
                         />
                         {/* Chevron path */}

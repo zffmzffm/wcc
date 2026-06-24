@@ -296,7 +296,7 @@ function MapContent({
 
     // Get layer visibility
     const { visibility } = useLayerVisibility();
-    const knockoutPaths = useKnockoutPaths(currentTeam?.group || '', allKnockoutVenues, cities);
+    const knockoutPaths = useKnockoutPaths(currentTeam?.group || '', allKnockoutVenues, cities, selectedTeam || undefined);
 
     // Calculate knockout path cities based on visible layers
     const knockoutCityIds = useMemo(() => {

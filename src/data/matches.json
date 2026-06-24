@@ -104,7 +104,8 @@
         "team2": "CAN",
         "cityId": "vancouver",
         "datetime": "2026-06-24T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 2, "right": 1 }
     },
     {
         "id": 52,
@@ -113,7 +114,8 @@
         "team2": "QAT",
         "cityId": "seattle",
         "datetime": "2026-06-24T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 3, "right": 1 }
     },
     {
         "id": 7,

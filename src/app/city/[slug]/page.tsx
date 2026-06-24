@@ -5,6 +5,7 @@ import knockoutVenuesData from '@/data/knockoutVenues.json';
 import type { Match } from '@/types';
 import type { KnockoutVenue } from '@/repositories/types';
 import { getScoreDisplay } from '@/utils/score';
+import { resolveKnockoutMatchup } from '@/utils/knockoutResults';
 import { cityIdToSlug, slugToCityId, teamNameToSlug } from '@/utils/slugs';
 import '@/styles/landing.css';
 
@@ -237,7 +238,7 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
 
         return {
             ...baseEvent,
-            name: `${getKnockoutStageLabel(event.venue.stage)}: ${event.venue.matchup || 'TBD'} – World Cup 2026`,
+            name: `${getKnockoutStageLabel(event.venue.stage)}: ${resolveKnockoutMatchup(event.venue.matchId, event.venue.matchup).join(' vs ')} - World Cup 2026`,
         };
     });
 
@@ -314,7 +315,7 @@ export default async function CityLandingPage({ params }: { params: Promise<{ sl
                             const date = formatMatchDate(event.datetime);
                             const scoreDisplay = getScoreDisplay(event.kind === 'group' ? event.match.score : event.venue.score);
                             const knockoutParts = event.kind === 'knockout'
-                                ? (event.venue.matchup || 'TBD vs TBD').split(' vs ')
+                                ? resolveKnockoutMatchup(event.venue.matchId, event.venue.matchup)
                                 : null;
                             return (
                                 <article key={event.id} className="landing-match-card">

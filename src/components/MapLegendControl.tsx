@@ -6,6 +6,8 @@ import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import type { KnockoutPath } from '@/hooks/useKnockoutPaths';
+import { isGrayKnockoutPathState } from '@/utils/knockoutResults';
+import type { KnockoutPathDisplayState } from '@/utils/knockoutResults';
 
 /**
  * MapLegendControl - Leaflet custom control for path legend with visibility toggles
@@ -20,6 +22,7 @@ interface LegendItem {
     label: string;
     isDashed?: boolean;
     isChevron?: boolean;  // For group stage chevron arrows
+    displayState?: KnockoutPathDisplayState;
 }
 
 interface MapLegendControlProps {
@@ -30,7 +33,9 @@ interface MapLegendControlProps {
  * Renders the legend line/icon for each layer type
  */
 function LegendIcon({ item, isVisible }: { item: LegendItem; isVisible: boolean }) {
-    const opacity = isVisible ? 1 : 0.4;
+    const isGrayState = item.displayState ? isGrayKnockoutPathState(item.displayState) : false;
+    const opacity = isVisible ? (isGrayState ? 0.55 : 1) : 0.4;
+    const chevronStrokeWidth = isGrayState ? 1.6 : 2;
 
     // Chevron style for group stage (matches the V-shaped arrows on map)
     if (item.isChevron) {
@@ -47,7 +52,7 @@ function LegendIcon({ item, isVisible }: { item: LegendItem; isVisible: boolean 
                     d="M 1 2 L 4 6 L 1 10"
                     fill="none"
                     stroke={item.color}
-                    strokeWidth="2"
+                    strokeWidth={chevronStrokeWidth}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />
@@ -55,7 +60,7 @@ function LegendIcon({ item, isVisible }: { item: LegendItem; isVisible: boolean 
                     d="M 9 2 L 12 6 L 9 10"
                     fill="none"
                     stroke={item.color}
-                    strokeWidth="2"
+                    strokeWidth={chevronStrokeWidth}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />
@@ -63,7 +68,7 @@ function LegendIcon({ item, isVisible }: { item: LegendItem; isVisible: boolean 
                     d="M 17 2 L 20 6 L 17 10"
                     fill="none"
                     stroke={item.color}
-                    strokeWidth="2"
+                    strokeWidth={chevronStrokeWidth}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />
@@ -149,6 +154,7 @@ export default function MapLegendControl({ knockoutPaths }: MapLegendControlProp
             color: path.color,
             label: path.label,
             isChevron: true,
+            displayState: path.displayState,
         })),
     ];
 
@@ -160,7 +166,14 @@ export default function MapLegendControl({ knockoutPaths }: MapLegendControlProp
                     : visibility.scenarios[item.key] ?? false;
 
                 return (
-                    <label key={item.key} className="legend-item legend-item-clickable">
+                    <label
+                        key={item.key}
+                        className={[
+                            'legend-item',
+                            'legend-item-clickable',
+                            item.displayState && item.displayState !== 'open' ? `is-${item.displayState}` : '',
+                        ].filter(Boolean).join(' ')}
+                    >
                         <input
                             type="checkbox"
                             className="legend-checkbox"

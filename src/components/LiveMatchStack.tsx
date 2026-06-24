@@ -6,6 +6,7 @@ import { KnockoutVenue } from '@/repositories/types';
 import { formatDateTimeWithTimezone, getTeamDisplay } from '@/utils/formatters';
 import { getMatchTimingStatus, MatchTimingStatus } from '@/utils/matchStatus';
 import { getScoreDisplay } from '@/utils/score';
+import { resolveKnockoutMatchup } from '@/utils/knockoutResults';
 
 interface LiveMatchStackProps {
     matches: Match[];
@@ -30,11 +31,6 @@ type MatchStackEvent = {
 
 const MAX_VISIBLE_MATCHES = 4;
 const TICK_INTERVAL_MS = 60 * 1000;
-
-function splitMatchup(matchup?: string): [string, string] {
-    const [left, right] = (matchup || 'TBD vs TBD').split(' vs ');
-    return [left || 'TBD', right || 'TBD'];
-}
 
 function getStageLabel(event: Match | KnockoutVenue): string {
     if ('group' in event) {
@@ -89,7 +85,7 @@ export default function LiveMatchStack({
             score: match.score,
         }));
         const knockoutEvents = knockoutVenues.map(venue => {
-            const [team1, team2] = splitMatchup(venue.matchup);
+            const [team1, team2] = resolveKnockoutMatchup(venue.matchId, venue.matchup);
 
             return {
                 id: `knockout-${venue.matchId}`,

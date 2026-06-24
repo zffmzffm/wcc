@@ -468,6 +468,28 @@
     color: var(--text-primary);
 }
 
+.knockout-tab.is-impossible,
+.knockout-tab.is-eliminated {
+    background: #eef0f3;
+    border-color: rgba(92, 99, 112, 0.22);
+}
+
+.knockout-tab.is-impossible .knockout-tab-label,
+.knockout-tab.is-eliminated .knockout-tab-label {
+    color: #7d8490;
+    text-decoration-line: line-through;
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: currentColor;
+}
+
+.knockout-tab.is-actual .knockout-tab-label {
+    color: var(--text-primary);
+}
+
+.knockout-tab.is-pending .knockout-tab-label {
+    color: var(--text-secondary);
+}
+
 /* Tab Content Panel - Connects with active tab */
 .knockout-path-content {
     background: var(--sidebar-bg);
@@ -476,6 +498,80 @@
     padding: 0.5rem 0;
     margin-top: -1px;
     animation: fadeIn 0.15s ease;
+}
+.knockout-path-content.is-impossible,
+.knockout-path-content.is-eliminated {
+    background: #f4f5f7;
+    border-color: rgba(120, 127, 138, 0.24);
+}
+
+.knockout-path-content.is-impossible .match-item,
+.knockout-path-content.is-eliminated .match-item {
+    background: #f7f8f9;
+    box-shadow:
+        3px 3px 8px rgba(92, 99, 112, 0.08),
+        -3px -3px 8px rgba(255, 255, 255, 0.78);
+}
+
+.knockout-path-content.is-impossible .match-item:hover,
+.knockout-path-content.is-impossible .match-item.match-item-hovered,
+.knockout-path-content.is-eliminated .match-item:hover,
+.knockout-path-content.is-eliminated .match-item.match-item-hovered {
+    background: #f1f3f5;
+    transform: none;
+    box-shadow:
+        3px 3px 8px rgba(92, 99, 112, 0.08),
+        -3px -3px 8px rgba(255, 255, 255, 0.78);
+}
+
+.knockout-path-content.is-impossible .match-info-row,
+.knockout-path-content.is-eliminated .match-info-row {
+    background: #e2e5e9;
+}
+
+.knockout-path-content.is-impossible .match-number,
+.knockout-path-content.is-impossible .match-date,
+.knockout-path-content.is-impossible .match-time,
+.knockout-path-content.is-impossible .match-venue,
+.knockout-path-content.is-impossible .team-name,
+.knockout-path-content.is-eliminated .match-number,
+.knockout-path-content.is-eliminated .match-date,
+.knockout-path-content.is-eliminated .match-time,
+.knockout-path-content.is-eliminated .match-venue,
+.knockout-path-content.is-eliminated .team-name {
+    color: #8a929d;
+}
+
+.knockout-path-content.is-impossible .vs,
+.knockout-path-content.is-eliminated .vs {
+    background: #dfe3e7;
+    color: #8a929d;
+}
+
+.knockout-path-content.is-impossible .flag-fallback,
+.knockout-path-content.is-eliminated .flag-fallback {
+    background-color: #eef0f3 !important;
+    color: #7d8490;
+    box-shadow: none;
+    opacity: 0.72;
+}
+
+.knockout-path-content.is-impossible .flag-icon:not(.flag-fallback),
+.knockout-path-content.is-eliminated .flag-icon:not(.flag-fallback) {
+    filter: none;
+    opacity: 1;
+}
+
+.knockout-path-content.is-impossible .team-clickable:hover,
+.knockout-path-content.is-impossible .venue-clickable:hover,
+.knockout-path-content.is-eliminated .team-clickable:hover,
+.knockout-path-content.is-eliminated .venue-clickable:hover {
+    background: rgba(120, 127, 138, 0.12);
+}
+
+.knockout-path-content.is-impossible .team-clickable:hover .team-name,
+.knockout-path-content.is-eliminated .team-clickable:hover .team-name {
+    color: #7d8490;
 }
 
 @keyframes fadeIn {

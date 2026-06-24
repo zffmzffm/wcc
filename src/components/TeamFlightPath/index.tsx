@@ -59,7 +59,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
     );
 
     // Get knockout path selection for bounds fitting
-    const knockoutPaths = useKnockoutPaths(currentTeam?.group || '', knockoutVenues, cities);
+    const knockoutPaths = useKnockoutPaths(currentTeam?.group || '', knockoutVenues, cities, teamCode);
 
     // Calculate group stage city IDs for knockout path label offset
     const groupStageCityIds = useMemo(() => {
@@ -225,6 +225,7 @@ export default function TeamFlightPath({ teamCode, matches, cities, teams, knock
             {knockoutVenues.length > 0 && currentTeam && (
                 <KnockoutFlightPath
                     groupId={currentTeam.group}
+                    teamCode={teamCode}
                     knockoutVenues={knockoutVenues}
                     cities={cities}
                     lastGroupMatchCoords={lastGroupMatchCoords}

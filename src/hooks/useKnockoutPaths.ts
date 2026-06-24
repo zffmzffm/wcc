@@ -9,6 +9,12 @@ import { MatchWithCoords, City, Match } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getGroupPaths, KnockoutPosition } from '@/data/knockoutBracket';
 import { STAGE_NAMES } from '@/constants';
+import {
+    getDisplayColor,
+    getKnockoutPathDisplayState,
+    KnockoutPathDisplayState,
+    resolveKnockoutMatchup,
+} from '@/utils/knockoutResults';
 
 export interface KnockoutPath {
     id: string;
@@ -18,6 +24,8 @@ export interface KnockoutPath {
     variantIndex: number;
     r32MatchId: string;
     color: string;
+    baseColor: string;
+    displayState: KnockoutPathDisplayState;
     matchIds: string[];
     matches: MatchWithCoords[];
 }
@@ -33,7 +41,8 @@ export interface KnockoutPath {
 export function useKnockoutPaths(
     groupId: string,
     knockoutVenues: KnockoutVenue[],
-    cities: City[]
+    cities: City[],
+    teamCode?: string
 ): KnockoutPath[] {
     return useMemo(() => {
         if (!groupId) return [];
@@ -51,7 +60,7 @@ export function useKnockoutPaths(
                     const city = cityMap.get(venue.cityId);
                     if (!city) return null;
 
-                    const matchupParts = (venue.matchup || 'TBD vs TBD').split(' vs ');
+                    const matchupParts = resolveKnockoutMatchup(venue.matchId, venue.matchup);
                     const matchNumber = Number(matchId.split('_')[1]) || 0;
                     const match: Match = {
                         id: matchNumber,
@@ -72,6 +81,12 @@ export function useKnockoutPaths(
                     };
                 })
                 .filter((match): match is MatchWithCoords => match !== null);
+            const displayState = getKnockoutPathDisplayState({
+                teamCode,
+                groupId,
+                position: template.position,
+                r32MatchId: template.r32MatchId,
+            });
 
             return {
                 id: template.id,
@@ -80,12 +95,14 @@ export function useKnockoutPaths(
                 label: template.label,
                 variantIndex: template.variantIndex,
                 r32MatchId: template.r32MatchId,
-                color: template.color,
+                color: getDisplayColor(template.color, displayState),
+                baseColor: template.color,
+                displayState,
                 matchIds: template.path,
                 matches,
             };
         });
-    }, [groupId, knockoutVenues, cities]);
+    }, [groupId, knockoutVenues, cities, teamCode]);
 }
 
 /**
