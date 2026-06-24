@@ -616,7 +616,8 @@
         "team2": "COD",
         "cityId": "guadalajara",
         "datetime": "2026-06-23T22:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 0 }
     },
     {
         "id": 71,
