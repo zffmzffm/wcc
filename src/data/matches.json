@@ -673,7 +673,8 @@
         "team2": "CRO",
         "cityId": "toronto",
         "datetime": "2026-06-23T19:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 1 }
     },
     {
         "id": 67,
