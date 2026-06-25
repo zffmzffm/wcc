@@ -10,6 +10,7 @@ import { resolveKnockoutMatchup } from '@/utils/knockoutResults';
 import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
+import FlagIcon from './FlagIcon';
 
 // Map city IDs to venue images (when available)
 const venueImages: Record<string, string> = {
@@ -118,10 +119,24 @@ export default function CitySidebar({
         );
     }, [knockoutVenues]);
 
+    const teamsByCode = useMemo(() => new Map(teams.map(team => [team.code, team])), [teams]);
+
     // Get city name by ID helper
     const getCityName = (cityId: string): string => {
         const foundCity = cities.find(c => c.id === cityId);
         return foundCity?.name || cityId;
+    };
+
+    const renderKnockoutSide = (side?: string) => {
+        const label = side || 'TBD';
+        const resolvedTeam = teamsByCode.get(label);
+
+        return (
+            <span className="team">
+                {resolvedTeam && <FlagIcon code={resolvedTeam.code} size={18} />}
+                <span className="team-name">{resolvedTeam?.name || label}</span>
+            </span>
+        );
     };
 
     const countryCode = city ? getCountryCode(city.country) : '';
@@ -227,18 +242,14 @@ export default function CitySidebar({
                                                     const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>
-                                                            <span className="team">
-                                                                <span className="team-name">{parts[0]}</span>
-                                                            </span>
+                                                            {renderKnockoutSide(parts[0])}
                                                             <span
                                                                 className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
                                                                 aria-label={scoreDisplay.ariaLabel}
                                                             >
                                                                 {scoreDisplay.label}
                                                             </span>
-                                                            <span className="team">
-                                                                <span className="team-name">{parts[1] || 'TBD'}</span>
-                                                            </span>
+                                                            {renderKnockoutSide(parts[1])}
                                                         </>
                                                     );
                                                 })()}
@@ -307,18 +318,14 @@ export default function CitySidebar({
                                                     const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>
-                                                            <span className="team">
-                                                                <span className="team-name">{parts[0]}</span>
-                                                            </span>
+                                                            {renderKnockoutSide(parts[0])}
                                                             <span
                                                                 className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
                                                                 aria-label={scoreDisplay.ariaLabel}
                                                             >
                                                                 {scoreDisplay.label}
                                                             </span>
-                                                            <span className="team">
-                                                                <span className="team-name">{parts[1] || 'TBD'}</span>
-                                                            </span>
+                                                            {renderKnockoutSide(parts[1])}
                                                         </>
                                                     );
                                                 })()}

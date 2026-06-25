@@ -6,6 +6,13 @@
             "eliminated": [
                 "QAT"
             ]
+        },
+        "C": {
+            "first": "BRA",
+            "second": "MAR",
+            "eliminated": [
+                "HAI"
+            ]
         }
     },
     "thirdPlaceSlots": {}

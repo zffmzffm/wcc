@@ -164,7 +164,8 @@
         "team2": "BRA",
         "cityId": "miami",
         "datetime": "2026-06-24T18:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 3 }
     },
     {
         "id": 50,
@@ -173,7 +174,8 @@
         "team2": "HAI",
         "cityId": "atlanta",
         "datetime": "2026-06-24T18:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 4, "right": 2 }
     },
     {
         "id": 4,
