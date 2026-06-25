@@ -13,6 +13,13 @@
             "eliminated": [
                 "HAI"
             ]
+        },
+        "A": {
+            "first": "MEX",
+            "second": "RSA",
+            "eliminated": [
+                "CZE"
+            ]
         }
     },
     "thirdPlaceSlots": {}

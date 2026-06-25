@@ -46,7 +46,8 @@
         "team2": "MEX",
         "cityId": "mexico_city",
         "datetime": "2026-06-24T21:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 3 }
     },
     {
         "id": 54,
@@ -55,7 +56,8 @@
         "team2": "KOR",
         "cityId": "monterrey",
         "datetime": "2026-06-24T21:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 0 }
     },
     {
         "id": 3,
