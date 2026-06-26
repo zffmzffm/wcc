@@ -226,7 +226,8 @@
         "team2": "USA",
         "cityId": "los_angeles",
         "datetime": "2026-06-25T22:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 3, "right": 2 }
     },
     {
         "id": 60,
@@ -235,7 +236,8 @@
         "team2": "AUS",
         "cityId": "san_francisco",
         "datetime": "2026-06-25T22:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 0 }
     },
     {
         "id": 10,

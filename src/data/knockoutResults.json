@@ -34,6 +34,13 @@
             "eliminated": [
                 "TUN"
             ]
+        },
+        "D": {
+            "first": "USA",
+            "second": "AUS",
+            "eliminated": [
+                "TUR"
+            ]
         }
     },
     "thirdPlaceSlots": {}
