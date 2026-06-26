@@ -344,7 +344,8 @@
         "team2": "SWE",
         "cityId": "dallas",
         "datetime": "2026-06-25T19:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 58,
@@ -353,7 +354,8 @@
         "team2": "NED",
         "cityId": "kansas_city",
         "datetime": "2026-06-25T19:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 3 }
     },
     {
         "id": 16,
