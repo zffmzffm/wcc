@@ -1,9 +1,9 @@
 'use client';
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useMap } from 'react-leaflet';
-import { MatchWithCoords, FlightSegment } from '@/types';
+import { FlightSegment } from '@/types';
 import { FLIGHT_PATH_CONFIG } from '@/constants';
-import { generateArcPath, generateChevronPath, generateLoopPath, generateLoopChevronPath } from '@/utils/pathGenerators';
+import { generateArcPath, generateChevronPath } from '@/utils/pathGenerators';
 
 interface FlightSegmentProps {
     segment: FlightSegment;

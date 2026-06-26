@@ -4,6 +4,14 @@ Visualize 2026 Soccer - One Map for All Matches & Cities. An interactive web app
 
 🌐 **Live Demo**: [cup26map.com](https://cup26map.com)
 
+## Public App Notes
+
+Cup26Map is publicly accessible at `cup26map.com`, while this repository remains private and is not licensed for redistribution.
+
+The app is a static, client-side experience. Core tournament data is maintained in `src/data/`; schedule, score, team, city, knockout, and path-distance updates should be validated before deployment. Public match information should still be checked against official sources before user-facing changes are published.
+
+Cup26Map does not require accounts or first-party form submissions. Runtime third-party requests include map tiles from CARTO/OpenStreetMap, flags from Flagcdn, and outbound links to the video guide, support page, and creator site.
+
 ## Features
 
 - **Interactive World Map**: Explore all 16 host cities across USA, Mexico, and Canada with clickable markers
@@ -118,11 +126,23 @@ npm.cmd run knockout -- check
 Keep `src/data/knockoutVenues.json` unchanged because its seed strings drive
 path generation.
 
+### Recommended Checks
+
+```bash
+npm.cmd run lint
+npm.cmd run data:validate
+npm.cmd run knockout -- check
+npm.cmd run test -- --run
+npm.cmd run build
+```
+
+Run the data checks after score or knockout updates, and run the full set before publishing a public deploy.
+
 ### Testing
 
 ```bash
-# Run tests
-npm.cmd run test
+# Run tests once
+npm.cmd run test -- --run
 
 # Run tests with coverage
 npm.cmd run test:coverage
@@ -169,7 +189,7 @@ public/                   # Static images, venue photos, headers, and Cloudflare
 
 ## License
 
-This project is private and not licensed for public distribution.
+The source code in this repository is private and not licensed for redistribution. The hosted Cup26Map web app is public, but reuse of the source requires explicit permission.
 
 ## Acknowledgments
 

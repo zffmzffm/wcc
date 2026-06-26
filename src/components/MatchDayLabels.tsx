@@ -300,6 +300,9 @@ export default function MatchDayLabels({
     }, [matches, knockoutVenues]);
 
     const labelEntries = useMemo<CityLabelEntry[]>(() => {
+        // Recompute pixel positions after map resize or zoom refreshes.
+        void mapRefreshKey;
+
         const metrics = isMobile ? LABEL_METRICS.mobile : LABEL_METRICS.desktop;
         const mapSize = map.getSize();
 

@@ -522,7 +522,8 @@
         "team2": "FRA",
         "cityId": "boston",
         "datetime": "2026-06-26T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 4 }
     },
     {
         "id": 62,
@@ -531,7 +532,8 @@
         "team2": "IRQ",
         "cityId": "toronto",
         "datetime": "2026-06-26T15:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 5, "right": 0 }
     },
     {
         "id": 19,

@@ -20,11 +20,6 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
 
     const { city, coords } = matchInfo;
 
-    // Convert number to circled digit (➊➋➌➍➎➏➐➑)
-    const toCircledDigit = (n: number): string => {
-        const circledDigits = ['➊', '➋', '➌', '➍', '➎', '➏', '➐', '➑'];
-        return n >= 1 && n <= 8 ? circledDigits[n - 1] : String(n);
-    };
 
     // Calculate match numbers for this city (1-indexed)
     const matchNumbers = useMemo(() => {
@@ -37,8 +32,6 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
         return nums;
     }, [teamMatches, city.id]);
 
-    // String prefix kept for collision detection width estimation
-    const matchNumbersPrefix = matchNumbers.map(n => toCircledDigit(n)).join('');
 
     // Convert lat/lng to pixel coordinates
     const latLngToPixel = useCallback((c: [number, number]): { x: number; y: number } => {
@@ -61,32 +54,6 @@ export default function CityLabel({ matchInfo, markerIndex, teamMatches, animati
         return pixels;
     }, [teamMatches, city.id, latLngToPixel]);
 
-    // Check if a label position would overlap with any other city marker
-    const wouldOverlapMarker = useCallback((labelX: number, labelY: number, textAnchor: string): boolean => {
-        // Estimate label bounds (approximate)
-        const labelWidth = (matchNumbersPrefix.length * 12) + (city.name.length * 9);
-        const labelHeight = 18;
-
-        // Calculate label bounds based on anchor
-        let left = labelX;
-        let right = labelX + labelWidth;
-        if (textAnchor === 'end') {
-            left = labelX - labelWidth;
-            right = labelX;
-        } else if (textAnchor === 'middle') {
-            left = labelX - labelWidth / 2;
-            right = labelX + labelWidth / 2;
-        }
-        const top = labelY - labelHeight;
-        const bottom = labelY + 4;
-
-        // Check collision with each other city marker (radius ~15px)
-        const markerRadius = 15;
-        return otherCityPixels.some(mp => {
-            return mp.x > left - markerRadius && mp.x < right + markerRadius &&
-                mp.y > top - markerRadius && mp.y < bottom + markerRadius;
-        });
-    }, [otherCityPixels, matchNumbersPrefix.length, city.name.length]);
 
     // Calculate label position based on flight path directions
     const labelPosition = useMemo(() => {

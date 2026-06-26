@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 
 /**
- * Footer component with copyright and a Legal link
- * Click the link to open a modal with disclaimer
+ * Footer component with copyright and a privacy/legal link.
+ * Click the link to open a modal with disclaimer and privacy notes.
  */
 const Footer = memo(function Footer() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,9 +55,9 @@ const Footer = memo(function Footer() {
                         <button
                             className="footer-legal-link"
                             onClick={openModal}
-                            aria-label="Open legal disclaimer"
+                            aria-label="Open privacy and legal information"
                         >
-                            Legal
+                            Privacy & Legal
                         </button>
                     </div>
                 </div>
@@ -73,7 +73,7 @@ const Footer = memo(function Footer() {
                         aria-labelledby="legal-modal-title"
                     >
                         <div className="legal-modal-header">
-                            <h2 id="legal-modal-title">Legal Disclaimer</h2>
+                            <h2 id="legal-modal-title">Privacy & Legal</h2>
                             <button
                                 className="legal-modal-close"
                                 onClick={closeModal}
@@ -94,6 +94,12 @@ const Footer = memo(function Footer() {
                             <p className="legal-disclaimer">
                                 While we strive for accuracy, the information presented in this app may contain errors.
                                 Please verify independently.
+                            </p>
+                            <p className="legal-disclaimer">
+                                <strong>Privacy:</strong> Cup26Map does not require an account and does not collect personal
+                                information through first-party forms. Map tiles, flags, video links, support links, and
+                                creator links are served by third parties and may receive standard request metadata when
+                                loaded or opened.
                             </p>
                         </div>
                     </div>

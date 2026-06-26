@@ -41,6 +41,13 @@
             "eliminated": [
                 "TUR"
             ]
+        },
+        "I": {
+            "first": "FRA",
+            "second": "NOR",
+            "eliminated": [
+                "IRQ"
+            ]
         }
     },
     "thirdPlaceSlots": {}

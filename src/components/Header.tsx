@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { ReactNode, memo } from 'react';
 
 interface HeaderProps {
@@ -19,7 +20,7 @@ const Header = memo(function Header({ children, onReset }: HeaderProps) {
                 style={{ cursor: 'pointer' }}
             >
                 {/* Desktop Version: Image Logo */}
-                <img src="/header-logo.png" alt="Cup26Map – World Cup 2026 Schedule & Interactive Map" className="header-brand-desktop" />
+                <Image src="/header-logo.png" alt="Cup26Map – World Cup 2026 Schedule & Interactive Map" className="header-brand-desktop" width={1000} height={153} priority />
 
                 {/* Mobile Version: Text and Trophy */}
                 <div className="header-brand-mobile">

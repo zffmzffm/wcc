@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
-import { City, Match } from '@/types';
+import { City } from '@/types';
 import {
     MAP_CONFIG,
     MAP_BOUNDS,
     TEAM_VIEW_CONFIG,
-    SIDEBAR_VIEW_CONFIG,
-    BREAKPOINTS
+    SIDEBAR_VIEW_CONFIG
 } from '@/constants';
 import { cities, matches } from '@/data';
 
@@ -258,7 +257,7 @@ export function useMapViewControl({
         }, SIDEBAR_VIEW_CONFIG.adjustDelay);
 
         return () => clearTimeout(timeoutId);
-    }, [map, selectedCity, selectedTeam, isSidebarOpen, isMobile]);
+    }, [map, selectedCity, selectedDay, selectedTeam, isSidebarOpen, isMobile]);
 
     // Handle sidebar close - reset bounds
     useEffect(() => {
