@@ -406,7 +406,8 @@
         "team2": "BEL",
         "cityId": "vancouver",
         "datetime": "2026-06-26T23:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 5 }
     },
     {
         "id": 63,
@@ -415,7 +416,8 @@
         "team2": "IRN",
         "cityId": "seattle",
         "datetime": "2026-06-26T23:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 1 }
     },
     {
         "id": 14,
