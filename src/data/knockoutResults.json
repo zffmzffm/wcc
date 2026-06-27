@@ -48,6 +48,13 @@
             "eliminated": [
                 "IRQ"
             ]
+        },
+        "H": {
+            "first": "ESP",
+            "second": "CPV",
+            "eliminated": [
+                "KSA"
+            ]
         }
     },
     "thirdPlaceSlots": {}
