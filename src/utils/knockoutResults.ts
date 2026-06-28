@@ -117,7 +117,25 @@ export function getKnockoutPathDisplayState({
     }
 
     if (first && second) {
-        return position === 3 ? 'pending' : 'impossible';
+        if (position !== 3) {
+            return 'impossible';
+        }
+        // All third-place slots are now decided. If this r32 slot is already
+        // taken by another team, this path is impossible for the current team.
+        if (thirdPlaceTeamForPath) {
+            return 'impossible';
+        }
+        // Check if the team's actual r32 slot is known (assigned elsewhere).
+        // If found in any slot, every other path is impossible.
+        const teamSlotMatchId = Object.entries(source.thirdPlaceSlots || {}).find(
+            ([, code]) => normalizeTeamCode(code) === normalizedTeam
+        )?.[0];
+        if (teamSlotMatchId) {
+            // Team is assigned to a different r32 match — this path is not it.
+            return 'impossible';
+        }
+        // Team's third-place fate is not yet determined.
+        return 'pending';
     }
 
     return 'open';

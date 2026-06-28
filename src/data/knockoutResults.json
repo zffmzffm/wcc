@@ -11,14 +11,16 @@
             "first": "BRA",
             "second": "MAR",
             "eliminated": [
-                "HAI"
+                "HAI",
+                "SCO"
             ]
         },
         "A": {
             "first": "MEX",
             "second": "RSA",
             "eliminated": [
-                "CZE"
+                "CZE",
+                "KOR"
             ]
         },
         "E": {
@@ -53,14 +55,16 @@
             "first": "ESP",
             "second": "CPV",
             "eliminated": [
-                "KSA"
+                "KSA",
+                "URU"
             ]
         },
         "G": {
             "first": "BEL",
             "second": "EGY",
             "eliminated": [
-                "NZL"
+                "NZL",
+                "IRN"
             ]
         },
         "L": {
@@ -76,7 +80,23 @@
             "eliminated": [
                 "UZB"
             ]
+        },
+        "J": {
+            "first": "ARG",
+            "second": "AUT",
+            "eliminated": [
+                "JOR"
+            ]
         }
     },
-    "thirdPlaceSlots": {}
+    "thirdPlaceSlots": {
+        "R32_79": "ECU",
+        "R32_85": "ALG",
+        "R32_81": "BIH",
+        "R32_74": "PAR",
+        "R32_82": "SEN",
+        "R32_77": "SWE",
+        "R32_87": "GHA",
+        "R32_80": "COD"
+    }
 }

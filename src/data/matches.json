@@ -586,7 +586,8 @@
         "team2": "AUT",
         "cityId": "kansas_city",
         "datetime": "2026-06-27T22:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 3, "right": 3 }
     },
     {
         "id": 70,
@@ -595,7 +596,8 @@
         "team2": "ARG",
         "cityId": "dallas",
         "datetime": "2026-06-27T22:00:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 1, "right": 3 }
     },
     {
         "id": 23,
