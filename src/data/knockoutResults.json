@@ -98,5 +98,11 @@
         "R32_77": "SWE",
         "R32_87": "GHA",
         "R32_80": "COD"
+    },
+    "knockoutWinners": {
+        "R32_73": "CAN"
+    },
+    "knockoutEliminatedAt": {
+        "RSA": "R32_73"
     }
 }

@@ -12,6 +12,7 @@ import { STAGE_NAMES } from '@/constants';
 import {
     getDisplayColor,
     getKnockoutPathDisplayState,
+    getKnockoutEliminationMatchId,
     KnockoutPathDisplayState,
     resolveKnockoutMatchup,
 } from '@/utils/knockoutResults';
@@ -28,6 +29,8 @@ export interface KnockoutPath {
     displayState: KnockoutPathDisplayState;
     matchIds: string[];
     matches: MatchWithCoords[];
+    /** Index in matches[] of the last played match (for 'knocked-out' paths). Matches after this are grayed. */
+    eliminationMatchIndex?: number;
 }
 
 /**
@@ -88,6 +91,30 @@ export function useKnockoutPaths(
                 r32MatchId: template.r32MatchId,
             });
 
+            // For knocked-out paths, find the index of the last played match.
+            // Use the matchIds from template.path mapped to the filtered matches array.
+            let eliminationMatchIndex: number | undefined = undefined;
+            if (displayState === 'knocked-out' && teamCode) {
+                const eliminationMatchId = getKnockoutEliminationMatchId(teamCode);
+                if (eliminationMatchId) {
+                    // Build a matchId→matches[] index map (accounting for null-filtered entries)
+                    let filteredIdx = 0;
+                    let foundIdx: number | undefined = undefined;
+                    for (const pathMatchId of template.path) {
+                        const venue = venueMap.get(pathMatchId);
+                        const city = venue ? cityMap.get(venue.cityId) : null;
+                        if (venue && city) {
+                            if (pathMatchId === eliminationMatchId) {
+                                foundIdx = filteredIdx;
+                                break;
+                            }
+                            filteredIdx++;
+                        }
+                    }
+                    eliminationMatchIndex = foundIdx;
+                }
+            }
+
             return {
                 id: template.id,
                 scenarioId: template.scenarioId,
@@ -100,6 +127,7 @@ export function useKnockoutPaths(
                 displayState,
                 matchIds: template.path,
                 matches,
+                eliminationMatchIndex,
             };
         });
     }, [groupId, knockoutVenues, cities, teamCode]);

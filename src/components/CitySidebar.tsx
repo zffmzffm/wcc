@@ -6,7 +6,7 @@ import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
 import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
 import { getScoreDisplay } from '@/utils/score';
-import { resolveKnockoutMatchup } from '@/utils/knockoutResults';
+import { resolveKnockoutMatchup, isTeamKnockoutEliminated } from '@/utils/knockoutResults';
 import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
@@ -230,9 +230,13 @@ export default function CitySidebar({
                                     const dayDiff = getDayDifference(venue.datetime, timezone);
                                     const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
                                     const date = dayDiff !== 0 ? formatMatchDayDate(venue.datetime) : tzDate;
-                                    
+                                    const parts = resolveKnockoutMatchup(venue.matchId, venue.matchup);
+                                    const scoreDisplay = getScoreDisplay(venue.score);
+                                    // Only gray future (unplayed) matches involving eliminated teams
+                                    const isEliminated = !scoreDisplay.isScored && parts.some(p => isTeamKnockoutEliminated(p));
+
                                     return (
-                                        <li key={venue.matchId} className="match-item" role="listitem">
+                                        <li key={venue.matchId} className={`match-item${isEliminated ? ' match-item-eliminated' : ''}`} role="listitem">
                                             <div className="match-header">
                                                 <span className="match-group knockout-stage">
                                                     {STAGE_NAMES.full[venue.stage as keyof typeof STAGE_NAMES.full] || venue.stage}
@@ -243,22 +247,14 @@ export default function CitySidebar({
                                                 </span>
                                             </div>
                                             <div className="match-teams">
-                                                {(() => {
-                                                    const parts = resolveKnockoutMatchup(venue.matchId, venue.matchup);
-                                                    const scoreDisplay = getScoreDisplay(venue.score);
-                                                    return (
-                                                        <>
-                                                            {renderKnockoutSide(parts[0], onTeamSelect)}
-                                                            <span
-                                                                className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
-                                                                aria-label={scoreDisplay.ariaLabel}
-                                                            >
-                                                                {scoreDisplay.label}
-                                                            </span>
-                                                            {renderKnockoutSide(parts[1], onTeamSelect)}
-                                                        </>
-                                                    );
-                                                })()}
+                                                {renderKnockoutSide(parts[0], onTeamSelect)}
+                                                <span
+                                                    className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
+                                                    aria-label={scoreDisplay.ariaLabel}
+                                                >
+                                                    {scoreDisplay.label}
+                                                </span>
+                                                {renderKnockoutSide(parts[1], onTeamSelect)}
                                             </div>
                                         </li>
                                     );
@@ -307,8 +303,12 @@ export default function CitySidebar({
                                     const { time } = formatDateTimeWithTimezone(venue.datetime, timezone);
                                     const dayDiff = getDayDifference(venue.datetime, timezone);
                                     const timeDisplay = dayDiff !== 0 ? `${time} (${dayDiff > 0 ? '+' : ''}${dayDiff})` : time;
+                                    const parts = resolveKnockoutMatchup(venue.matchId, venue.matchup);
+                                    const scoreDisplay = getScoreDisplay(venue.score);
+                                    // Only gray future (unplayed) matches involving eliminated teams
+                                    const isEliminated = !scoreDisplay.isScored && parts.some(p => isTeamKnockoutEliminated(p));
                                     return (
-                                        <li key={venue.matchId} className="match-item" role="listitem">
+                                        <li key={venue.matchId} className={`match-item${isEliminated ? ' match-item-eliminated' : ''}`} role="listitem">
                                             <div className="match-header">
                                                 <span className="match-group knockout-stage">
                                                     {STAGE_NAMES.full[venue.stage as keyof typeof STAGE_NAMES.full] || venue.stage}

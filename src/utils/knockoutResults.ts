@@ -8,7 +8,8 @@ export type KnockoutPathDisplayState =
     | 'actual'
     | 'pending'
     | 'impossible'
-    | 'eliminated';
+    | 'eliminated'    // group-stage eliminated
+    | 'knocked-out';  // eliminated in a knockout round (partial path shown)
 
 export interface GroupKnockoutResult {
     first?: string;
@@ -19,6 +20,8 @@ export interface GroupKnockoutResult {
 export interface KnockoutResults {
     groups?: Partial<Record<GroupId, GroupKnockoutResult>>;
     thirdPlaceSlots?: Record<string, string>;
+    knockoutWinners?: Record<string, string>; // matchId -> winner team code, e.g. "R32_73" -> "CAN"
+    knockoutEliminatedAt?: Record<string, string>; // team code -> matchId where they were eliminated, e.g. "RSA" -> "R32_73"
 }
 
 export const GRAY_KNOCKOUT_PATH_COLOR = '#AAB1BA';
@@ -55,6 +58,21 @@ export function resolveKnockoutSide(
         return normalizeTeamCode(source.thirdPlaceSlots?.[matchId]) || value;
     }
 
+    // Winner token e.g. "W73" -> look up match R32_73 winner
+    const winnerMatch = value.match(/^W(\d+)$/);
+    if (winnerMatch) {
+        const matchNumber = winnerMatch[1];
+        // Search for a match with this number across all stages
+        const matchIdSuffix = `_${matchNumber}`;
+        const stages = ['R32', 'R16', 'QF', 'SF', 'F'] as const;
+        for (const stage of stages) {
+            const candidateId = `${stage}${matchIdSuffix}`;
+            const winner = normalizeTeamCode(source.knockoutWinners?.[candidateId]);
+            if (winner) return winner;
+        }
+        return value;
+    }
+
     return value;
 }
 
@@ -89,11 +107,19 @@ export function getKnockoutPathDisplayState({
         return 'open';
     }
 
+    // Determine if this team was knocked out mid-tournament.
+    // This only changes the result for the path they ACTUALLY took (would be 'actual').
+    // Paths that would be 'impossible' remain 'impossible' (strikethrough still shown).
+    const eliminatedAtMatchId = source.knockoutEliminatedAt?.[normalizedTeam];
+
     const groupResult = getGroupResult(groupId, source);
     const thirdPlaceTeamForPath = normalizeTeamCode(source.thirdPlaceSlots?.[r32MatchId]);
 
     if (thirdPlaceTeamForPath === normalizedTeam) {
-        return position === 3 ? 'actual' : 'impossible';
+        if (position === 3) {
+            return eliminatedAtMatchId ? 'knocked-out' : 'actual';
+        }
+        return 'impossible';
     }
 
     if (!groupResult) {
@@ -109,11 +135,17 @@ export function getKnockoutPathDisplayState({
     }
 
     if (first === normalizedTeam) {
-        return position === 1 ? 'actual' : 'impossible';
+        if (position === 1) {
+            return eliminatedAtMatchId ? 'knocked-out' : 'actual';
+        }
+        return 'impossible';
     }
 
     if (second === normalizedTeam) {
-        return position === 2 ? 'actual' : 'impossible';
+        if (position === 2) {
+            return eliminatedAtMatchId ? 'knocked-out' : 'actual';
+        }
+        return 'impossible';
     }
 
     if (first && second) {
@@ -149,4 +181,25 @@ export function getDisplayColor(baseColor: string, state: KnockoutPathDisplaySta
     return isGrayKnockoutPathState(state)
         ? GRAY_KNOCKOUT_PATH_COLOR
         : baseColor;
+}
+
+/**
+ * Returns true if the given team code has been eliminated mid-tournament
+ * (i.e. lost in a knockout stage match rather than the group stage).
+ */
+export function isTeamKnockoutEliminated(teamCode: string, source: KnockoutResults = results): boolean {
+    const normalized = normalizeTeamCode(teamCode);
+    return !!source.knockoutEliminatedAt?.[normalized];
+}
+
+/**
+ * Returns the matchId (e.g. "R32_73") where the team was knocked out mid-tournament,
+ * or undefined if the team was not knocked out mid-tournament.
+ */
+export function getKnockoutEliminationMatchId(
+    teamCode: string,
+    source: KnockoutResults = results
+): string | undefined {
+    const normalized = normalizeTeamCode(teamCode);
+    return source.knockoutEliminatedAt?.[normalized] || undefined;
 }

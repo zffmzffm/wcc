@@ -40,7 +40,7 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
             return;
         }
 
-        const actualIndex = knockoutPaths.findIndex(path => path.displayState === 'actual');
+        const actualIndex = knockoutPaths.findIndex(path => path.displayState === 'actual' || path.displayState === 'knocked-out');
         const pendingIndex = knockoutPaths.findIndex(path => path.displayState === 'pending');
         const nextIndex = actualIndex >= 0 ? actualIndex : pendingIndex >= 0 ? pendingIndex : 0;
         const hasResolvedState = knockoutPaths.some(path => path.displayState !== 'open');
@@ -242,6 +242,10 @@ export default function TeamScheduleSidebar({ team, matches, teams, cities, time
                                                     variant="schedule"
                                                     matchIndex={matchNumber}
                                                     cityName={cityName}
+                                                    grayed={
+                                                        selectedPath.eliminationMatchIndex !== undefined
+                                                        && idx > selectedPath.eliminationMatchIndex
+                                                    }
                                                 />
                                             );
                                         })}

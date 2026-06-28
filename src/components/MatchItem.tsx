@@ -18,6 +18,7 @@ interface MatchItemProps {
     cityId?: string;
     onTeamSelect?: (teamCode: string) => void;
     onCitySelect?: (cityId: string) => void;
+    grayed?: boolean; // renders the match item in a grayed/eliminated style
 }
 
 /**
@@ -34,7 +35,8 @@ const MatchItem = memo(function MatchItem({
     cityName,
     cityId,
     onTeamSelect,
-    onCitySelect
+    onCitySelect,
+    grayed = false,
 }: MatchItemProps) {
     const team1 = getTeamDisplay(match.team1, teams);
     const team2 = getTeamDisplay(match.team2, teams);
@@ -79,7 +81,7 @@ const MatchItem = memo(function MatchItem({
     if (variant === 'schedule') {
         return (
             <li
-                className={`match-item schedule-item ${isHovered ? 'match-item-hovered' : ''}`}
+                className={`match-item schedule-item${grayed ? ' match-item-eliminated' : ''} ${isHovered ? 'match-item-hovered' : ''}`}
                 role="listitem"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}

@@ -5,7 +5,8 @@
             "stage": "R32",
             "cityId": "los_angeles",
             "datetime": "2026-06-28T15:00:00-04:00",
-            "matchup": "2A vs 2B"
+            "matchup": "2A vs 2B",
+            "score": { "left": 0, "right": 1 }
         },
         {
             "matchId": "R32_76",

@@ -8,7 +8,7 @@ import { useMapRefresh } from '@/hooks/useMapRefresh';
 import { useLayerVisibility } from '@/contexts/LayerVisibilityContext';
 import { SVG_CONFIG, FLIGHT_PATH_CONFIG } from '@/constants';
 import { generateArcPath, generateChevronPath } from '@/utils/pathGenerators';
-import { isGrayKnockoutPathState } from '@/utils/knockoutResults';
+import { isGrayKnockoutPathState, GRAY_KNOCKOUT_PATH_COLOR } from '@/utils/knockoutResults';
 
 interface KnockoutFlightPathProps {
     groupId: string;
@@ -104,10 +104,9 @@ export default function KnockoutFlightPath({
             >
                 {/* Define chevron markers for each visible path */}
                 <defs>
-                    {visiblePathRenderOrder.map(path => {
+                    {visiblePathRenderOrder.flatMap(path => {
                         const strokeStyle = getKnockoutPathStrokeStyle(path.displayState);
-
-                        return (
+                        const normalMarker = (
                             <marker
                                 key={`chevron-marker-${path.id}`}
                                 id={`chevron-marker-${path.id}`}
@@ -129,6 +128,33 @@ export default function KnockoutFlightPath({
                                 />
                             </marker>
                         );
+                        // For knocked-out paths, also define a gray marker for post-elimination segments
+                        if (path.eliminationMatchIndex !== undefined) {
+                            const grayMarker = (
+                                <marker
+                                    key={`chevron-marker-${path.id}-gray`}
+                                    id={`chevron-marker-${path.id}-gray`}
+                                    markerWidth="8"
+                                    markerHeight="8"
+                                    refX="4"
+                                    refY="4"
+                                    orient="auto"
+                                    markerUnits="userSpaceOnUse"
+                                >
+                                    <path
+                                        d="M 1 1 L 6 4 L 1 7"
+                                        fill="none"
+                                        stroke={GRAY_KNOCKOUT_PATH_COLOR}
+                                        strokeWidth={1.6}
+                                        strokeOpacity={0.42}
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </marker>
+                            );
+                            return [normalMarker, grayMarker];
+                        }
+                        return [normalMarker];
                     })}
                 </defs>
 
@@ -380,6 +406,16 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                     return null;
                 }
 
+                // For knocked-out paths, segments after the elimination match are grayed
+                // segment[0] goes TO matches[0], segment[k] goes TO matches[k]
+                const isGraySegment = path.eliminationMatchIndex !== undefined
+                    && idx > path.eliminationMatchIndex;
+                const segColor = isGraySegment ? GRAY_KNOCKOUT_PATH_COLOR : color;
+                const segGlowOpacity = isGraySegment ? 0.04 : strokeStyle.glowOpacity;
+                const segMarkerId = isGraySegment
+                    ? `url(#chevron-marker-${path.id}-gray)`
+                    : markerId;
+
                 // Normal segment: draw arc with chevrons
                 const glowPathD = generateArcPath(segment.from, segment.to, FLIGHT_PATH_CONFIG.curvature * 0.8, 18);
                 const chevronPathD = generateChevronPath(
@@ -395,9 +431,9 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                         <path
                             d={glowPathD}
                             fill="none"
-                            stroke={color}
+                            stroke={segColor}
                             strokeWidth={8}
-                            strokeOpacity={strokeStyle.glowOpacity}
+                            strokeOpacity={segGlowOpacity}
                             strokeLinecap="round"
                         />
                         {/* Chevron path */}
@@ -406,7 +442,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                             fill="none"
                             stroke="transparent"
                             strokeWidth={3}
-                            markerMid={markerId}
+                            markerMid={segMarkerId}
                         />
                     </g>
                 );
@@ -432,6 +468,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                 });
 
                 const seenCities = new Set<string>();
+                // Track the match index (within matches[]) for each label entry to determine gray
                 const labelEntries = matches.reduce<{
                     key: string;
                     cityId: string;
@@ -440,6 +477,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                     matchNums: number[];
                     pixel: { x: number; y: number };
                     isAlreadyLabeled: boolean;
+                    firstMatchIdx: number; // first match index at this city
                 }[]>((entries, matchInfo, idx) => {
                     const cityId = matchInfo.city?.id;
                     const cityName = matchInfo.city?.name;
@@ -459,7 +497,8 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                         label: `${fakePrefix}${cityName}`,
                         matchNums: nums,
                         pixel: latLngToPixel(matchInfo.coords),
-                        isAlreadyLabeled: groupStageCityIds.has(cityId)
+                        isAlreadyLabeled: groupStageCityIds.has(cityId),
+                        firstMatchIdx: idx,
                     });
                     return entries;
                 }, []);
@@ -483,6 +522,11 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                 const badgeToTextGap = 3;
 
                 return placedLabels.map(entry => {
+                    // For knocked-out paths, labels after the elimination match are grayed
+                    const isGrayLabel = path.eliminationMatchIndex !== undefined
+                        && entry.firstMatchIdx > path.eliminationMatchIndex;
+                    const labelColor = isGrayLabel ? GRAY_KNOCKOUT_PATH_COLOR : color;
+
                     const totalBadgesWidth = entry.matchNums.length * badgeSpacing;
 
                     // Calculate badge start offset based on text anchor
@@ -504,7 +548,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                                 return (
                                     <g key={`badge-${i}`}>
                                         <circle cx={cx} cy={cy} r={badgeRadius + 1.5} fill="white" />
-                                        <circle cx={cx} cy={cy} r={badgeRadius} fill={color} />
+                                        <circle cx={cx} cy={cy} r={badgeRadius} fill={labelColor} />
                                         <text
                                             x={cx}
                                             y={cy}
@@ -529,7 +573,7 @@ function KnockoutPathLine({ path, lastGroupMatchCoords, latLngToPixel, groupStag
                                 textAnchor="start"
                                 fontSize="15"
                                 fontWeight={700}
-                                fill={color}
+                                fill={labelColor}
                                 stroke="white"
                                 strokeWidth="4"
                                 paintOrder="stroke fill"

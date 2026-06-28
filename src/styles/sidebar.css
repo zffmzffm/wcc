@@ -482,6 +482,17 @@
     text-decoration-color: currentColor;
 }
 
+/* knocked-out: eliminated in a knockout round — no strikethrough, but muted */
+.knockout-tab.is-knocked-out {
+    background: #eef0f3;
+    border-color: rgba(92, 99, 112, 0.22);
+}
+
+.knockout-tab.is-knocked-out .knockout-tab-label {
+    color: #7d8490;
+    /* no strikethrough — team's path was real up to their last match */
+}
+
 .knockout-tab.is-actual .knockout-tab-label {
     color: var(--text-primary);
 }
@@ -587,4 +598,51 @@
 /* Knockout match list inherits match-list styles */
 .knockout-match-list {
     gap: 0.5rem;
+}
+
+/* Grayout for knockout match items where one team has been eliminated mid-tournament */
+.match-item.match-item-eliminated {
+    background: #f7f8f9;
+    box-shadow:
+        3px 3px 8px rgba(92, 99, 112, 0.08),
+        -3px -3px 8px rgba(255, 255, 255, 0.78);
+}
+
+.match-item.match-item-eliminated:hover,
+.match-item.match-item-eliminated.match-item-hovered {
+    background: #f1f3f5;
+    transform: none;
+    box-shadow:
+        3px 3px 8px rgba(92, 99, 112, 0.08),
+        -3px -3px 8px rgba(255, 255, 255, 0.78);
+}
+
+.match-item.match-item-eliminated .match-info-row {
+    background: #e2e5e9 !important;
+}
+
+.match-item.match-item-eliminated .match-group,
+.match-item.match-item-eliminated .match-number,
+.match-item.match-item-eliminated .match-date,
+.match-item.match-item-eliminated .match-time,
+.match-item.match-item-eliminated .match-venue,
+.match-item.match-item-eliminated .team-name {
+    color: #8a929d !important;
+}
+
+.match-item.match-item-eliminated .vs {
+    background: #dfe3e7 !important;
+    color: #8a929d !important;
+}
+
+.match-item.match-item-eliminated .flag-fallback {
+    background-color: #eef0f3 !important;
+    color: #7d8490 !important;
+    box-shadow: none !important;
+    opacity: 0.72 !important;
+}
+
+.match-item.match-item-eliminated .flag-icon:not(.flag-fallback) {
+    filter: none;
+    opacity: 1;
 }
