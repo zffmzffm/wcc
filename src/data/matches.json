@@ -644,7 +644,8 @@
         "team2": "POR",
         "cityId": "miami",
         "datetime": "2026-06-27T19:30:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 0, "right": 0 }
     },
     {
         "id": 72,
@@ -653,7 +654,8 @@
         "team2": "UZB",
         "cityId": "atlanta",
         "datetime": "2026-06-27T19:30:00-04:00",
-        "stage": "group"
+        "stage": "group",
+        "score": { "left": 3, "right": 1 }
     },
     {
         "id": 22,

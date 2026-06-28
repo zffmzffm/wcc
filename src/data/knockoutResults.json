@@ -69,6 +69,13 @@
             "eliminated": [
                 "PAN"
             ]
+        },
+        "K": {
+            "first": "COL",
+            "second": "POR",
+            "eliminated": [
+                "UZB"
+            ]
         }
     },
     "thirdPlaceSlots": {}
