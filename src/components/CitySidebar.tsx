@@ -127,12 +127,18 @@ export default function CitySidebar({
         return foundCity?.name || cityId;
     };
 
-    const renderKnockoutSide = (side?: string) => {
+    const renderKnockoutSide = (side?: string, handleTeamSelect?: (code: string) => void) => {
         const label = side || 'TBD';
         const resolvedTeam = teamsByCode.get(label);
+        const isClickable = !!resolvedTeam && !!handleTeamSelect;
 
         return (
-            <span className="team">
+            <span
+                className={`team${isClickable ? ' team-clickable' : ''}`}
+                onClick={isClickable ? (e) => { e.stopPropagation(); handleTeamSelect!(resolvedTeam!.code); } : undefined}
+                role={isClickable ? 'button' : undefined}
+                tabIndex={isClickable ? 0 : undefined}
+            >
                 {resolvedTeam && <FlagIcon code={resolvedTeam.code} size={18} />}
                 <span className="team-name">{resolvedTeam?.name || label}</span>
             </span>
@@ -242,14 +248,14 @@ export default function CitySidebar({
                                                     const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>
-                                                            {renderKnockoutSide(parts[0])}
+                                                            {renderKnockoutSide(parts[0], onTeamSelect)}
                                                             <span
                                                                 className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
                                                                 aria-label={scoreDisplay.ariaLabel}
                                                             >
                                                                 {scoreDisplay.label}
                                                             </span>
-                                                            {renderKnockoutSide(parts[1])}
+                                                            {renderKnockoutSide(parts[1], onTeamSelect)}
                                                         </>
                                                     );
                                                 })()}
@@ -318,14 +324,14 @@ export default function CitySidebar({
                                                     const scoreDisplay = getScoreDisplay(venue.score);
                                                     return (
                                                         <>
-                                                            {renderKnockoutSide(parts[0])}
+                                                            {renderKnockoutSide(parts[0], onTeamSelect)}
                                                             <span
                                                                 className={`vs${scoreDisplay.isScored ? ' is-scored' : ''}`}
                                                                 aria-label={scoreDisplay.ariaLabel}
                                                             >
                                                                 {scoreDisplay.label}
                                                             </span>
-                                                            {renderKnockoutSide(parts[1])}
+                                                            {renderKnockoutSide(parts[1], onTeamSelect)}
                                                         </>
                                                     );
                                                 })()}
