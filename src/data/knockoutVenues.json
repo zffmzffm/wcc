@@ -13,7 +13,8 @@
             "stage": "R32",
             "cityId": "houston",
             "datetime": "2026-06-29T13:00:00-04:00",
-            "matchup": "1C vs 2F"
+            "matchup": "1C vs 2F",
+            "score": { "left": 2, "right": 1 }
         },
         {
             "matchId": "R32_74",

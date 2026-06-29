@@ -100,9 +100,11 @@
         "R32_80": "COD"
     },
     "knockoutWinners": {
-        "R32_73": "CAN"
+        "R32_73": "CAN",
+        "R32_76": "BRA"
     },
     "knockoutEliminatedAt": {
-        "RSA": "R32_73"
+        "RSA": "R32_73",
+        "JPN": "R32_76"
     }
 }
