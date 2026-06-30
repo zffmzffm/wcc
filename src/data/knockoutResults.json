@@ -102,11 +102,13 @@
     "knockoutWinners": {
         "R32_73": "CAN",
         "R32_76": "BRA",
-        "R32_74": "PAR"
+        "R32_74": "PAR",
+        "R32_75": "MAR"
     },
     "knockoutEliminatedAt": {
         "RSA": "R32_73",
         "JPN": "R32_76",
-        "GER": "R32_74"
+        "GER": "R32_74",
+        "NED": "R32_75"
     }
 }

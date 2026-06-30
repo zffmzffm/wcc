@@ -29,7 +29,8 @@
             "stage": "R32",
             "cityId": "monterrey",
             "datetime": "2026-06-29T21:00:00-04:00",
-            "matchup": "1F vs 2C"
+            "matchup": "1F vs 2C",
+            "score": { "left": 1, "right": 1, "penLeft": 2, "penRight": 3 }
         },
         {
             "matchId": "R32_78",
