@@ -14,6 +14,8 @@ export interface City {
 export interface ScoreLine {
     left: number;
     right: number;
+    penLeft?: number;   // penalty shootout score (left side)
+    penRight?: number;  // penalty shootout score (right side)
 }
 
 export interface Match {

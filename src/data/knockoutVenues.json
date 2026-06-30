@@ -21,7 +21,8 @@
             "stage": "R32",
             "cityId": "boston",
             "datetime": "2026-06-29T16:30:00-04:00",
-            "matchup": "1E vs 3ABCDF"
+            "matchup": "1E vs 3ABCDF",
+            "score": { "left": 1, "right": 1, "penLeft": 3, "penRight": 4 }
         },
         {
             "matchId": "R32_75",

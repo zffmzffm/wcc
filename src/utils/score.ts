@@ -29,6 +29,16 @@ export function getScoreDisplay(
         };
     }
 
+    const hasPenalties = typeof score.penLeft === 'number' && typeof score.penRight === 'number';
+
+    if (hasPenalties) {
+        return {
+            label: `${score.left}(${score.penLeft})-${score.right}(${score.penRight})`,
+            ariaLabel: `${score.left} to ${score.right}, penalties ${score.penLeft} to ${score.penRight}`,
+            isScored: true,
+        };
+    }
+
     return {
         label: `${score.left}-${score.right}`,
         ariaLabel: `${score.left} to ${score.right}`,
@@ -44,5 +54,8 @@ export function flipScore(score: ScoreLine | null | undefined): ScoreLine | unde
     return {
         left: score.right,
         right: score.left,
+        ...(typeof score.penLeft === 'number' && typeof score.penRight === 'number'
+            ? { penLeft: score.penRight, penRight: score.penLeft }
+            : {}),
     };
 }
