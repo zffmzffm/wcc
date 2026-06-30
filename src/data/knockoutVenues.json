@@ -37,7 +37,8 @@
             "stage": "R32",
             "cityId": "dallas",
             "datetime": "2026-06-30T13:00:00-04:00",
-            "matchup": "2E vs 2I"
+            "matchup": "2E vs 2I",
+            "score": { "left": 1, "right": 2 }
         },
         {
             "matchId": "R32_77",
