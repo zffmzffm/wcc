@@ -61,7 +61,8 @@
             "stage": "R32",
             "cityId": "atlanta",
             "datetime": "2026-07-01T12:00:00-04:00",
-            "matchup": "1L vs 3EHIJK"
+            "matchup": "1L vs 3EHIJK",
+            "score": { "left": 2, "right": 1 }
         },
         {
             "matchId": "R32_82",
