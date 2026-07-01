@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import "./globals.css";
 
 const inter = Inter({
@@ -184,6 +185,13 @@ export default function RootLayout({
         <div id="main-content">
           {children}
         </div>
+        {/* Cloudflare Web Analytics */}
+        <Script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "69a9a98c709c405db9916eb307b4ec35"}'
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
