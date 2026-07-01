@@ -53,7 +53,8 @@
             "stage": "R32",
             "cityId": "mexico_city",
             "datetime": "2026-06-30T21:00:00-04:00",
-            "matchup": "1A vs 3CEFHI"
+            "matchup": "1A vs 3CEFHI",
+            "score": { "left": 2, "right": 0 }
         },
         {
             "matchId": "R32_80",
