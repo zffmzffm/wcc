@@ -45,7 +45,8 @@
             "stage": "R32",
             "cityId": "new_york",
             "datetime": "2026-06-30T17:00:00-04:00",
-            "matchup": "1I vs 3CDFGH"
+            "matchup": "1I vs 3CDFGH",
+            "score": { "left": 3, "right": 0 }
         },
         {
             "matchId": "R32_79",
