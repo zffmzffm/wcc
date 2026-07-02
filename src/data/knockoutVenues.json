@@ -77,7 +77,8 @@
             "stage": "R32",
             "cityId": "san_francisco",
             "datetime": "2026-07-01T20:00:00-04:00",
-            "matchup": "1D vs 3BEFIJ"
+            "matchup": "1D vs 3BEFIJ",
+            "score": { "left": 2, "right": 0 }
         },
         {
             "matchId": "R32_84",
