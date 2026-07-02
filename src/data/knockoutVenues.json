@@ -85,7 +85,8 @@
             "stage": "R32",
             "cityId": "los_angeles",
             "datetime": "2026-07-02T15:00:00-04:00",
-            "matchup": "1H vs 2J"
+            "matchup": "1H vs 2J",
+            "score": { "left": 3, "right": 0 }
         },
         {
             "matchId": "R32_83",
