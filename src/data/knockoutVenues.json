@@ -109,7 +109,8 @@
             "stage": "R32",
             "cityId": "dallas",
             "datetime": "2026-07-03T14:00:00-04:00",
-            "matchup": "2D vs 2G"
+            "matchup": "2D vs 2G",
+            "score": { "left": 1, "right": 1, "penLeft": 2, "penRight": 4 }
         },
         {
             "matchId": "R32_86",
