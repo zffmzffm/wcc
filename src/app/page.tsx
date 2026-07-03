@@ -164,6 +164,8 @@ export default function Home() {
               city={selectedCity}
               matches={sidebarMatches}
               knockoutVenues={sidebarKnockoutVenues}
+              allMatches={matches}
+              allKnockoutVenues={knockoutVenues}
               teams={teams}
               cities={cities}
               timezone={displayTimezone}

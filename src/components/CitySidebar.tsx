@@ -54,6 +54,8 @@ interface CitySidebarProps {
     city: City | null;
     matches: Match[];
     knockoutVenues?: KnockoutVenue[];
+    allMatches?: Match[];
+    allKnockoutVenues?: KnockoutVenue[];
     teams: Team[];
     cities?: City[];  // For match day mode - to show venue names
     timezone: string;
@@ -68,6 +70,8 @@ export default function CitySidebar({
     city,
     matches,
     knockoutVenues = [],
+    allMatches,
+    allKnockoutVenues,
     teams,
     cities = [],
     timezone,
@@ -127,13 +131,15 @@ export default function CitySidebar({
 
     const countryCode = city ? getCountryCode(city.country) : '';
 
-    // Calculate all unique sorted match days for navigation
+    // Calculate all unique sorted match days for navigation across the full tournament
     const allDays = useMemo(() => {
+        const sourceMatches = allMatches && allMatches.length > 0 ? allMatches : matches;
+        const sourceKnockoutVenues = allKnockoutVenues && allKnockoutVenues.length > 0 ? allKnockoutVenues : knockoutVenues;
         const dateSet = new Set<string>();
-        matches.forEach(m => dateSet.add(getMatchDay(m.datetime)));
-        knockoutVenues.forEach(v => dateSet.add(getMatchDay(v.datetime)));
+        sourceMatches.forEach(m => dateSet.add(getMatchDay(m.datetime)));
+        sourceKnockoutVenues.forEach(v => dateSet.add(getMatchDay(v.datetime)));
         return Array.from(dateSet).sort();
-    }, [matches, knockoutVenues]);
+    }, [allMatches, matches, allKnockoutVenues, knockoutVenues]);
 
     const currentDayIndex = selectedDay ? allDays.indexOf(selectedDay) : -1;
     const prevDay = currentDayIndex > 0 ? allDays[currentDayIndex - 1] : null;
@@ -147,49 +153,25 @@ export default function CitySidebar({
         ariaLabel: `Match Day ${matchDayInfo?.dayNum} Information`,
         iconCode: undefined,
         title: (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <div className="matchday-title-nav">
                 <button
+                    className="matchday-nav-btn"
                     onClick={(e) => { e.stopPropagation(); if (prevDay && onSelectDay) onSelectDay(prevDay); }}
                     disabled={!prevDay || !onSelectDay}
                     aria-label="Previous Match Day"
                     title="Previous Match Day"
-                    style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: prevDay ? 'pointer' : 'default',
-                        opacity: prevDay ? 1 : 0.25,
-                        color: 'var(--text-primary)',
-                        fontSize: '1.4rem',
-                        lineHeight: 1,
-                        padding: '0 0.25rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        transition: 'opacity 0.2s'
-                    }}
                 >
-                    ‹
+                    ◀
                 </button>
                 <span>{matchDayInfo?.dateDisplay}</span>
                 <button
+                    className="matchday-nav-btn"
                     onClick={(e) => { e.stopPropagation(); if (nextDay && onSelectDay) onSelectDay(nextDay); }}
                     disabled={!nextDay || !onSelectDay}
                     aria-label="Next Match Day"
                     title="Next Match Day"
-                    style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: nextDay ? 'pointer' : 'default',
-                        opacity: nextDay ? 1 : 0.25,
-                        color: 'var(--text-primary)',
-                        fontSize: '1.4rem',
-                        lineHeight: 1,
-                        padding: '0 0.25rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        transition: 'opacity 0.2s'
-                    }}
                 >
-                    ›
+                    ▶
                 </button>
             </div>
         ),
