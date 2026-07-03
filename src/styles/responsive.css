@@ -10,10 +10,22 @@
         gap: 0.5rem;
     }
 
+    .header-left-group {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+
     .header-brand {
         width: 100%;
         justify-content: center;
         gap: 0;
+    }
+
+    .header-snapshot-btn {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.65rem;
     }
 
     .header-brand-desktop {
