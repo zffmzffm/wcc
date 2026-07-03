@@ -30,6 +30,27 @@ const Header = memo(function Header({ children, onReset }: HeaderProps) {
                 </div>
             </div>
 
+            <a
+                href="https://wcc-b9o.pages.dev/"
+                style={{
+                    background: 'linear-gradient(90deg, #d97706, #b45309)',
+                    color: '#ffffff',
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '9999px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    whiteSpace: 'nowrap'
+                }}
+                title="Return to Live World Cup 2026"
+            >
+                ✨ Snapshot Archive | Return to Live Site ➔
+            </a>
+
             <nav className="header-nav" aria-label="Main navigation">
                 {children}
             </nav>

@@ -29,6 +29,35 @@ const Footer = memo(function Footer() {
         <>
             <footer className="app-footer" role="contentinfo">
                 <div className="footer-content footer-stacked">
+                    <div style={{
+                        background: 'linear-gradient(90deg, #d97706, #b45309)',
+                        color: '#ffffff',
+                        padding: '0.4rem 0.75rem',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
+                        gap: '0.5rem',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        textAlign: 'center'
+                    }}>
+                        <span>✨ Opening Day Snapshot (June 13 Archive)</span>
+                        <a
+                            href="https://wcc-b9o.pages.dev/"
+                            style={{
+                                background: '#ffffff',
+                                color: '#b45309',
+                                padding: '0.18rem 0.6rem',
+                                borderRadius: '9999px',
+                                textDecoration: 'none',
+                                fontWeight: 700
+                            }}
+                        >
+                            Return to Live Site ➔
+                        </a>
+                    </div>
                     <div className="footer-row footer-row-buttons">
                         <a
                             href="https://www.youtube.com/watch?v=WxOD7-CB0qI"
