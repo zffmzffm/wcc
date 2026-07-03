@@ -93,7 +93,8 @@
             "stage": "R32",
             "cityId": "toronto",
             "datetime": "2026-07-02T19:00:00-04:00",
-            "matchup": "2K vs 2L"
+            "matchup": "2K vs 2L",
+            "score": { "left": 2, "right": 1 }
         },
         {
             "matchId": "R32_85",
