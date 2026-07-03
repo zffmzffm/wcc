@@ -184,6 +184,43 @@ export default function RootLayout({
         <div id="main-content">
           {children}
         </div>
+        <div style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9999,
+          background: 'linear-gradient(90deg, #d97706, #b45309)',
+          color: '#ffffff',
+          padding: '0.55rem 1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
+          boxShadow: '0 -4px 16px rgba(0,0,0,0.3)',
+          fontFamily: 'var(--font-inter), sans-serif'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>
+            <span style={{ fontSize: '1.1rem' }}>✨</span>
+            <span>You are viewing the Opening Day Snapshot (June 13, 2026 Archive).</span>
+          </div>
+          <a
+            href="https://wcc-b9o.pages.dev/"
+            style={{
+              background: '#ffffff',
+              color: '#b45309',
+              padding: '0.35rem 0.9rem',
+              borderRadius: '9999px',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+            }}
+          >
+            Return to Live World Cup 2026 ➔
+          </a>
+        </div>
       </body>
     </html>
   );
