@@ -101,7 +101,8 @@
             "stage": "R32",
             "cityId": "vancouver",
             "datetime": "2026-07-02T23:00:00-04:00",
-            "matchup": "1B vs 3EFGIJ"
+            "matchup": "1B vs 3EFGIJ",
+            "score": { "left": 2, "right": 0 }
         },
         {
             "matchId": "R32_88",
