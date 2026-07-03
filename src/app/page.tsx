@@ -171,6 +171,7 @@ export default function Home() {
               onClose={handleSidebarClose}
               onTeamSelect={handleTeamSelect}
               onCitySelect={handleCitySelectById}
+              onSelectDay={handleDaySelect}
             />
             <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
               <MapErrorBoundary>

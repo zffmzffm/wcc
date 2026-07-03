@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { City, Match, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
-import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
+import { getDayDifference, formatMatchDayDate, getMatchDay } from '@/utils/dateUtils';
 import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
 import SidebarLayout from './SidebarLayout';
 import MatchItem from './MatchItem';
@@ -61,6 +61,7 @@ interface CitySidebarProps {
     onClose: () => void;
     onTeamSelect?: (teamCode: string) => void;
     onCitySelect?: (cityId: string) => void;
+    onSelectDay?: (day: string | null) => void;
 }
 
 export default function CitySidebar({
@@ -73,7 +74,8 @@ export default function CitySidebar({
     selectedDay,
     onClose,
     onTeamSelect,
-    onCitySelect
+    onCitySelect,
+    onSelectDay
 }: CitySidebarProps) {
     // Ref to the sidebar container for scroll reset
     const sidebarRef = useRef<HTMLElement>(null);
@@ -125,6 +127,18 @@ export default function CitySidebar({
 
     const countryCode = city ? getCountryCode(city.country) : '';
 
+    // Calculate all unique sorted match days for navigation
+    const allDays = useMemo(() => {
+        const dateSet = new Set<string>();
+        matches.forEach(m => dateSet.add(getMatchDay(m.datetime)));
+        knockoutVenues.forEach(v => dateSet.add(getMatchDay(v.datetime)));
+        return Array.from(dateSet).sort();
+    }, [matches, knockoutVenues]);
+
+    const currentDayIndex = selectedDay ? allDays.indexOf(selectedDay) : -1;
+    const prevDay = currentDayIndex > 0 ? allDays[currentDayIndex - 1] : null;
+    const nextDay = currentDayIndex !== -1 && currentDayIndex < allDays.length - 1 ? allDays[currentDayIndex + 1] : null;
+
     // Match day mode header info
     const matchDayInfo = selectedDay ? formatMatchDayHeader(selectedDay) : null;
 
@@ -132,7 +146,53 @@ export default function CitySidebar({
     const sidebarProps = isMatchDayMode ? {
         ariaLabel: `Match Day ${matchDayInfo?.dayNum} Information`,
         iconCode: undefined,
-        title: matchDayInfo?.dateDisplay || '',
+        title: (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <button
+                    onClick={(e) => { e.stopPropagation(); if (prevDay && onSelectDay) onSelectDay(prevDay); }}
+                    disabled={!prevDay || !onSelectDay}
+                    aria-label="Previous Match Day"
+                    title="Previous Match Day"
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: prevDay ? 'pointer' : 'default',
+                        opacity: prevDay ? 1 : 0.25,
+                        color: 'var(--text-primary)',
+                        fontSize: '1.4rem',
+                        lineHeight: 1,
+                        padding: '0 0.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        transition: 'opacity 0.2s'
+                    }}
+                >
+                    ‹
+                </button>
+                <span>{matchDayInfo?.dateDisplay}</span>
+                <button
+                    onClick={(e) => { e.stopPropagation(); if (nextDay && onSelectDay) onSelectDay(nextDay); }}
+                    disabled={!nextDay || !onSelectDay}
+                    aria-label="Next Match Day"
+                    title="Next Match Day"
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: nextDay ? 'pointer' : 'default',
+                        opacity: nextDay ? 1 : 0.25,
+                        color: 'var(--text-primary)',
+                        fontSize: '1.4rem',
+                        lineHeight: 1,
+                        padding: '0 0.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        transition: 'opacity 0.2s'
+                    }}
+                >
+                    ›
+                </button>
+            </div>
+        ),
         badge: <span className="team-group-badge">Day {matchDayInfo?.dayNum}</span>,
         showPlaceholder: false,
     } : {

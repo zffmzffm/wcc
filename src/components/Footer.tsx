@@ -45,7 +45,7 @@ const Footer = memo(function Footer() {
                     }}>
                         <span>✨ Opening Day Snapshot (June 13 Archive)</span>
                         <a
-                            href="https://wcc-b9o.pages.dev/"
+                            href="https://cup26map.com"
                             style={{
                                 background: '#ffffff',
                                 color: '#b45309',

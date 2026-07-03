@@ -1,0 +1,33 @@
+
+> wc@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://127.0.0.1:3000
+   - Network:       http://127.0.0.1:3000
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+ ✓ Starting...
+ ✓ Ready in 911ms
+ GET / 200 in 2.0s (compile: 1877ms, render: 154ms)
+ ✓ Compiled in 49ms
+ GET /?team=BIH&day=2026-06-24&tz=America%2FToronto 200 in 148ms (compile: 52ms, render: 97ms)
+ GET / 200 in 91ms (compile: 8ms, render: 84ms)
+ GET / 200 in 130ms (compile: 24ms, render: 106ms)
+ GET / 200 in 80ms (compile: 7ms, render: 73ms)
+ ✓ Compiled in 45ms
+ ✓ Compiled in 225ms
+ GET / 200 in 276ms (compile: 125ms, render: 151ms)
+ ✓ Compiled in 189ms
+ GET / 200 in 262ms (compile: 109ms, render: 153ms)
+ GET / 200 in 226ms (compile: 20ms, render: 206ms)
+ ✓ Compiled in 131ms
+ GET / 200 in 330ms (compile: 153ms, render: 177ms)
+ ✓ Compiled in 96ms
+ ✓ Compiled in 65ms
+ ✓ Compiled in 133ms
+ ✓ Compiled in 76ms
+ GET / 200 in 221ms (compile: 78ms, render: 143ms)
+ GET / 200 in 89ms (compile: 9ms, render: 80ms)

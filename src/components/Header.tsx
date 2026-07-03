@@ -31,7 +31,7 @@ const Header = memo(function Header({ children, onReset }: HeaderProps) {
             </div>
 
             <a
-                href="https://wcc-b9o.pages.dev/"
+                href="https://cup26map.com"
                 style={{
                     background: 'linear-gradient(90deg, #d97706, #b45309)',
                     color: '#ffffff',

@@ -9,8 +9,8 @@ interface SidebarLayoutProps {
     ariaLabel: string;
     /** Icon or flag code to display in header */
     iconCode?: string;
-    /** Title text for the header */
-    title: string;
+    /** Title text or node for the header */
+    title: ReactNode;
     /** Placeholder state when no content is selected */
     placeholder?: {
         icon: string;
