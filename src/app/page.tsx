@@ -16,7 +16,7 @@ import { teams, matches, cities } from '@/data';
 import { JsonMatchRepository } from '@/repositories/JsonMatchRepository';
 import { useUrlState } from '@/hooks/useUrlState';
 import { useIsCompactSelectionMode, useIsMobile } from '@/hooks/useIsMobile';
-import { getMatchDay } from '@/utils/dateUtils';
+import { getMatchDay, getAllMatchDays } from '@/utils/dateUtils';
 import { DEFAULT_TIMEZONE } from '@/constants';
 
 // Get knockout venues singleton
@@ -59,6 +59,12 @@ export default function Home() {
     isMobile: isCompactSelectionMode,
     scheduleEvents: defaultScheduleEvents,
   });
+
+  // Generate sorted unique match days for navigation
+  const allMatchDays = useMemo(() =>
+    getAllMatchDays(defaultScheduleEvents),
+    []
+  );
 
   // Get selected team info - memoized to avoid unnecessary lookups
   const selectedTeamInfo = useMemo(() =>
@@ -168,9 +174,11 @@ export default function Home() {
               cities={cities}
               timezone={displayTimezone}
               selectedDay={selectedDay}
+              allMatchDays={allMatchDays}
               onClose={handleSidebarClose}
               onTeamSelect={handleTeamSelect}
               onCitySelect={handleCitySelectById}
+              onDaySelect={handleDaySelect}
             />
             <div id="main-map" className="map-container" role="application" aria-label="2026 World Cup Venue Map">
               <MapErrorBoundary>

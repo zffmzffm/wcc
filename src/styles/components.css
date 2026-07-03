@@ -124,6 +124,23 @@
     animation: fadeIn 0.3s ease;
 }
 
+button.team-group-badge.back-to-today-btn {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+button.team-group-badge.back-to-today-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    filter: brightness(1.1);
+}
+
+button.team-group-badge.back-to-today-btn:active {
+    transform: translateY(0);
+}
+
 /* ============================================
    Select/Dropdown Common Styles
    ============================================ */

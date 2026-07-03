@@ -9,8 +9,8 @@ interface SidebarLayoutProps {
     ariaLabel: string;
     /** Icon or flag code to display in header */
     iconCode?: string;
-    /** Title text for the header */
-    title: string;
+    /** Title text or node for the header */
+    title: ReactNode;
     /** Placeholder state when no content is selected */
     placeholder?: {
         icon: string;
@@ -21,6 +21,8 @@ interface SidebarLayoutProps {
     showPlaceholder?: boolean;
     /** Optional badge content (e.g., group letter) */
     badge?: ReactNode;
+    /** Whether to show the close button */
+    showClose?: boolean;
     /** Close button handler */
     onClose: () => void;
     /** Content to render in the sidebar body */
@@ -40,6 +42,7 @@ const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(function Sideb
         placeholder,
         showPlaceholder = false,
         badge,
+        showClose = true,
         onClose,
         children
     },
@@ -67,13 +70,15 @@ const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(function Sideb
             <div className="sidebar-header sidebar-header-compact">
                 <div className="sidebar-title">
                     {iconCode && <FlagIcon code={iconCode} size={28} />}
-                    <h2>{title}</h2>
+                    {typeof title === 'string' ? <h2>{title}</h2> : title}
                 </div>
                 <div className="sidebar-header-actions">
                     {badge}
-                    <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
-                        ✕
-                    </button>
+                    {showClose && (
+                        <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
+                            ✕
+                        </button>
+                    )}
                 </div>
             </div>
 

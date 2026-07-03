@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { City, Match, Team } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
 import { getCountryCode, formatDateTimeWithTimezone } from '@/utils/formatters';
-import { getDayDifference, formatMatchDayDate } from '@/utils/dateUtils';
+import { getDayDifference, formatMatchDayDate, getTodayOrTargetMatchDay } from '@/utils/dateUtils';
 import { getScoreDisplay } from '@/utils/score';
 import { resolveKnockoutMatchup, isTeamKnockoutEliminated } from '@/utils/knockoutResults';
 import { STAGE_NAMES, TOURNAMENT_START } from '@/constants';
@@ -60,9 +60,11 @@ interface CitySidebarProps {
     cities?: City[];  // For match day mode - to show venue names
     timezone: string;
     selectedDay?: string | null;  // ISO date string for match day mode
+    allMatchDays?: string[];
     onClose: () => void;
     onTeamSelect?: (teamCode: string) => void;
     onCitySelect?: (cityId: string) => void;
+    onDaySelect?: (day: string) => void;
 }
 
 export default function CitySidebar({
@@ -73,9 +75,11 @@ export default function CitySidebar({
     cities = [],
     timezone,
     selectedDay,
+    allMatchDays = [],
     onClose,
     onTeamSelect,
-    onCitySelect
+    onCitySelect,
+    onDaySelect
 }: CitySidebarProps) {
     // Ref to the sidebar container for scroll reset
     const sidebarRef = useRef<HTMLElement>(null);
@@ -150,18 +154,62 @@ export default function CitySidebar({
     // Match day mode header info
     const matchDayInfo = selectedDay ? formatMatchDayHeader(selectedDay) : null;
 
+    const currentDayIndex = selectedDay ? allMatchDays.indexOf(selectedDay) : -1;
+    const prevDay = currentDayIndex > 0 ? allMatchDays[currentDayIndex - 1] : null;
+    const nextDay = currentDayIndex >= 0 && currentDayIndex < allMatchDays.length - 1 ? allMatchDays[currentDayIndex + 1] : null;
+
+    const matchDayTitleNode = matchDayInfo ? (
+        <div className="matchday-title-nav">
+            {onDaySelect && (
+                <button
+                    className="matchday-nav-btn"
+                    onClick={() => prevDay && onDaySelect(prevDay)}
+                    disabled={!prevDay}
+                    aria-label="Previous match day"
+                >
+                    ◀
+                </button>
+            )}
+            <span>{matchDayInfo.dateDisplay}</span>
+            {onDaySelect && (
+                <button
+                    className="matchday-nav-btn"
+                    onClick={() => nextDay && onDaySelect(nextDay)}
+                    disabled={!nextDay}
+                    aria-label="Next match day"
+                >
+                    ▶
+                </button>
+            )}
+        </div>
+    ) : '';
+
     // Determine sidebar props based on mode
     const sidebarProps = isMatchDayMode ? {
         ariaLabel: `Match Day ${matchDayInfo?.dayNum} Information`,
         iconCode: undefined,
-        title: matchDayInfo?.dateDisplay || '',
-        badge: <span className="team-group-badge">Day {matchDayInfo?.dayNum}</span>,
+        title: matchDayTitleNode,
+        badge: onDaySelect ? (
+            <button
+                type="button"
+                className="team-group-badge back-to-today-btn"
+                onClick={() => {
+                    const targetDay = getTodayOrTargetMatchDay(allMatchDays);
+                    if (targetDay) onDaySelect(targetDay);
+                }}
+                title="Back to Today"
+            >
+                Back to Today
+            </button>
+        ) : <span className="team-group-badge">Day {matchDayInfo?.dayNum}</span>,
+        showClose: false,
         showPlaceholder: false,
     } : {
         ariaLabel: city ? `${city.name} City Information` : 'City Information',
         iconCode: countryCode,
         title: city?.name || '',
         badge: undefined,
+        showClose: true,
         showPlaceholder: !city,
     };
 
@@ -174,6 +222,7 @@ export default function CitySidebar({
             title={sidebarProps.title}
             showPlaceholder={sidebarProps.showPlaceholder}
             badge={sidebarProps.badge}
+            showClose={sidebarProps.showClose}
             placeholder={{
                 icon: '🏟️',
                 line1: 'Select a city or match day',

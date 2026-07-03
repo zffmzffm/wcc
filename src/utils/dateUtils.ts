@@ -35,6 +35,44 @@ export function getMatchDay(datetime: string): string {
 }
 
 /**
+ * Extract sorted unique match days (YYYY-MM-DD) from a list of items with datetime properties.
+ */
+export function getAllMatchDays(events: { datetime: string }[]): string[] {
+    const dateSet = new Set<string>();
+    events.forEach(e => {
+        if (e.datetime) {
+            dateSet.add(getMatchDay(e.datetime));
+        }
+    });
+    return Array.from(dateSet).sort();
+}
+
+/**
+ * Determine the target match day for "Back to Today".
+ * - If today is a match day, return today.
+ * - If the tournament has ended (today > last match day), return the final day.
+ * - If before the tournament (today < first match day), return the opening day.
+ * - If on a rest day during the tournament, return the next upcoming match day.
+ */
+export function getTodayOrTargetMatchDay(allMatchDays: string[]): string {
+    if (!allMatchDays || allMatchDays.length === 0) return '';
+
+    const todayStr = getMatchDay(new Date().toISOString());
+    const firstDay = allMatchDays[0];
+    const lastDay = allMatchDays[allMatchDays.length - 1];
+
+    if (todayStr > lastDay) {
+        return lastDay;
+    }
+    if (todayStr < firstDay) {
+        return firstDay;
+    }
+
+    const nextOrToday = allMatchDays.find(d => d >= todayStr);
+    return nextOrToday || lastDay;
+}
+
+/**
  * Calculate tournament day number from a date string.
  * June 11, 2026 = Day 1.
  */

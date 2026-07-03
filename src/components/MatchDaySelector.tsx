@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { Match } from '@/types';
 import { KnockoutVenue } from '@/repositories/types';
-import { getMatchDay } from '@/utils/dateUtils';
+import { getAllMatchDays } from '@/utils/dateUtils';
 import { TOURNAMENT_START } from '@/constants';
 import DropdownSelect from './DropdownSelect';
 
@@ -43,17 +43,7 @@ export default function MatchDaySelector({
 }: MatchDaySelectorProps) {
     // Generate sorted unique match days
     const matchDays = useMemo(() => {
-        const dateSet = new Set<string>();
-
-        // Add group stage match dates
-        matches.forEach(m => dateSet.add(getMatchDay(m.datetime)));
-
-        // Add knockout match dates
-        knockoutVenues.forEach(v => dateSet.add(getMatchDay(v.datetime)));
-
-        // Sort dates chronologically and create display objects
-        return Array.from(dateSet)
-            .sort()
+        return getAllMatchDays([...matches, ...knockoutVenues])
             .map(dateStr => ({
                 value: dateStr,
                 ...formatMatchDay(dateStr)
