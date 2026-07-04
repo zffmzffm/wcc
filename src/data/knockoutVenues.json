@@ -135,7 +135,8 @@
             "stage": "R16",
             "cityId": "houston",
             "datetime": "2026-07-04T13:00:00-04:00",
-            "matchup": "W73 vs W75"
+            "matchup": "W73 vs W75",
+            "score": { "left": 0, "right": 3 }
         },
         {
             "matchId": "R16_89",
