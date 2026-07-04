@@ -125,7 +125,8 @@
             "stage": "R32",
             "cityId": "kansas_city",
             "datetime": "2026-07-03T21:30:00-04:00",
-            "matchup": "1K vs 3DEIJL"
+            "matchup": "1K vs 3DEIJL",
+            "score": { "left": 1, "right": 0 }
         }
     ],
     "R16": [
