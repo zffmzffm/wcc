@@ -151,7 +151,8 @@
             "stage": "R16",
             "cityId": "new_york",
             "datetime": "2026-07-05T16:00:00-04:00",
-            "matchup": "W76 vs W78"
+            "matchup": "W76 vs W78",
+            "score": { "left": 1, "right": 2 }
         },
         {
             "matchId": "R16_92",
