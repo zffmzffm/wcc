@@ -159,7 +159,8 @@
             "stage": "R16",
             "cityId": "mexico_city",
             "datetime": "2026-07-05T20:00:00-04:00",
-            "matchup": "W79 vs W80"
+            "matchup": "W79 vs W80",
+            "score": { "left": 2, "right": 3 }
         },
         {
             "matchId": "R16_93",
