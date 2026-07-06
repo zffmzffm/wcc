@@ -167,7 +167,8 @@
             "stage": "R16",
             "cityId": "dallas",
             "datetime": "2026-07-06T15:00:00-04:00",
-            "matchup": "W83 vs W84"
+            "matchup": "W83 vs W84",
+            "score": { "left": 0, "right": 1 }
         },
         {
             "matchId": "R16_94",
