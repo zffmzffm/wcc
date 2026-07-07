@@ -183,7 +183,8 @@
             "stage": "R16",
             "cityId": "atlanta",
             "datetime": "2026-07-07T12:00:00-04:00",
-            "matchup": "W86 vs W88"
+            "matchup": "W86 vs W88",
+            "score": { "left": 3, "right": 2 }
         },
         {
             "matchId": "R16_96",
