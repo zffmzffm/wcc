@@ -175,7 +175,8 @@
             "stage": "R16",
             "cityId": "seattle",
             "datetime": "2026-07-06T20:00:00-04:00",
-            "matchup": "W81 vs W82"
+            "matchup": "W81 vs W82",
+            "score": { "left": 1, "right": 4 }
         },
         {
             "matchId": "R16_95",
