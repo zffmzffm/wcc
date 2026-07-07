@@ -191,7 +191,8 @@
             "stage": "R16",
             "cityId": "vancouver",
             "datetime": "2026-07-07T16:00:00-04:00",
-            "matchup": "W85 vs W87"
+            "matchup": "W85 vs W87",
+            "score": { "left": 0, "right": 0, "penLeft": 4, "penRight": 3 }
         }
     ],
     "QF": [
