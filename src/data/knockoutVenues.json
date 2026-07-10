@@ -209,7 +209,8 @@
             "stage": "QF",
             "cityId": "los_angeles",
             "datetime": "2026-07-10T15:00:00-04:00",
-            "matchup": "W93 vs W94"
+            "matchup": "W93 vs W94",
+            "score": { "left": 2, "right": 1 }
         },
         {
             "matchId": "QF_99",
