@@ -217,7 +217,8 @@
             "stage": "QF",
             "cityId": "miami",
             "datetime": "2026-07-11T17:00:00-04:00",
-            "matchup": "W91 vs W92"
+            "matchup": "W91 vs W92",
+            "score": { "left": 1, "right": 2 }
         },
         {
             "matchId": "QF_100",
