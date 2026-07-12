@@ -225,7 +225,8 @@
             "stage": "QF",
             "cityId": "kansas_city",
             "datetime": "2026-07-11T21:00:00-04:00",
-            "matchup": "W95 vs W96"
+            "matchup": "W95 vs W96",
+            "score": { "left": 3, "right": 1 }
         }
     ],
     "SF": [

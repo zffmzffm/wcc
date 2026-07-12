@@ -126,7 +126,8 @@
         "R16_96": "SUI",
         "QF_97": "FRA",
         "QF_98": "ESP",
-        "QF_99": "ENG"
+        "QF_99": "ENG",
+        "QF_100": "ARG"
     },
     "knockoutEliminatedAt": {
         "RSA": "R32_73",
@@ -155,6 +156,7 @@
         "COL": "R16_96",
         "MAR": "QF_97",
         "BEL": "QF_98",
-        "NOR": "QF_99"
+        "NOR": "QF_99",
+        "SUI": "QF_100"
     }
 }
