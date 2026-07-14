@@ -235,7 +235,8 @@
             "stage": "SF",
             "cityId": "dallas",
             "datetime": "2026-07-14T15:00:00-04:00",
-            "matchup": "W97 vs W98"
+            "matchup": "W97 vs W98",
+            "score": { "left": 0, "right": 2 }
         },
         {
             "matchId": "SF_102",
