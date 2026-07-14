@@ -1,5 +1,6 @@
 import type { KnockoutPosition } from '@/data/knockoutBracket';
 import knockoutResultsData from '@/data/knockoutResults.json';
+import knockoutVenuesData from '@/data/knockoutVenues.json';
 
 export type GroupId = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L';
 
@@ -69,6 +70,32 @@ export function resolveKnockoutSide(
             const candidateId = `${stage}${matchIdSuffix}`;
             const winner = normalizeTeamCode(source.knockoutWinners?.[candidateId]);
             if (winner) return winner;
+        }
+        return value;
+    }
+
+    // Loser token e.g. "L101" -> look up match SF_101 loser (the team that did NOT win)
+    const loserMatch = value.match(/^L(\d+)$/);
+    if (loserMatch) {
+        const matchNumber = loserMatch[1];
+        const matchIdSuffix = `_${matchNumber}`;
+        const stages = ['R32', 'R16', 'QF', 'SF', 'F'] as const;
+        for (const stage of stages) {
+            const candidateId = `${stage}${matchIdSuffix}`;
+            const winner = normalizeTeamCode(source.knockoutWinners?.[candidateId]);
+            if (winner) {
+                // Find the venue to get the matchup, then resolve both sides
+                const allVenues = Object.values(knockoutVenuesData).flat() as { matchId: string; matchup?: string }[];
+                const venue = allVenues.find(v => v.matchId === candidateId);
+                if (venue?.matchup) {
+                    const [leftSide, rightSide] = venue.matchup.split(/\s+vs\s+/);
+                    const resolvedLeft = resolveKnockoutSide(candidateId, leftSide || '', source);
+                    const resolvedRight = resolveKnockoutSide(candidateId, rightSide || '', source);
+                    // Return whichever side is NOT the winner
+                    if (normalizeTeamCode(resolvedLeft) === winner) return resolvedRight;
+                    if (normalizeTeamCode(resolvedRight) === winner) return resolvedLeft;
+                }
+            }
         }
         return value;
     }
