@@ -243,7 +243,8 @@
             "stage": "SF",
             "cityId": "atlanta",
             "datetime": "2026-07-15T15:00:00-04:00",
-            "matchup": "W99 vs W100"
+            "matchup": "W99 vs W100",
+            "score": { "left": 1, "right": 2 }
         }
     ],
     "F": [
