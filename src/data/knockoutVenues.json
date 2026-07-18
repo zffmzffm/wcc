@@ -262,7 +262,8 @@
             "stage": "3P",
             "cityId": "miami",
             "datetime": "2026-07-18T17:00:00-04:00",
-            "matchup": "L101 vs L102"
+            "matchup": "L101 vs L102",
+            "score": { "left": 4, "right": 6 }
         }
     ]
 }
