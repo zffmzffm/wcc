@@ -130,7 +130,8 @@
         "QF_100": "ARG",
         "SF_101": "ESP",
         "SF_102": "ARG",
-        "3P_103": "ENG"
+        "3P_103": "ENG",
+        "F_104": "ESP"
     },
     "knockoutEliminatedAt": {
         "RSA": "R32_73",
@@ -162,6 +163,7 @@
         "NOR": "QF_99",
         "SUI": "QF_100",
         "FRA": "SF_101",
-        "ENG": "SF_102"
+        "ENG": "SF_102",
+        "ARG": "F_104"
     }
 }

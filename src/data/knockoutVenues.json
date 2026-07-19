@@ -253,7 +253,8 @@
             "stage": "F",
             "cityId": "new_york",
             "datetime": "2026-07-19T15:00:00-04:00",
-            "matchup": "W101 vs W102"
+            "matchup": "W101 vs W102",
+            "score": { "left": 1, "right": 0 }
         }
     ],
     "3P": [
