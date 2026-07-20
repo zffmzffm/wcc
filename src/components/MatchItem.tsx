@@ -47,7 +47,11 @@ const MatchItem = memo(function MatchItem({
     // so that the (+1/-1) suffix correctly indicates the shift from the displayed date.
     // Otherwise show the timezone-local date (which is the same as the match day).
     const date = dayDiff !== 0 ? formatMatchDayDate(match.datetime) : tzDate;
-    const scoreDisplay = getScoreDisplay(match.score);
+    // Grayed matches are ones the team never played (eliminated earlier),
+    // so force "vs" instead of the actual match result.
+    const scoreDisplay = grayed
+        ? { label: 'vs', ariaLabel: 'versus', isScored: false }
+        : getScoreDisplay(match.score);
 
     
     const isTeam1Highlighted = highlightTeamCode === match.team1;
